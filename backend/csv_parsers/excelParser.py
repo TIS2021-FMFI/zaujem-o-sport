@@ -1,43 +1,37 @@
 import openpyxl
+from typing import *
 
 class SuccessRecord:
-    def __init__(self, rank, country, points):
+    def __init__(self, rank : int, country : str, points:float):
         self.rank = rank
         self.country = country
         self.points = points
 
-    def countryExistsCheck(self):
+    def countryExistsCheck(self) -> bool:
         # todo -> pristup do db a overenie
         return True
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "SuccessRecord: {}, {}, {}".format(self.rank, self.country, self.points)
 
 
 class SportSuccess:
 
-    def __init__(self, sport_name, sport_code, cell):
+    def __init__(self, sport_name : str, sport_code : int, cell: openpyxl.cell):
 
         self.sport_name = sport_name
         self.sport_code = sport_code
         self.cell = cell
         self.records = []
 
-    def sportNameCodeCheck(self):
+    def sportNameCodeCheck(self) -> bool:
         # todo -> pristup do DB a overenie
         return True
 
-    def add_record(self, new_record):
-
-        if isinstance(new_record, SuccessRecord):
-            self.records.append(new_record)
-        else:
-            raise TypeError("expected instance of SuccessRecord, get other")
-
-    def __str__(self):
+    def __str__(self) -> str:
         return "SportSuccess: {}, {}, {}".format(self.sport_name, self.sport_code, self.cell)
 
-    def parse_record(self, sheet, num_rows):
+    def parse_record(self, sheet : str, num_rows : int):
 
         for r in range(self.cell[0] + 2, num_rows + 1):
 
@@ -57,7 +51,7 @@ class InterconnectnessRecord:
         self.type = type
         self.value = value
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.type} {self.countryA} {self.countryB} {self.value}"
 
 
@@ -67,7 +61,7 @@ class ParseError(Exception):
 
 class excelParser:
 
-    def parseSuccess(file: str) -> list:
+    def parseSuccess(file: str) -> List[SportSuccess]:
         SPORT_NAMES_ROW = 2  # mohol by zadat user v GUI ?
 
         wb_obj = openpyxl.load_workbook(file)
@@ -99,7 +93,7 @@ class excelParser:
 
         return records
 
-    def parseInterconnectness(file: str, type: str):
+    def parseInterconnectness(file: str, type: str) -> List[InterconnectnessRecord]:
 
         wb_obj = openpyxl.load_workbook(file)
         sheet = wb_obj.active
