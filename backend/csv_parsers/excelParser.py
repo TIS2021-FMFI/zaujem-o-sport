@@ -1,31 +1,27 @@
 import openpyxl
 
-
-
-
 class SuccessRecord:
-        def __init__(self, rank, country, points):
+    def __init__(self, rank, country, points):
+        self.rank = rank
+        self.country = country
+        self.points = points
 
-            self.rank = rank
-            self.country = country
-            self.points = points
+    def countryExistsCheck(self):
+        # todo -> pristup do db a overenie
+        return True
 
-        def countryExistsCheck(self):
-            # todo -> pristup do db a overenie
-            return True
+    def __str__(self):
+        return "SuccessRecord: {}, {}, {}".format(self.rank, self.country, self.points)
 
-        def __str__(self):
-            return "SuccessRecord: {}, {}, {}".format(self.rank, self.country, self.points)
 
 class SportSuccess:
-        
+
     def __init__(self, sport_name, sport_code, cell):
 
         self.sport_name = sport_name
         self.sport_code = sport_code
         self.cell = cell
         self.records = []
-
 
     def sportNameCodeCheck(self):
         # todo -> pristup do DB a overenie
@@ -40,12 +36,11 @@ class SportSuccess:
 
     def __str__(self):
         return "SportSuccess: {}, {}, {}".format(self.sport_name, self.sport_code, self.cell)
-   
 
     def parse_record(self, sheet, num_rows):
 
-        for r in range(self.cell[0]+2, num_rows+1):
-            
+        for r in range(self.cell[0] + 2, num_rows + 1):
+
             rank = sheet.cell(row=r, column=self.cell[1] - 1).value
             country = sheet.cell(row=r, column=self.cell[1]).value
             points = sheet.cell(row=r, column=self.cell[1] + 1).value
@@ -53,9 +48,10 @@ class SportSuccess:
             if rank != None:
                 self.records.append(SuccessRecord(rank, country, points))
 
+
 class InterconnectnessRecord:
 
-    def __init__(self, countryA: str, countryB:str, type:str, value:float):
+    def __init__(self, countryA: str, countryB: str, type: str, value: float):
         self.countryA = countryA
         self.countryB = countryB
         self.type = type
@@ -103,7 +99,6 @@ class excelParser:
 
         return records
 
-
     def parseInterconnectness(file: str, type: str):
 
         wb_obj = openpyxl.load_workbook(file)
@@ -125,14 +120,13 @@ class excelParser:
         # check if countries in first row and first col are in same order
         for row in range(2, LAST_ROW + 1):
             cell = sheet.cell(row=row, column=FIRST_COL)
-            if countries[row-2] != cell.value:
+            if countries[row - 2] != cell.value:
                 raise ParseError("Inconsistance in countries in first row and first col.")
 
-
         for row in range(2, LAST_ROW + 1):
-            for col in range(2, LAST_COL+1):
+            for col in range(2, LAST_COL + 1):
                 cell = sheet.cell(row=row, column=col)
-                records.append(InterconnectnessRecord(countries[row-2], countries[col-2], type, float(cell.value)))
+                records.append(InterconnectnessRecord(countries[row - 2], countries[col - 2], type, float(cell.value)))
 
         return records
 
@@ -152,5 +146,3 @@ for i in parsed:
     if i.countryA == "Izrael":
         print(i)
 print(len(parsed))
-
-    
