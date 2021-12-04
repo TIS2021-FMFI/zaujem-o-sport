@@ -24,3 +24,10 @@ Switch to your virtual environment in terminal using: <br>
 Then start the server using
 <code>python app.py</code> on Windows <br>
 <code>python3 app.py</code> on Linux.
+
+# When you install new dependencies
+Always make sure you're in your virtual environment and 
+before pushing to some repository use command<br>
+<code>pip freeze > requirements.txt</code><br>
+which will ensure that all of us are going to be able to install
+correct new dependencies.
