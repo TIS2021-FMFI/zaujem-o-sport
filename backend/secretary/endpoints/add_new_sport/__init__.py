@@ -5,7 +5,7 @@ from verification.jwt import is_secretary
 # TODO
 class AddNewSportView(SwaggerView):
 
-	@is_secretary()
+	@is_secretary
 	def post(self):
 		if not request.json:
 			return {"message": "Missing JSON body.", "data": {}}, 400
