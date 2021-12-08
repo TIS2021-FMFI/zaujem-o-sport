@@ -1,16 +1,18 @@
 import psycopg2
 from psycopg2 import pool
 import psycopg2.extras
+import psycopg2.extensions
 from typing import Union
 
 class Database:
 	def __init__(self, dbPool: psycopg2.pool.ThreadedConnectionPool):
 		self.dbPool = dbPool
 
-	def _getConnection(self):
-		return self.dbPool.getconn()
+	def _getConnection(self) -> psycopg2.extensions.connection:
+		dbConn = self.dbPool.getconn()
+		return dbConn
 
-	def _releaseConnection(self, dbConnection):
+	def _releaseConnection(self, dbConnection: psycopg2.extensions.connection):
 		self.dbPool.putconn(dbConnection)
 
 	def getSecretary(self, email: str) -> Union[None, dict]:
