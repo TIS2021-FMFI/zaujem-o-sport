@@ -23,4 +23,4 @@ Switch to your virtual environment in terminal using: <br>
 
 Then start the server using
 <code>python app.py</code> on Windows <br>
-<code>python3 app.py</code> on Linux.
+<code>python3 app.py dev</code> on Linux.
