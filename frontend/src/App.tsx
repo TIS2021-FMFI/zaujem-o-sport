@@ -8,12 +8,15 @@ import {Logout} from "./secretary/pages/login/Logout";
 import {Home} from "secretary/pages/home/Home";
 import {Sports} from "./secretary/pages/sports/Sports";
 import {setupInterceptors} from "./app/axios_provider";
+import {Nav} from "user/pages/Nav"
 
 const history = createBrowserHistory();
 setupInterceptors(history);
 
 const App = () => {
   return (
+  <>
+  <Nav></Nav>
     <Router>
       <Switch>
         {/* Secretary routes */}
@@ -26,6 +29,7 @@ const App = () => {
         <Route exact path="*" component={NotFound} />
       </Switch>
     </Router>
+    </>
   );
 }
 
