@@ -20,8 +20,8 @@ setupInterceptors(history);
 const App = () => {
   return (
   <>
-  <Nav></Nav>
     <Router>
+      <Nav></Nav>
       <Switch>
         {/* Secretary routes */}
         <SecretaryAuthRoute exact path="/secretary" component={Home}/>

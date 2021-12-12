@@ -8,14 +8,22 @@ export const Nav = () => {
   	<>
 		  <nav className={styles.nav}>
 		  <img src={logo} width="100"></img>
-
-		  <button className={styles.button}>Home</button>
-		  <button className={styles.button} >Export</button>
-		  <button className={styles.button}>Fundings</button>
-		  <button className={styles.button}>Success</button>
-		  <button className={styles.button}>Interconnectness</button>
+			  <Link to="/">
+				  Home
+			  </Link>
+			  <Link to="/export">
+				  Export
+			  </Link>
+			  <Link to="/funding">
+				  Funding
+			  </Link>
+			  <Link to="/success">
+				  Success
+			  </Link>
+			  <Link to="/interconnectness">
+				  Interconnectness
+			  </Link>
 		  </nav>
-		  
 	  </>
   )
 }
