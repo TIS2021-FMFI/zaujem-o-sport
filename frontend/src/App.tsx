@@ -9,6 +9,10 @@ import {Home} from "secretary/pages/home/Home";
 import {Sports} from "./secretary/pages/sports/Sports";
 import {setupInterceptors} from "./app/axios_provider";
 import {Nav} from "user/pages/Nav"
+import {Export} from "user/pages/Export";
+import {Funding} from "./user/pages/Funding";
+import {Success} from "./user/pages/Success";
+import {Interconnectness} from "user/pages/Interconnectness";
 
 const history = createBrowserHistory();
 setupInterceptors(history);
@@ -25,8 +29,15 @@ const App = () => {
         <SecretaryAuthRoute exact path="/secretary/sports" component={Sports}/>
         <Route exact path="/secretary/logout" component={Logout}/>
 
+        {/* User routes */}
+        <Route exact path="/export" component={Export}/>
+        <Route exact path="/funding" component={Funding}/>
+        <Route exact path="/success" component={Success}/>
+        <Route exact path="/interconnectness" component={Interconnectness}/>
+
         <Route exact path="/" component={CounterWrapper}/>
         <Route exact path="*" component={NotFound} />
+
       </Switch>
     </Router>
     </>
