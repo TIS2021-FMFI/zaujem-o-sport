@@ -8,19 +8,19 @@ export const Nav = () => {
   	<>
 		  <nav className={styles.nav}>
 		  <img src={logo} width="100"></img>
-			  <Link to="/">
+			  <Link  to="/">
 				  Home
 			  </Link>
-			  <Link to="/export">
+			  <Link  to="/export">
 				  Export
 			  </Link>
 			  <Link to="/funding">
 				  Funding
 			  </Link>
-			  <Link to="/success">
+			  <Link className="link" to="/success">
 				  Success
 			  </Link>
-			  <Link to="/interconnectness">
+			  <Link className="link" to="/interconnectness">
 				  Interconnectness
 			  </Link>
 		  </nav>
