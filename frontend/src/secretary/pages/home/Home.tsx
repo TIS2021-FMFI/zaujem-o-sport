@@ -4,9 +4,7 @@ export const Home = () => {
   return (
   	<>
 		  <h1>Home</h1>
-		  <Link to="/secretary/sports">
-			  Zobraz športy
-		  </Link>
+		  gi
 		  <br/>
 		  <Link to="/secretary/logout">
 			  Logout

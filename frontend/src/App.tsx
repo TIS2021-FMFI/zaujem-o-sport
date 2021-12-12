@@ -8,11 +8,11 @@ import {Logout} from "./secretary/pages/login/Logout";
 import {Home} from "secretary/pages/home/Home";
 import {Sports} from "./secretary/pages/sports/Sports";
 import {setupInterceptors} from "./app/axios_provider";
-import {Nav} from "user/pages/Nav"
-import {Export} from "user/pages/Export";
-import {Funding} from "./user/pages/Funding";
-import {Success} from "./user/pages/Success";
-import {Interconnectness} from "user/pages/Interconnectness";
+import {Nav} from "user/components/Nav"
+import {Export} from "user/pages/export/Export";
+import {Funding} from "user/pages/funding/Funding";
+import {Success} from "user/pages/success/Success";
+import {Interconnectness} from "user/pages/interconnectness/Interconnectness";
 
 const history = createBrowserHistory();
 setupInterceptors(history);
