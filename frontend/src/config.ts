@@ -1,9 +1,9 @@
 const ENV = process.env.NODE_ENV.toLowerCase() as "production" | "development";
 
-// TODO: define development and production URLs for the backend API
+// TODO: define production URL for the backend API
 const config = {
 	API_URL: {
-		development: "DEVELOPMENT_API_URL",
+		development: "http://localhost:3001/api",
 		production: "PRODUCTION_API_URL"
 	}[ENV]
 }

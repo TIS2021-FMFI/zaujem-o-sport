@@ -1,7 +1,8 @@
 import sys
 import settings
-from settings import app
-import endpoints.login
+from settings import app, jwt
+import secretary.endpoints.login
+import secretary.endpoints.show_sports
 
 @app.errorhandler(400)
 def bad_request(e):
@@ -23,11 +24,34 @@ def gone(e):
 def internal_server_error(e):
 	return {"message": "Internal server error.", "data": {}}, 500
 
+@jwt.expired_token_loader
+def expired_token_callback(jwt_header, jwt_payload):
+	return {"message": "Token has expired", "data": {}}, 401
+
+@jwt.invalid_token_loader
+def invalid_token_callback(callback):
+	return {"message": "Signature verification failed", "data": {}}, 422
+
+@jwt.revoked_token_loader
+def revoked_token_callback(jwt_header, jwt_payload):
+	return {"message": "Token has been revoked", "data": {}}, 401
+
+@jwt.unauthorized_loader
+def unathorized_callback(callback):
+	return {"message": "Missing Authorization Header", "data": {}}, 401
+
 app.add_url_rule(
-	"/api/login",
-	view_func=endpoints.login.LoginView.as_view("login"),
+	"/api/secretary/login",
+	view_func=secretary.endpoints.login.LoginView.as_view("secretary_login"),
+	methods=["POST"]
+)
+
+app.add_url_rule(
+	"/api/secretary/sports",
+	view_func=secretary.endpoints.show_sports.ShowSportsView.as_view("list_sports"),
 	methods=["GET"]
 )
+
 
 if __name__ == "__main__":
 	ip = None
