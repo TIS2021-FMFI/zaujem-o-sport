@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./sidebar.module.scss";
+import styles from "components/sidebar/sidebar.module.scss";
 import {Link} from "react-router-dom";
 import {IconWithText} from "../icons/IconWithText";
 import {BoxArrowDownLeft, Icon} from "react-bootstrap-icons";
