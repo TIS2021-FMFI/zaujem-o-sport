@@ -6,6 +6,8 @@ import {TableColumnNameType, Table, TableRowsType} from "../../../components/tab
 
 export const Sports = () => {
 
+	// TODO: export
+
 	const [columnNames, setColumnsNames] = useState<TableColumnNameType[]>([]);
 	const [sportRows, setSportRows] = useState<TableRowsType>([]);
 
@@ -26,7 +28,7 @@ export const Sports = () => {
 
   return (<>
 	  <header>
-	    <h1>Športy</h1>
+	    <h1>Uložené športy</h1>
 	  </header>
 	  <section>
 		  { isLoading

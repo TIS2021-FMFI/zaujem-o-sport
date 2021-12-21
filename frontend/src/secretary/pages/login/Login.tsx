@@ -59,7 +59,7 @@ export const Login = () => {
 					<section className={`w-100 h-100vh d-flex justify-content-center align-items-center`}>
 						<Form className={`${styles.loginForm}`} onSubmit={submitForm}>
 							<header className={`text-center`}>
-								<h2>Prihlásenie</h2>
+								<h1>Prihlásenie</h1>
 							</header>
 							{ serverErrorMessage.length !== 0 &&
 								<>
