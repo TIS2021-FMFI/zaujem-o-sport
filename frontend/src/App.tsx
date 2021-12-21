@@ -1,31 +1,35 @@
 import React from "react";
 import {BrowserRouter as Router, Redirect, Route, Switch} from "react-router-dom";
 import { createBrowserHistory } from 'history';
-import {CounterWrapper} from "pages/counter/CounterWrapper";
+//import {CounterWrapper} from "pages/counter/CounterWrapper";
 import {NotFound} from "pages/not_found/NotFound";
 import {Login} from "secretary/pages/login/Login";
 import {Logout} from "./secretary/pages/login/Logout";
 import {Home} from "secretary/pages/home/Home";
 import {Sports} from "./secretary/pages/sports/Sports";
 import {setupInterceptors} from "./app/axios_provider";
-
+import Footer from "./components/Footer";
+import Success from "./components/Success";
 const history = createBrowserHistory();
 setupInterceptors(history);
 
 const App = () => {
   return (
     <Router>
-      <Switch>
-        {/* Secretary routes */}
+
+          <Switch>
         <SecretaryAuthRoute exact path="/secretary" component={Home}/>
         <SecretaryAuthRoute exact path="/secretary/login" component={Login}/>
         <SecretaryAuthRoute exact path="/secretary/sports" component={Sports}/>
+
         <Route exact path="/secretary/logout" component={Logout}/>
 
-        <Route exact path="/" component={CounterWrapper}/>
-        <Route exact path="*" component={NotFound} />
       </Switch>
+        <Success />
+        <Footer />
+
     </Router>
+
   );
 }
 
