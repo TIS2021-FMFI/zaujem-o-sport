@@ -9,12 +9,14 @@ import {Home} from "secretary/pages/home/Home";
 import {Sports} from "./secretary/pages/sports/Sports";
 import {setupInterceptors} from "./app/axios_provider";
 import {ToastContainer} from "react-toastify";
-import create_snackbar from 'components/snackbar/Snackbar'
+import create_snackbar from 'components/snackbar/Snackbar';
 
 const history = createBrowserHistory();
 setupInterceptors(history);
 
 const App = () => {
+
+    enum snackTypes{'error', 'info', 'warn', 'success'}
 
     return (
         <>
@@ -34,7 +36,11 @@ const App = () => {
 
             {/* example of snackbar usage*/}
             <div>
-                <button onClick={() => create_snackbar("hello from snackbar")}>try snackbar</button>
+
+                <button onClick={() => create_snackbar("hello from snackbar", snackTypes.info)}>try info snackbar</button>
+                <button onClick={() => create_snackbar("hello from snackbar", snackTypes.warn)}>try warn snackbar</button>
+                <button onClick={() => create_snackbar("hello from snackbar", snackTypes.error)}>try error snackbar</button>
+                <button onClick={() => create_snackbar("hello from snackbar", snackTypes.success)}>try success snackbar</button>
                 <ToastContainer />
             </div>
         </>
