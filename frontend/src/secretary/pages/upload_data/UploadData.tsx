@@ -83,9 +83,22 @@ export const UploadData = () => {
 			</Row>
 		</section>
 
-		{/* TODO: remove after functionality is ready */}
-		<div className={`mt-5`}>
-			<IncorrectRows />
-		</div>
+		{/* TODO: remove after backend functionality is ready */}
+		<section className={`mt-5`}>
+			{/* TODO: adjust count of mistakes from the backend response */}
+			<header>
+				<h2>Nájdené <span className={`text-danger`}>3 chyby</span> v nahratom súbore:</h2>
+			</header>
+			<div className={`mt-3`}>
+				<IncorrectRows
+					tableColumnNames={ ["číslo riadka", "nesprávna hodnota", "návrh"] }
+					tableRowValues={ [
+							[1, "tst1", "test1"],
+							[8, "tst2", "test2"],
+							[32, "tst3", "test3"]
+	          ]
+	        } />
+			</div>
+		</section>
 	</>)
 }

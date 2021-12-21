@@ -2,21 +2,22 @@ import {Table as BootstrapTable} from "react-bootstrap";
 import {SortUp, SortDown} from "react-bootstrap-icons";
 import React, {useEffect, useState} from "react";
 
-export type TableColumnNamesType = string[];
-
+export type TableColumnNameType = {
+  name: string,
+  sortable?: boolean
+};
+export type TableCellValueOnly = string | number;
 export type TableCellComponent = {
   element?: React.ReactNode
-  value: string
+  value: TableCellValueOnly
 }
-
-export type TableCell = string | TableCellComponent
-
+export type TableCell = TableCellValueOnly | TableCellComponent;
 export type TableRowsType = TableCell[][];
 
 type SortFunction = (i: number, reverse: boolean) => void;
 
 interface TableProps {
-  columnNames: TableColumnNamesType,
+  columnNames: TableColumnNameType[],
   rows: TableRowsType
 }
 
@@ -53,7 +54,7 @@ export const Table = ({columnNames, rows}: TableProps) => {
 }
 
 interface TableHeadProps {
-  columnNames: TableColumnNamesType,
+  columnNames: TableColumnNameType[],
   sort: SortFunction
 }
 
@@ -94,8 +95,8 @@ const TableHead = ({columnNames, sort}: TableHeadProps) => {
               switchIcon(i);
             }}
           >
-            {column}
-            {iconsSwitch[i] ? SortDownIcon : SortUpIcon}
+            { column.name }
+            { column.sortable && (iconsSwitch[i] ? SortDownIcon : SortUpIcon) }
           </div>
         </th>
       )}
@@ -115,7 +116,7 @@ const TableBody = ({rows}: TableBodyProps) => {
       <tr key={`row-${i}`}>
         { row.map((cellValue, j) =>
           <td key={`cell-${i}-${j}`}>
-            { (typeof cellValue === "object" && cellValue?.element) || cellValue }
+            { typeof cellValue === "object" ? (cellValue.element || cellValue.value) : cellValue }
           </td>
         )}
       </tr>

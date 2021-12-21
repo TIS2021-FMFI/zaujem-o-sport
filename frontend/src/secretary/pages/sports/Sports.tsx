@@ -2,17 +2,21 @@ import {useState} from "react";
 import {useQuery} from "react-query";
 import {apiListSports} from "../../adapters";
 import {Spinner} from "react-bootstrap";
-import {TableColumnNamesType, Table, TableRowsType} from "../../../components/table/Table";
+import {TableColumnNameType, Table, TableRowsType} from "../../../components/table/Table";
 
 export const Sports = () => {
 
-	const [columnNames, setColumnsNames] = useState<TableColumnNamesType>([]);
+	const [columnNames, setColumnsNames] = useState<TableColumnNameType[]>([]);
 	const [sportRows, setSportRows] = useState<TableRowsType>([]);
 
 	const {isLoading} = useQuery("list_sports", apiListSports, {
 		onSuccess: (response) => {
 			const serverData = response.data.data;
-			setColumnsNames(serverData.columnNames);
+			setColumnsNames(
+				serverData.columnNames.map( (colName) => {
+					return { name: colName, sortable: true }
+				})
+			);
 			setSportRows(serverData.sports);
 		},
 		onError: (error) => {
