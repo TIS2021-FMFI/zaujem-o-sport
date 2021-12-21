@@ -12,6 +12,7 @@ import {Sidebar, SidebarLinksProp} from "./components/sidebar/Sidebar";
 import {FileEarmarkPlus, HouseDoor, List, Upload} from "react-bootstrap-icons";
 import globalStyles from "styles/global.module.scss";
 import {Container} from "react-bootstrap";
+import {UploadData} from "./secretary/pages/upload_data/UploadData";
 
 const history = createBrowserHistory();
 setupInterceptors(history);
@@ -44,7 +45,7 @@ const SecretaryRoutes = () => {
       icon: HouseDoor
     },
     {
-      route: `${url}/upload`,
+      route: `${url}/data/upload`,
       name: "Nahrať dáta",
       icon: Upload
     },
@@ -76,6 +77,7 @@ const SecretaryRoutes = () => {
         <div style={{marginLeft: globalStyles.sidebarWidth}}>
           <Switch>
             <SecretaryAuthRoute exact path={path} component={Home} />
+            <SecretaryAuthRoute exact path={`${path}/data/upload`} component={UploadData} />
             <SecretaryAuthRoute exact path={`${path}/sports/list`} component={Sports} />
             <Route exact path={`${path}/logout`} component={Logout} />
             <SecretaryAuthRoute path="*" component={NotFound} />

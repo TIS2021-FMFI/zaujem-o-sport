@@ -1,6 +1,6 @@
 import {Table as BootstrapTable} from "react-bootstrap";
 import {SortUp, SortDown} from "react-bootstrap-icons";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 type columnNamesType = string[];
 type rowsType = string[][];
