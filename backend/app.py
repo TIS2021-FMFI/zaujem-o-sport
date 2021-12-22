@@ -3,6 +3,7 @@ import settings
 from settings import app, jwt
 import secretary.endpoints.login
 import secretary.endpoints.show_sports
+import secretary.endpoints.show_countries
 
 @app.errorhandler(400)
 def bad_request(e):
@@ -49,6 +50,12 @@ app.add_url_rule(
 app.add_url_rule(
 	"/api/secretary/sports",
 	view_func=secretary.endpoints.show_sports.ShowSportsView.as_view("list_sports"),
+	methods=["GET"]
+)
+
+app.add_url_rule(
+	"/api/secretary/countries",
+	view_func=secretary.endpoints.show_countries.ShowCountriesView.as_view("list_countries"),
 	methods=["GET"]
 )
 
