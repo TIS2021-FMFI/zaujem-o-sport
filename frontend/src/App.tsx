@@ -12,11 +12,25 @@ import {Sidebar, SidebarLinksProp} from "./components/sidebar/Sidebar";
 import {FileEarmarkPlus, HouseDoor, List, Upload} from "react-bootstrap-icons";
 import globalStyles from "styles/global.module.scss";
 import {Container} from "react-bootstrap";
+import {ToastContainer} from "react-toastify";
+import create_snackbar from 'components/snackbar/Snackbar';
 
 const history = createBrowserHistory();
 setupInterceptors(history);
 
 const App = () => {
+  
+  {/* example of snackbar usage
+  enum snackTypes{'error', 'info', 'warn', 'success'}  // this will be exported
+  <div>
+    <button onClick={() => create_snackbar("hello from snackbar", snackTypes.info)}>try info snackbar</button>
+    <button onClick={() => create_snackbar("hello from snackbar", snackTypes.warn)}>try warn snackbar</button>
+    <button onClick={() => create_snackbar("hello from snackbar", snackTypes.error)}>try error snackbar</button>
+    <button onClick={() => create_snackbar("hello from snackbar", snackTypes.success)}>try success snackbar</button>
+    <ToastContainer />
+  </div>
+  */}
+  
   return (
     <Router>
       <Switch>
@@ -105,18 +119,18 @@ const SecretaryAuthRoute = ({component: Component, ...routeProps}: any) => {
 }
 
 const AdminAuthRoute = ({component: Component, ...routeProps}: any) => {
-  const isAdminLoggedIn = localStorage.getItem("adminAccessToken") !== null;
+    const isAdminLoggedIn = localStorage.getItem("adminAccessToken") !== null;
 
-  return (
-    <Route
-      {...routeProps}
-      render={(props) => {
-        if (typeof routeProps.path !== "object" && routeProps.path === "/admin/login")
-          return !isAdminLoggedIn ? <Component {...props}/> : <Redirect to="/admin"/>;
-        return isAdminLoggedIn ? <Component {...props}/> : <Redirect to="/admin/login"/>;
-      }}
-    />
-  );
+    return (
+        <Route
+            {...routeProps}
+            render={(props) => {
+                if (typeof routeProps.path !== "object" && routeProps.path === "/admin/login")
+                    return !isAdminLoggedIn ? <Component {...props}/> : <Redirect to="/admin"/>;
+                return isAdminLoggedIn ? <Component {...props}/> : <Redirect to="/admin/login"/>;
+            }}
+        />
+    );
 }
 
 export default App;
