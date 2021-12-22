@@ -31,3 +31,49 @@ class Database:
 			print(error)
 		finally:
 			return result
+
+
+	def getAllCountries(self) -> dict:
+
+		sql = "select id, code, name from country where is_active = true"
+		result = {}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						result[tmp[0]] = tmp[1:]
+						tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			print(result)
+			return result
+
+
+	def getAllSports(self) -> dict:
+
+		sql = "select code, title from sport"
+		result = {"sports":[]}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						result["sports"].append({"title":tmp[1], "code":tmp[0]})
+						tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			print(result)
+			return result
+
+

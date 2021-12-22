@@ -40,3 +40,5 @@ dbPool = psycopg2.pool.ThreadedConnectionPool(
 	password=env.get("DB_PASS")
 )
 DB = Database(dbPool)
+
+# DB.getAllSports()
