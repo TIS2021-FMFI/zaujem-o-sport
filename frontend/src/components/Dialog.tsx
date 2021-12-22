@@ -2,14 +2,25 @@ import React,{useState } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
-function Dialog() {
+
+export interface DialogLinksProp {
+    handle: Function
+}
+
+
+
+function Dialog({handle}:DialogLinksProp) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+
     return (
         <>
-            <Button variant="primary" onClick = {handleShow}>
+            <Button variant="primary" onClick = { () => { handleShow() ;
+                handle();
+
+            }}>
         Potvrď zmeny
     </Button>
 

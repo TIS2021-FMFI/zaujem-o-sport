@@ -10,6 +10,7 @@ import {Sports} from "./secretary/pages/sports/Sports";
 import {setupInterceptors} from "./app/axios_provider";
 import Footer from "./components/Footer";
 import Success from "./components/Success";
+import MyDropzone from "./components/Upload";
 const history = createBrowserHistory();
 setupInterceptors(history);
 
@@ -26,6 +27,7 @@ const App = () => {
 
       </Switch>
         <Success />
+        <MyDropzone />
         <Footer />
 
     </Router>
