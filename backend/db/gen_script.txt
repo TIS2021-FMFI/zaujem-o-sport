@@ -5423,7 +5423,7 @@ INSERT INTO funding ( country_id, branch_id, relative_funding, absolute_funding,
 (199, 968, 0.007288916202474659, 10200000.0, 'RSD (Srbský dinár)'),
 (46, 969, 0.04323521670604337, 1396277000.0, '¥ (Čínsky juan)'),
 (84, 970, 0.035886692371535134, 3118889.0, '€ (Euro)') ;
-INSERT INTO users ( login, password, type ) 
+INSERT INTO users ( email, password, type )
  VALUES 
  ( 'Admin22@gmail.com', 'c7656114487fd2aa9b04a8e84a0990290b7cfe5102fc68d7ab385e3893dce0736db4ade885158aa04b8da66931af132f38b7eba714941367452cd8c6f8c9d94333813aa694970907ee5b13d8a149e3e280057154b1bca10c08cac1becdd415691afa3eca8a7851985a148bb9268f0f4a3d54a0ef50d493479faa239ec1ac916c2fc2bac252515779ffca59f2a6cebef8bd2328deaaedb052ee2d854b901ac909', 'admin' ),  
  ( 'secretary@uniba.sk', 'c7656114487fd2aa9b04a8e84a0990290b7cfe5102fc68d7ab385e3893dce0736db4ade885158aa04b8da66931af132f38b7eba714941367452cd8c6f8c9d94333813aa694970907ee5b13d8a149e3e280057154b1bca10c08cac1becdd415691afa3eca8a7851985a148bb9268f0f4a3d54a0ef50d493479faa239ec1ac916c2fc2bac252515779ffca59f2a6cebef8bd2328deaaedb052ee2d854b901ac909', 'secretary' ),
