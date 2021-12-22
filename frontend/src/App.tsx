@@ -1,9 +1,13 @@
 import React from "react";
 import {BrowserRouter as Router, Redirect, Route, Switch, useRouteMatch} from "react-router-dom";
 import { createBrowserHistory } from 'history';
-import {CounterWrapper} from "pages/counter/CounterWrapper";
 import {NotFound} from "pages/not_found/NotFound";
 import {Login} from "secretary/pages/login/Login";
+import {Nav} from "user/components/Nav"
+import {Export} from "user/pages/export/Export";
+import {Funding} from "user/pages/funding/Funding";
+import {Success} from "user/pages/success/Success";
+import {Interconnectedness} from "user/pages/interconnectedness/Interconnectness";
 import {Logout} from "./secretary/pages/login/Logout";
 import {Home} from "secretary/pages/home/Home";
 import {Sports} from "./secretary/pages/sports/Sports";
@@ -32,15 +36,27 @@ const App = () => {
   */}
   
   return (
+  <>
     <Router>
       <Switch>
         <SecretaryAuthRoute exact path="/auth/secretary/login" component={Login} />
         <Route path="/secretary" component={SecretaryRoutes} />
-        <Route exact path="/" component={CounterWrapper} />
-        <Route path="*" component={NotFound} />
+        <Route path="/" component={UserRouters} />
       </Switch>
     </Router>
+    </>
   );
+}
+
+const UserRouters = () => {
+  return (<>
+    <Nav />
+    <Route exact path="/export" component={Export} />
+    <Route exact path="/funding" component={Funding} />
+    <Route exact path="/success" component={Success} />
+    <Route exact path="/interconnectedness" component={Interconnectedness} />
+    <Route exact path="*" component={NotFound} />
+  </>)
 }
 
 const SecretaryRoutes = () => {
