@@ -19,15 +19,11 @@ export const apiSecretaryLogin = (email: string, password: string)
 	});
 }
 
-export type sportType = {
-	title: string,
-	code: string
-}
-
 export interface ApiListSportsType {
 	message: string,
 	data: {
-		sports: sportType[]
+		columnNames: string[],
+		sports: string[][]
 	}
 }
 
