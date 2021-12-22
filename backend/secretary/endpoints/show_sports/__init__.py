@@ -7,9 +7,14 @@ class ShowSportsView(SwaggerView):
 	def get(self):
 		# mock data
 		return {"message": "ok", "data": {
+			"columnNames": ["názov", "kód športu"],
 			"sports": [
-				{"title": "Football", "code": "1"},
-				{"title": "Basketball", "code": "2"},
-				{"title": "Baseball", "code": "3"}
+				["Football", 1],
+				["Basketball", 2],
+				["Baseball", 3],
+				["Soccer", 4],
+				["Golf", 5],
+				["Running", 6],
+				["Volleyball", 7]
 			]
 		}}
