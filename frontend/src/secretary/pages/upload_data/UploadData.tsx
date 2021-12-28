@@ -91,7 +91,6 @@ export const UploadData = () => {
 			</header>
 			<div className={`mt-3`}>
 				<IncorrectRows
-					tableColumnNames={ ["číslo riadka", "nesprávna hodnota", "návrh"] }
 					tableRowValues={ [
 							[1, "tst1", "test1"],
 							[8, "tst2", "test2"],
