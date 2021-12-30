@@ -42,3 +42,5 @@ dbPool = psycopg2.pool.ThreadedConnectionPool(
 DB = Database(dbPool)
 
 #print(DB.getBranchesWithSports())
+#print(DB.getSuccessByCountry("SVK"))
+print(DB.getInterconnectnessData(1, "SVK"))
