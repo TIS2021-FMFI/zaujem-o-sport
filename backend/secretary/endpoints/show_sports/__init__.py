@@ -7,7 +7,7 @@ class ShowSportsView(SwaggerView):
 	@is_secretary
 	def get(self):
 
-		res = { "message":"ok", "data": DB.getAllSports()}
+		res = { "message":"ok", "data": DB.getBranchesWithSports()}
 		return res
 
 		# mock data
