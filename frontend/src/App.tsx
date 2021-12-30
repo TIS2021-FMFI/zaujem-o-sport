@@ -10,6 +10,7 @@ import {Sports} from "./secretary/pages/sports/Sports";
 import {setupInterceptors} from "./app/axios_provider";
 import {ToastContainer} from "react-toastify";
 import create_snackbar from 'components/snackbar/Snackbar';
+import {Countries} from "./secretary/pages/countries/Countries";
 
 const history = createBrowserHistory();
 setupInterceptors(history);
@@ -26,6 +27,7 @@ const App = () => {
                     <SecretaryAuthRoute exact path="/secretary" component={Home}/>
                     <SecretaryAuthRoute exact path="/secretary/login" component={Login}/>
                     <SecretaryAuthRoute exact path="/secretary/sports" component={Sports}/>
+                    <SecretaryAuthRoute exact path="/secretary/countries" component={Countries}/>
                     <Route exact path="/secretary/logout" component={Logout}/>
 
                     <Route exact path="/" component={CounterWrapper}/>

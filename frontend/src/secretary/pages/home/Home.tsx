@@ -8,6 +8,10 @@ export const Home = () => {
 			  Zobraz športy
 		  </Link>
 		  <br/>
+		  <Link to="/secretary/countries">
+			  Zobraz krajiny
+		  </Link>
+		  <br/>
 		  <Link to="/secretary/logout">
 			  Logout
 		  </Link>
