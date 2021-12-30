@@ -35,7 +35,7 @@ class Database:
 
 	def getAllCountries(self) -> dict:
 
-		sql = "select code, name from country " # where is_active = true"
+		sql = "select code, name from country" # where is_active = true"
 		result = {"countries":[]}
 		try:
 			with self._getConnection() as dbConn:
@@ -66,6 +66,35 @@ class Database:
 					tmp = cursor.fetchone()
 					while tmp:
 						result["sports"].append({"title":tmp[1], "code":tmp[0]})
+						tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+			return result
+
+
+
+	def addSport(self, data : dict) -> str:
+		...
+
+	def addBranch(self, data : dict) -> str:
+		...
+
+	def getInactiveCountries(self) -> dict:
+
+		sql = "select code, name from country where is_active = false"
+		result = {"countries": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						result["countries"].append({"name": tmp[1], "code": tmp[0]})
 						tmp = cursor.fetchone()
 			self._releaseConnection(dbConn)
 		except psycopg2.DatabaseError as error:
