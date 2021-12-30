@@ -5,8 +5,11 @@ import {
 	TableColumnNameType
 } from "components/table/Table";
 import {useEffect, useState} from "react";
-import {Check, CheckLg, XLg} from "react-bootstrap-icons";
-import {Button, Form} from "react-bootstrap";
+import {CheckLg, XLg} from "react-bootstrap-icons";
+import {Form} from "react-bootstrap";
+import {useAppDispatch, useAppSelector} from "../../../app/hooks";
+import {RootState} from "../../../app/store";
+import { updateRow } from "./incorrectRowsSlice";
 
 // TODO: props: number of row in files, suggestion, ...
 // TODO: Table prop for not ordering and adding onClick functionality for cell (component instead of string)
@@ -15,14 +18,11 @@ interface IncorrectRowsProps {
 	tableRowValues: TableCellValueOnly[][]
 }
 
-interface ApprovedRowsType {
-	rowIndex: number,
-	approved: boolean
-}
-
 type UpdateRowStatusFunction = (rowIndex: number, approve: boolean) => void
 
 export const IncorrectRows = ({tableRowValues}: IncorrectRowsProps) => {
+
+	const dispatch = useAppDispatch();
 
 	// TODO: Adjust with real incorrect rows probably from props.
 
@@ -35,18 +35,14 @@ export const IncorrectRows = ({tableRowValues}: IncorrectRowsProps) => {
 
 	const [rows, setRows] = useState<TableCellComponent[][]>([]);
 
-	const [approvedRows, setApprovedRows] = useState<ApprovedRowsType[]>([]);
+	const approvedRows = useAppSelector((state: RootState) => state.secretaryUploadIncorrectRows.rows);
+
+	useEffect(() => {
+		console.log(approvedRows);
+	}, [approvedRows])
 
 	const updateRowStatus: UpdateRowStatusFunction = (rowIndex, approve) => {
-		console.log(approvedRows);  // TODO: can not access current version of approvedRows, better to use Redux
-		console.log(rows);
-		const _approvedRows = [...approvedRows];
-		const row = _approvedRows.find( (r) => r.rowIndex === rowIndex );
-		if (row === undefined)
-			_approvedRows.push({rowIndex: rowIndex, approved: approve});
-		else
-			row.approved = approve
-		setApprovedRows([{rowIndex: rowIndex, approved: approve}]);
+		dispatch(updateRow({rowIndex: rowIndex, approved: approve}));
 	}
 
 	useEffect(() => {
@@ -63,7 +59,7 @@ export const IncorrectRows = ({tableRowValues}: IncorrectRowsProps) => {
 	}, [tableRowValues]);
 
 	return (
-		<div onClick={() => console.log(approvedRows)}>
+		<div>
 	    <Table
 			  columnNames={columnNames}
 		    rows={rows}
