@@ -14,6 +14,7 @@ export const Sports = () => {
 		},
 		onError: (error) => {
 
+
 		}
 	})
 
@@ -25,7 +26,7 @@ export const Sports = () => {
 					  <span className="visually-hidden">Loading...</span>
 				  </Spinner>
 			  : sports?.map((sport, i) => { return (
-					  <p key={`sport-${i}`}>Názov: {sport.title}, Kód: {sport.code}</p>
+					  <p key={`sport-${i}`}>Názov športu: {sport.sport_title}, Kód športu: {sport.sport_code}, Názov odvetvia: {sport.branch_title}, Kód odvetvia: {sport.branch_code}</p>
 				  )})
 		  }
 	  </>

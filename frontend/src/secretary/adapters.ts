@@ -20,8 +20,10 @@ export const apiSecretaryLogin = (email: string, password: string)
 }
 
 export type sportType = {
-	title: string,
-	code: string
+    sport_code: string,
+	sport_title: string,
+	branch_code: string,
+	branch_title: string
 }
 
 export interface ApiListSportsType {
