@@ -9,7 +9,7 @@ import {CheckLg, XLg} from "react-bootstrap-icons";
 import {Form} from "react-bootstrap";
 import {useAppDispatch, useAppSelector} from "../../../app/hooks";
 import {RootState} from "../../../app/store";
-import { updateRow } from "./incorrectRowsSlice";
+import {clearState, updateRow} from "./incorrectRowsSlice";
 
 // TODO: props: number of row in files, suggestion, ...
 // TODO: Table prop for not ordering and adding onClick functionality for cell (component instead of string)
@@ -37,13 +37,17 @@ export const IncorrectRows = ({tableRowValues}: IncorrectRowsProps) => {
 
 	const approvedRows = useAppSelector((state: RootState) => state.secretaryUploadIncorrectRows.rows);
 
-	useEffect(() => {
-		console.log(approvedRows);
-	}, [approvedRows])
-
 	const updateRowStatus: UpdateRowStatusFunction = (rowIndex, approve) => {
 		dispatch(updateRow({rowIndex: rowIndex, approved: approve}));
 	}
+
+	useEffect(() => {
+		dispatch(clearState());
+	}, []);
+
+	useEffect(() => {
+		console.log(approvedRows);
+	}, [approvedRows]);
 
 	useEffect(() => {
 		setRows(

@@ -24,9 +24,12 @@ export const incorrectRowsSlice = createSlice({
 				state.rows.push(payload);
 			else
 				row.approved = payload.approved;
+		},
+		clearState: (state) => {
+			state.rows = [];
 		}
 	}
 });
 
-export const { updateRow } = incorrectRowsSlice.actions;
+export const { updateRow, clearState } = incorrectRowsSlice.actions;
 export default incorrectRowsSlice.reducer;
