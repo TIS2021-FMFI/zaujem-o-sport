@@ -131,5 +131,27 @@ class Database:
 			return result
 
 
+	def importFundingData(self):
+		...
+
+	def importSuccessdata(self):
+		...
+
+	def importInterconnectnessData(self):
+		...
+
+	def getFundingData(self):
+		...
+
+	def getSuccessdata(self):
+		...
+
+	def getInterconnectnessData(self):
+		...
+
+
+
+
+
 
 
