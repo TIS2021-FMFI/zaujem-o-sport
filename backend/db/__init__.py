@@ -4,6 +4,11 @@ import psycopg2.extras
 import psycopg2.extensions
 from typing import Union
 
+
+class DataError(Exception):
+	pass
+
+
 class Database:
 	def __init__(self, dbPool: psycopg2.pool.ThreadedConnectionPool):
 		self.dbPool = dbPool
@@ -76,17 +81,6 @@ class Database:
 			# print(result)
 			return result
 
-
-
-	def addSport(self, data : dict) -> str:
-		...
-
-	def addBranch(self, data : dict) -> str:
-		...
-
-	def updateSport(self, data: dict) -> str:
-		...
-
 	def getInactiveCountries(self) -> dict:
 
 		sql = "select code, name from country where is_active = false"
@@ -130,15 +124,6 @@ class Database:
 			#print(result)
 			return result
 
-
-	def importFundingData(self):
-		...
-
-	def importSuccessdata(self):
-		...
-
-	def importInterconnectnessData(self):
-		...
 
 	def getFundingData(self, country_code: str) -> dict:
 		sql = f"select b.title, f.absolute_funding, f.currency from funding f cross join country c join branch b on c.code = '{country_code}' and f.country_id = c.id and b.id = f.branch_id"
@@ -226,9 +211,37 @@ class Database:
 			# print(result)
 			return result
 
+	def addSport(self, data : dict) -> str:
+		if "code" not in data:
+			raise DataError("sport data do not contain code")
+		if "title" not in data:
+			raise DataError("sport data do not contain title")
+
+		sql = f"insert into sport(code, title) values ({data['code']}, '{data['title']}');"
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
 
 
+	def addBranch(self, data : dict) -> str:
+		...
 
+	def updateSport(self, data: dict) -> str:
+		...
 
+	def importFundingData(self):
+		...
+
+	def importSuccessdata(self):
+		...
+
+	def importInterconnectnessData(self):
+		...
 
 
