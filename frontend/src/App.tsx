@@ -1,9 +1,13 @@
 import React from "react";
 import {BrowserRouter as Router, Redirect, Route, Switch, useRouteMatch} from "react-router-dom";
 import { createBrowserHistory } from 'history';
-import {CounterWrapper} from "pages/counter/CounterWrapper";
 import {NotFound} from "pages/not_found/NotFound";
 import {Login} from "secretary/pages/login/Login";
+import {Nav} from "user/components/Nav"
+import {Export} from "user/pages/export/Export";
+import {Funding} from "user/pages/funding/Funding";
+import {Success} from "user/pages/success/Success";
+import {Interconnectedness} from "user/pages/interconnectedness/Interconnectness";
 import {Logout} from "./secretary/pages/login/Logout";
 import {Home} from "secretary/pages/home/Home";
 import {Sports} from "./secretary/pages/sports/Sports";
@@ -16,21 +20,47 @@ import {UploadData} from "./secretary/pages/upload_data/UploadData";
 import {AddSport} from "./secretary/pages/sports/add_sport/AddSport";
 import {AddBranch} from "./secretary/pages/branches/add_branch/AddBranch";
 import {Countries} from "./secretary/pages/countries/Countries";
+import {ToastContainer} from "react-toastify";
+import create_snackbar from 'components/snackbar/Snackbar';
 
 const history = createBrowserHistory();
 setupInterceptors(history);
 
 const App = () => {
+  
+  {/* example of snackbar usage
+  enum snackTypes{'error', 'info', 'warn', 'success'}  // this will be exported
+  <div>
+    <button onClick={() => create_snackbar("hello from snackbar", snackTypes.info)}>try info snackbar</button>
+    <button onClick={() => create_snackbar("hello from snackbar", snackTypes.warn)}>try warn snackbar</button>
+    <button onClick={() => create_snackbar("hello from snackbar", snackTypes.error)}>try error snackbar</button>
+    <button onClick={() => create_snackbar("hello from snackbar", snackTypes.success)}>try success snackbar</button>
+    <ToastContainer />
+  </div>
+  */}
+  
   return (
+  <>
     <Router>
       <Switch>
         <SecretaryAuthRoute exact path="/auth/secretary/login" component={Login} />
         <Route path="/secretary" component={SecretaryRoutes} />
-        <Route exact path="/" component={CounterWrapper} />
-        <Route path="*" component={NotFound} />
+        <Route path="/" component={UserRouters} />
       </Switch>
     </Router>
+    </>
   );
+}
+
+const UserRouters = () => {
+  return (<>
+    <Nav />
+    <Route exact path="/export" component={Export} />
+    <Route exact path="/funding" component={Funding} />
+    <Route exact path="/success" component={Success} />
+    <Route exact path="/interconnectedness" component={Interconnectedness} />
+    <Route exact path="*" component={NotFound} />
+  </>)
 }
 
 const SecretaryRoutes = () => {
@@ -118,18 +148,18 @@ const SecretaryAuthRoute = ({component: Component, ...routeProps}: any) => {
 }
 
 const AdminAuthRoute = ({component: Component, ...routeProps}: any) => {
-  const isAdminLoggedIn = localStorage.getItem("adminAccessToken") !== null;
+    const isAdminLoggedIn = localStorage.getItem("adminAccessToken") !== null;
 
-  return (
-    <Route
-      {...routeProps}
-      render={(props) => {
-        if (typeof routeProps.path !== "object" && routeProps.path === "/admin/login")
-          return !isAdminLoggedIn ? <Component {...props}/> : <Redirect to="/admin"/>;
-        return isAdminLoggedIn ? <Component {...props}/> : <Redirect to="/admin/login"/>;
-      }}
-    />
-  );
+    return (
+        <Route
+            {...routeProps}
+            render={(props) => {
+                if (typeof routeProps.path !== "object" && routeProps.path === "/admin/login")
+                    return !isAdminLoggedIn ? <Component {...props}/> : <Redirect to="/admin"/>;
+                return isAdminLoggedIn ? <Component {...props}/> : <Redirect to="/admin/login"/>;
+            }}
+        />
+    );
 }
 
 export default App;
