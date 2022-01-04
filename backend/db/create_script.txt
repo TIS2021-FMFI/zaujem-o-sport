@@ -107,7 +107,7 @@ DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users
   (
      id                SERIAL PRIMARY KEY,
-     login             VARCHAR UNIQUE,
+     emial             VARCHAR UNIQUE,
      password          VARCHAR(320),
      type              VARCHAR CHECK (type = 'admin' or type = 'secretary')
   );
