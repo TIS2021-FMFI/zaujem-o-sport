@@ -99,6 +99,7 @@ export const AddBranch = () => {
 						</Form.Group>
 
 						<Form.Group className="mb-3" controlId="formBasicCheckbox">
+							{/* TODO: Adjust with backend - expand next options. */}
 							<Form.Check type="checkbox" label="Kombinované" />
 						</Form.Group>
 

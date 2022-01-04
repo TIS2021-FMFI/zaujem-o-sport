@@ -1,8 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export enum IncorrectRowStates {
+	NONE,
+	APPROVED,
+	DISAPPROVED
+}
+
 export interface IncorrectRowType {
 	rowIndex: number,
-	approved: boolean
+	approved: IncorrectRowStates
 }
 
 export interface IncorrectRowsState {

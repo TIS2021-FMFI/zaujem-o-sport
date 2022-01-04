@@ -1,15 +1,10 @@
-import {
-	Table,
-	TableCellComponent,
-	TableCellValueOnly,
-	TableColumnNameType
-} from "components/table/Table";
+import {Table, TableCellComponent, TableCellValueOnly, TableColumnNameType} from "components/table/Table";
 import {useEffect, useState} from "react";
 import {CheckLg, XLg} from "react-bootstrap-icons";
 import {Form} from "react-bootstrap";
 import {useAppDispatch, useAppSelector} from "../../../app/hooks";
 import {RootState} from "../../../app/store";
-import {clearState, updateRow} from "./incorrectRowsSlice";
+import {clearState, IncorrectRowStates, IncorrectRowType, updateRow} from "./incorrectRowsSlice";
 
 // TODO: props: number of row in files, suggestion, ...
 // TODO: Table prop for not ordering and adding onClick functionality for cell (component instead of string)
@@ -18,7 +13,7 @@ interface IncorrectRowsProps {
 	tableRowValues: TableCellValueOnly[][]
 }
 
-type UpdateRowStatusFunction = (rowIndex: number, approve: boolean) => void
+type UpdateRowStatusFunction = (rowIndex: number, approve: IncorrectRowStates) => void
 
 export const IncorrectRows = ({tableRowValues}: IncorrectRowsProps) => {
 
@@ -30,12 +25,13 @@ export const IncorrectRows = ({tableRowValues}: IncorrectRowsProps) => {
 		{name: "číslo riadka", sortable: false},
 		{name: "nesprávna hodnota", sortable: false},
 		{name: "návrh", sortable: false},
-		{name: "schváliť všetky", sortable: false}
+		{name: "schváliť/zamietnuť", sortable: false}  // 'schváliť všetky' stopped making sense
 	];
 
 	const [rows, setRows] = useState<TableCellComponent[][]>([]);
 
-	const approvedRows = useAppSelector((state: RootState) => state.secretaryUploadIncorrectRows.rows);
+	// TODO: Access after the backend functionality is there.
+	// useAppSelector((state: RootState) => state.secretaryUploadIncorrectRows.rows);
 
 	const updateRowStatus: UpdateRowStatusFunction = (rowIndex, approve) => {
 		dispatch(updateRow({rowIndex: rowIndex, approved: approve}));
@@ -44,10 +40,6 @@ export const IncorrectRows = ({tableRowValues}: IncorrectRowsProps) => {
 	useEffect(() => {
 		dispatch(clearState());
 	}, []);
-
-	useEffect(() => {
-		console.log(approvedRows);
-	}, [approvedRows]);
 
 	useEffect(() => {
 		setRows(
@@ -88,8 +80,49 @@ interface RowOptionsCellProps {
 }
 
 const RowOptionsCell = ({rowIndex, updateRowStatus}: RowOptionsCellProps) => {
-	return (<>
-		<CheckLg onClick={() => updateRowStatus(rowIndex, true)} />
-		<XLg onClick={() => updateRowStatus(rowIndex, false)} />
-	</>)
+
+	const rows: IncorrectRowType[] = useAppSelector((state: RootState) => state.secretaryUploadIncorrectRows.rows);
+
+	const [rowState, setRowState] = useState<IncorrectRowStates>(IncorrectRowStates.NONE);
+
+	useEffect(() => {
+		if (rowIndex < rows.length)
+			setRowState(rows[rowIndex].approved);
+	}, [rows]);
+
+	return (<div className={`d-flex align-items-center justify-content-between`}>
+		{rowState === IncorrectRowStates.NONE
+			? <div>
+					<button type="button" className={`btn`} onClick={() => {
+						updateRowStatus(rowIndex, IncorrectRowStates.APPROVED);
+					}}>
+						<CheckLg color="green" size="1.4em" />
+					</button>
+					<button type="button" className={`btn`} onClick={() => {
+						updateRowStatus(rowIndex, IncorrectRowStates.DISAPPROVED);
+					}}>
+						<XLg color="red" size="1.2em" />
+					</button>
+				</div>
+			: <>
+					<div>
+						{rowState === IncorrectRowStates.APPROVED
+							? <span className={`text-success`}>
+									schválené <CheckLg color="green" size="1.4em" />
+								</span>
+							: <span className={`text-danger`}>
+									zamietnuté <XLg color="red" size="1.2em" />
+								</span>
+						}
+					</div>
+					<div>
+						<button type="button" className={`btn btn-link`} onClick={() => {
+							updateRowStatus(rowIndex, IncorrectRowStates.NONE);
+						}}>
+							obnoviť
+						</button>
+					</div>
+				</>
+		}
+	</div>)
 }

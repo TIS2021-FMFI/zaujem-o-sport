@@ -115,7 +115,7 @@ const TableBody = ({rows}: TableBodyProps) => {
     { rows.map((row, i) =>
       <tr key={`row-${i}`}>
         { row.map((cellValue, j) =>
-          <td key={`cell-${i}-${j}`}>
+          <td key={`cell-${i}-${j}`} className={`align-middle`}>
             { typeof cellValue === "object" ? (cellValue.element || cellValue.value) : cellValue }
           </td>
         )}
