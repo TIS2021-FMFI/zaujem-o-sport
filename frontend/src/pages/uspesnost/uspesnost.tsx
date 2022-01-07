@@ -38,7 +38,6 @@ export const Uspesnost = () => {
              */
         },
         onError: (error) => {
-
         }
     });
 
