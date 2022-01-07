@@ -9,7 +9,7 @@ export const Prepojenie = () => {
             <h1>Prepojenie</h1>
         </header>
         <section>
-
+            hello
         </section>
     </>)
 }
