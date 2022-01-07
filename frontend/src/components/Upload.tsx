@@ -29,16 +29,7 @@ function UploadData() {
             <h1>Nahranie dát</h1>
         </header>
         <section>
-            <Row>
-                <Col lg={5} md={6} sm={8} xs={12}>
-                    <Form.Label>Krajina</Form.Label>
-                    <Select
-                        id="country"
-                        options={countries}
-                        placeholder="Zvoľte krajinu"
-                    />
-                </Col>
-            </Row>
+
             <Row className={`mt-4`}>
                 <Col>
                     <Form.Label>Súbory</Form.Label>
