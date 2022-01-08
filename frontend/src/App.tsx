@@ -2,7 +2,6 @@ import React from "react";
 import {BrowserRouter as Router,  Redirect,  Route, Switch} from "react-router-dom";
 import { createBrowserHistory } from 'history';
 import "styles/site.scss"
-import Footer from "./components/Footer";
 import Navbar from "./components/Navbar"
 
 import {NotFound} from "pages/not_found/NotFound";
@@ -19,6 +18,9 @@ import { Export } from "pages/export/export";
 import { Rozpocty }   from "pages/rozpocty/rozpocty";
 import { Home } from "pages/home/home";
 import { Prepojenie } from "pages/prepojenie/prepojenie";
+import { Funding } from "user/Funding";
+
+
 
 const history = createBrowserHistory();
 setupInterceptors(history);
@@ -41,6 +43,7 @@ const UserRouters = () => {
             </Switch>
 
 
+
             <Footer />
 
         </Router>
@@ -61,9 +64,10 @@ const App = () => {
         <Route exact path="/secretary/logout" component={Logout}/>
 
       </Switch>
-        <Success />
-        <MyDropzone />
-        <Footer />
+        <Rozpocty />
+
+
+
 
     </Router>
 

@@ -3,7 +3,6 @@ import {useQuery} from "react-query";
 import {Button, Spinner} from "react-bootstrap";
 import {CSVLink, CSVDownload} from 'react-csv';
 
-
 export const Export = () => {
     const csvData = [
         ["Futbal", "4"],
