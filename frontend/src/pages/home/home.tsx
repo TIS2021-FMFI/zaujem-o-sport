@@ -21,5 +21,6 @@ export const Home = () => {
             <img src="https://cdn.pixabay.com/photo/2016/09/18/14/21/swimmer-1678307_960_720.jpg" alt="FotkaSportu" />
 
         </section>
+        <br></br><br></br><br></br><br></br>
     </>)
 }

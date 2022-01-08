@@ -11,7 +11,6 @@ function Navbar() {
         <div className="main-navbar">
         <Nav
             activeKey="/home"
-           // onSelect={(selectedKey) => alert(`selected ${selectedKey}`)}
         >
             <Nav.Item>
                 <Nav.Link href="/home"><HouseDoor size={25} /> Domov</Nav.Link>

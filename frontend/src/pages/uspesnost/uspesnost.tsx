@@ -16,6 +16,7 @@ const countries = [
     { value: "AGO", label: "Anguilla" },
     { value: "AIA", label: "Antarctica" }
 ]
+
 const handleSubmit = () => {
     ;
 }
@@ -32,10 +33,10 @@ export const Uspesnost = () => {
                     return { name: colName, sortable: true }
                 })
             );
-            /*
-            setSuccessRows(serverData.success);
 
-             */
+            //setSuccessRows(serverData.success);
+
+
         },
         onError: (error) => {
         }
