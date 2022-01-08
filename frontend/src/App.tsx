@@ -15,7 +15,7 @@ import MyDropzone from "./components/Upload";
 import { Uspesnost } from "pages/uspesnost/uspesnost";
 import { Rebricek } from "pages/rebricek/rebricek";
 import { Export } from "pages/export/export";
-import { Rozpocty } from "pages/rozpocty/rozpocty";
+import { Rozpocty }   from "pages/rozpocty/rozpocty";
 import { Home } from "pages/home/home";
 import { Prepojenie } from "pages/prepojenie/prepojenie";
 import { Funding } from "user/Funding";
@@ -44,8 +44,7 @@ const UserRouters = () => {
 
 
 
-
-
+            <Footer />
 
         </Router>
 

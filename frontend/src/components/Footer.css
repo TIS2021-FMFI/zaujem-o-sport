@@ -9,6 +9,11 @@
 
 .list-unstyled a{
     color: white !important;
+    text-decoration: None;
+}
+
+.list-unstyled a:hover{
+    background-color: #0092ff;
 }
 
 .page-container {
