@@ -89,7 +89,7 @@ const SecretaryRoutes = () => {
     },
     {
       route: `${url}/branches/add`,
-      name: "Pridať odvetie",
+      name: "Pridať odvetvie",
       icon: PlusLg
     },
     {
