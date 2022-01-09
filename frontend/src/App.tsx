@@ -13,9 +13,13 @@ import {Home} from "secretary/pages/home/Home";
 import {Sports} from "./secretary/pages/sports/Sports";
 import {setupInterceptors} from "app/axios_provider";
 import {Sidebar, SidebarLinksProp} from "./components/sidebar/Sidebar";
-import {FileEarmarkPlus, HouseDoor, List, Upload} from "react-bootstrap-icons";
+import {PlusLg, HouseDoor, List, Upload, ImageAlt} from "react-bootstrap-icons";
 import globalStyles from "styles/global.module.scss";
 import {Container} from "react-bootstrap";
+import {UploadData} from "./secretary/pages/upload_data/UploadData";
+import {AddSport} from "./secretary/pages/sports/add_sport/AddSport";
+import {AddBranch} from "./secretary/pages/branches/add_branch/AddBranch";
+import {Countries} from "./secretary/pages/countries/Countries";
 import {ToastContainer} from "react-toastify";
 import create_snackbar from 'components/snackbar/Snackbar';
 
@@ -74,25 +78,30 @@ const SecretaryRoutes = () => {
       icon: HouseDoor
     },
     {
-      route: `${url}/upload`,
+      route: `${url}/data/upload`,
       name: "Nahrať dáta",
       icon: Upload
     },
     {
-      route: `${url}/sport/add`,
+      route: `${url}/sports/add`,
       name: "Pridať šport",
-      icon: FileEarmarkPlus
+      icon: PlusLg
     },
     {
-      route: `${url}/branch/add`,
-      name: "Pridať odvetie",
-      icon: FileEarmarkPlus
+      route: `${url}/branches/add`,
+      name: "Pridať odvetvie",
+      icon: PlusLg
     },
     {
       route: `${url}/sports/list`,
       name: "Zobraz športy",
       icon: List
     },
+    {
+      route: `${url}/countries/list`,
+      name: "Zobraz krajiny",
+      icon: ImageAlt
+    }
   ]
 
   return (
@@ -106,7 +115,11 @@ const SecretaryRoutes = () => {
         <div style={{marginLeft: globalStyles.sidebarWidth}}>
           <Switch>
             <SecretaryAuthRoute exact path={path} component={Home} />
+            <SecretaryAuthRoute exact path={`${path}/data/upload`} component={UploadData} />
             <SecretaryAuthRoute exact path={`${path}/sports/list`} component={Sports} />
+            <SecretaryAuthRoute exact path={`${path}/sports/add`} component={AddSport} />
+            <SecretaryAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
+            <SecretaryAuthRoute exact path={`${path}/countries/list`} component={Countries} />
             <Route exact path={`${path}/logout`} component={Logout} />
             <SecretaryAuthRoute path="*" component={NotFound} />
           </Switch>

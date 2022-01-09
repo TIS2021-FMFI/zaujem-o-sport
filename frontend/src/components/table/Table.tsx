@@ -1,15 +1,24 @@
 import {Table as BootstrapTable} from "react-bootstrap";
 import {SortUp, SortDown} from "react-bootstrap-icons";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
-type columnNamesType = string[];
-type rowsType = string[][];
+export type TableColumnNameType = {
+  name: string,
+  sortable?: boolean
+};
+export type TableCellValueOnly = string | number;
+export type TableCellComponent = {
+  element?: React.ReactNode
+  value: TableCellValueOnly
+}
+export type TableCell = TableCellValueOnly | TableCellComponent;
+export type TableRowsType = TableCell[][];
 
 type SortFunction = (i: number, reverse: boolean) => void;
 
 interface TableProps {
-  columnNames: columnNamesType,
-  rows: rowsType
+  columnNames: TableColumnNameType[],
+  rows: TableRowsType
 }
 
 /**
@@ -20,12 +29,15 @@ interface TableProps {
  * */
 export const Table = ({columnNames, rows}: TableProps) => {
 
-  const [sortedRows, setSortedRows] = useState<string[][]>([]);
+  const [sortedRows, setSortedRows] = useState<TableRowsType>([]);
 
   /** Sort values by column `i`. */
   const sortColumn: SortFunction = (i, reverse) => {
     setSortedRows([...sortedRows.sort((row1, row2) => {
-      return (reverse ? 1 : -1) * (row1[i] > row2[i] ? 1 : row1[i] < row2[i] ? -1 : 0);
+      let row1Value = row1[i], row2Value = row2[i];
+      row1Value = typeof row1Value === "object" ? row1Value.value : row1Value;
+      row2Value = typeof row2Value === "object" ? row2Value.value : row2Value;
+      return (reverse ? 1 : -1) * (row1Value > row2Value ? 1 : row1Value < row2Value ? -1 : 0);
     })]);
   }
 
@@ -42,7 +54,7 @@ export const Table = ({columnNames, rows}: TableProps) => {
 }
 
 interface TableHeadProps {
-  columnNames: columnNamesType,
+  columnNames: TableColumnNameType[],
   sort: SortFunction
 }
 
@@ -78,13 +90,13 @@ const TableHead = ({columnNames, sort}: TableHeadProps) => {
         <th key={`column-name-${i}`}>
           <div
             className={`d-flex align-items-center`}
-            onClick={(e_) => {
+            onClick={() => {
               sort(i, iconsSwitch[i]);
               switchIcon(i);
             }}
           >
-            {column}
-            {iconsSwitch[i] ? SortDownIcon : SortUpIcon}
+            { column.name }
+            { column.sortable && (iconsSwitch[i] ? SortDownIcon : SortUpIcon) }
           </div>
         </th>
       )}
@@ -94,7 +106,7 @@ const TableHead = ({columnNames, sort}: TableHeadProps) => {
 }
 
 interface TableBodyProps {
-  rows: rowsType
+  rows: TableRowsType
 }
 
 const TableBody = ({rows}: TableBodyProps) => {
@@ -103,7 +115,9 @@ const TableBody = ({rows}: TableBodyProps) => {
     { rows.map((row, i) =>
       <tr key={`row-${i}`}>
         { row.map((cellValue, j) =>
-          <td key={`cell-${i}-${j}`}>{cellValue}</td>
+          <td key={`cell-${i}-${j}`} className={`align-middle`}>
+            { typeof cellValue === "object" ? (cellValue.element || cellValue.value) : cellValue }
+          </td>
         )}
       </tr>
     )}
