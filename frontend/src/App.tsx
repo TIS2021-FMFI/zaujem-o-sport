@@ -128,7 +128,9 @@ const SecretaryRoutes = () => {
             <SecretaryAuthRoute exact path={`${path}/sports/add`} component={AddSport} />
             <SecretaryAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
             <SecretaryAuthRoute exact path={`${path}/countries/list`} component={Countries} />
-            <Route exact path={`${path}/logout`} component={Logout} />
+            <Route exact path={`${path}/logout`}>
+              <Logout userType="secretary" />
+            </Route>
             <SecretaryAuthRoute path="*" component={NotFound} />
           </Switch>
         </div>
@@ -138,8 +140,73 @@ const SecretaryRoutes = () => {
 }
 
 const AdminRoutes = () => {
+  // The `path` lets us build <Route> paths that are
+  // relative to the parent route, while the `url` lets
+  // us build relative links.
+  let { path, url } = useRouteMatch();
+
+  console.log(path, url);
+
+  const adminHeader = "Admin panel";
+
+  const adminSidebarLinks: SidebarLinksProp[] = [
+    {
+      route: `${url}`,
+      name: "Domov",
+      icon: HouseDoor
+    },
+    {
+      route: `${url}/data/upload`,
+      name: "Nahrať dáta",
+      icon: Upload
+    },
+    {
+      route: `${url}/sports/add`,
+      name: "Pridať šport",
+      icon: PlusLg
+    },
+    {
+      route: `${url}/branches/add`,
+      name: "Pridať odvetvie",
+      icon: PlusLg
+    },
+    {
+      route: `${url}/sports/list`,
+      name: "Zobraz športy",
+      icon: List
+    },
+    {
+      route: `${url}/countries/list`,
+      name: "Zobraz krajiny",
+      icon: ImageAlt
+    }
+  ]
+
   return (
-    <h1>TODO</h1>
+    <>
+      <Sidebar
+        header={adminHeader}
+        links={adminSidebarLinks}
+        logoutRoute={`${path}/logout`}
+      />
+      <Container fluid="lg">
+        <div style={{marginLeft: globalStyles.sidebarWidth}}>
+          <Switch>
+            {/* TODO: define components */}
+            <AdminAuthRoute exact path={path} component={Home} />
+            <AdminAuthRoute exact path={`${path}/data/upload`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/sports/list`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/sports/add`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/branches/add`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/countries/list`} component={NotFound} />
+            <Route exact path={`${path}/logout`}>
+              <Logout userType="admin" />
+            </Route>
+            <AdminAuthRoute path="*" component={NotFound} />
+          </Switch>
+        </div>
+      </Container>
+    </>
   )
 }
 
