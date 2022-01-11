@@ -13,7 +13,7 @@ import {Home} from "secretary/pages/home/Home";
 import {Sports} from "./secretary/pages/sports/Sports";
 import {setupInterceptors} from "app/axios_provider";
 import {Sidebar, SidebarLinksProp} from "./components/sidebar/Sidebar";
-import {PlusLg, HouseDoor, List, Upload, ImageAlt} from "react-bootstrap-icons";
+import {PlusLg, HouseDoor, List, Upload, ImageAlt, Pen} from "react-bootstrap-icons";
 import globalStyles from "styles/global.module.scss";
 import {Container} from "react-bootstrap";
 import {UploadData} from "./secretary/pages/upload_data/UploadData";
@@ -49,7 +49,7 @@ const App = () => {
         <Route path="/secretary" component={SecretaryRoutes} />
 
         <AdminAuthRoute exact path="/auth/admin/login">
-          <Login userType="admin" />
+          <Login userType="admin" lang="en" />
         </AdminAuthRoute>
         <Route path="/admin" component={AdminRoutes} />
 
@@ -152,32 +152,42 @@ const AdminRoutes = () => {
   const adminSidebarLinks: SidebarLinksProp[] = [
     {
       route: `${url}`,
-      name: "Domov",
+      name: "Home",
       icon: HouseDoor
     },
     {
       route: `${url}/data/upload`,
-      name: "Nahrať dáta",
+      name: "Upload data",
       icon: Upload
     },
     {
       route: `${url}/sports/add`,
-      name: "Pridať šport",
+      name: "Add sport",
       icon: PlusLg
     },
     {
       route: `${url}/branches/add`,
-      name: "Pridať odvetvie",
+      name: "Add branch",
       icon: PlusLg
     },
     {
+      route: `${url}/countries/add`,
+      name: "Add country",
+      icon: PlusLg
+    },
+    {
+      route: `${url}/sports/update`,
+      name: "Update sport",
+      icon: Pen
+    },
+    {
       route: `${url}/sports/list`,
-      name: "Zobraz športy",
+      name: "Show sports",
       icon: List
     },
     {
       route: `${url}/countries/list`,
-      name: "Zobraz krajiny",
+      name: "Show countries",
       icon: ImageAlt
     }
   ]
@@ -188,16 +198,19 @@ const AdminRoutes = () => {
         header={adminHeader}
         links={adminSidebarLinks}
         logoutRoute={`${path}/logout`}
+        lang={"en"}
       />
       <Container fluid="lg">
         <div style={{marginLeft: globalStyles.sidebarWidth}}>
           <Switch>
             {/* TODO: define components */}
-            <AdminAuthRoute exact path={path} component={Home} />
+            <AdminAuthRoute exact path={path} component={NotFound} />
             <AdminAuthRoute exact path={`${path}/data/upload`} component={NotFound} />
-            <AdminAuthRoute exact path={`${path}/sports/list`} component={NotFound} />
             <AdminAuthRoute exact path={`${path}/sports/add`} component={NotFound} />
             <AdminAuthRoute exact path={`${path}/branches/add`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/countries/add`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/sports/update`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/sports/list`} component={NotFound} />
             <AdminAuthRoute exact path={`${path}/countries/list`} component={NotFound} />
             <Route exact path={`${path}/logout`}>
               <Logout userType="admin" />
