@@ -29,7 +29,8 @@ export type sportType = {
 export interface ApiListSportsType {
 	message: string,
 	data: {
-		sports: sportType[]
+		columnNames: string[],
+		sports: string[][]
 	}
 }
 
