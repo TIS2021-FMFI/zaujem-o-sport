@@ -43,4 +43,7 @@ DB = Database(dbPool)
 
 #print(DB.getBranchesWithSports())
 #print(DB.getSuccessByCountry("SVK"))
-print(DB.getInterconnectnessData(1, "SVK"))
+#print(DB.getFundingData("SVK"))
+#print(DB.getSuccessBySport(28))
+#print(DB.getSuccessByCountry("SVK"))
+#print(DB.getInterconnectnessData(1, "SVK"))
