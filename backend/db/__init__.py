@@ -147,7 +147,7 @@ class Database:
 
 	def getSuccessBySport(self, sport_code : str) -> dict:
 
-		sql = f"select c.name, suc.points, suc.orders from success suc cross join sport sp join country c on suc.sport_id = sp.id and sp.code = %(sport_code)s and suc.country_id = c.id order by suc.orders;"
+		sql = "select c.name, suc.points, suc.orders from success suc cross join sport sp join country c on suc.sport_id = sp.id and sp.code = %(sport_code)s and suc.country_id = c.id order by suc.orders;"
 		result = {"success": []}
 		try:
 			with self._getConnection() as dbConn:
@@ -168,7 +168,7 @@ class Database:
 
 	def getSuccessByCountry(self, country_code : str) -> dict:
 
-		sql = f"select sp.title, suc.points, suc.orders from success suc cross join sport sp join country c on suc.sport_id = sp.id and c.code = %(country_code)s and suc.country_id = c.id order by suc.orders;"
+		sql = "select sp.title, suc.points, suc.orders from success suc cross join sport sp join country c on suc.sport_id = sp.id and c.code = %(country_code)s and suc.country_id = c.id order by suc.orders;"
 		result = {"success": []}
 		try:
 			with self._getConnection() as dbConn:
@@ -189,7 +189,7 @@ class Database:
 
 	def getInterconnectnessData(self, type_id:int, country_code:str) -> dict:
 
-		sql = f"select c2.name, i.value, it.title  from interconnectness i join country c1 on country_one_id = c1.id join country c2 on country_two_id = c2.id join interconnectness_type it on i.type_id = it.id where i.type_id = %(type_id)s and c1.code = %(country_code)s "
+		sql = "select c2.name, i.value, it.title  from interconnectness i join country c1 on country_one_id = c1.id join country c2 on country_two_id = c2.id join interconnectness_type it on i.type_id = it.id where i.type_id = %(type_id)s and c1.code = %(country_code)s "
 		result = {"interconnectness": []}
 		try:
 			with self._getConnection() as dbConn:
@@ -214,7 +214,7 @@ class Database:
 		if "title" not in data:
 			raise DataError("sport data do not contain title")
 
-		sql = f"insert into sport(code, title) values (%(code)s, %(title)s);"
+		sql = "insert into sport(code, title) values (%(code)s, %(title)s);"
 		try:
 			with self._getConnection() as dbConn:
 				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
