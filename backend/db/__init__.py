@@ -16,8 +16,25 @@ class Database:
 		self.dbPool.putconn(dbConnection)
 
 	def getSecretary(self, email: str) -> Union[None, dict]:
-		""" Use in login process. """
-		sql = "select * from users where email=%s"
+		""" Use in secretary login process. """
+		sql = "select * from users where email=%s and type='secretary'"
+		result = None
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, (email,))
+					result = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			return result
+
+	def getAdmin(self, email: str) -> Union[None, dict]:
+		""" Use in admin login process. """
+		sql = "select * from users where email=%s and type='admin'"
 		result = None
 		try:
 			with self._getConnection() as dbConn:
