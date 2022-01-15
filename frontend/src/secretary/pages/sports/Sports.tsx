@@ -11,7 +11,7 @@ export const Sports = () => {
 	const [columnNames, setColumnsNames] = useState<TableColumnNameType[]>([]);
 	const [sportRows, setSportRows] = useState<TableRowsType>([]);
 
-	const {isLoading} = useQuery("list_sports", apiListSports, {
+	/*const {isLoading} = useQuery("list_sports", apiListSports, {
 		onSuccess: (response) => {
 			const serverData = response.data.data;
 			setColumnsNames(
@@ -25,21 +25,14 @@ export const Sports = () => {
 
 
 		}
-	});
+	});*/
   // TODO: use <Table columnNames={columnNames} rows={sportRows} /> instead of .map
   return (<>
 	  <header>
 	    <h1>Uložené športy</h1>
 	  </header>
 	  <section>
-		  { isLoading
-			  ? <Spinner animation="border" role="status">
-					  <span className="visually-hidden">Loading...</span>
-				  </Spinner>
-			  : sports?.map((sport, i) => { return (
-					  <p key={`sport-${i}`}>Názov športu: {sport.sport_title}, Kód športu: {sport.sport_code}, Názov odvetvia: {sport.branch_title}, Kód odvetvia: {sport.branch_code}</p>
-				  )})
-		  }
+		  TODO
 	  </section>
   </>)
 }

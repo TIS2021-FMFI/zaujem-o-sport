@@ -24,7 +24,6 @@ import {AddBranch} from "./secretary/pages/branches/add_branch/AddBranch";
 import {Countries} from "./secretary/pages/countries/Countries";
 import {ToastContainer} from "react-toastify";
 import create_snackbar from 'components/snackbar/Snackbar';
-import {Countries} from "./secretary/pages/countries/Countries";
 
 
 const history = createBrowserHistory();
