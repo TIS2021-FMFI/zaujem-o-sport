@@ -34,5 +34,6 @@ export interface ApiListCountriesType {
 export const apiListCountries = ()
 	: Promise<AxiosResponse<ApiListCountriesType>> =>
 {
+
 	return axios.get("/secretary/countries");
 }

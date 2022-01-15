@@ -1,4 +1,6 @@
-INSERT INTO sport ( id, title, code ) 
+-- jednotka je admin = '9b1ucrgk3lha7fviin652dlshkklv3xk', 'xlg3yj1tlkf2d902dp80dgg1v5gqpaa6'
+
+INSERT INTO sport ( id, title, code )
  VALUES 
  ( 1, 'AIKIDO', 1 ) ,
  ( 2, 'AMERICAN FOOTBALL', 2 ) ,
@@ -194,7 +196,7 @@ INSERT INTO sport ( id, title, code )
  ( 192, 'PARALYMPICS', 192 ) ,
  ( 193, 'RAFTING', 193 ) ,
  ( 194, 'STRONG MAN', 194 ) ;
-INSERT INTO country ( id, name , active, translation, code )
+INSERT INTO country ( id, name , is_active, translation, code )
  VALUES
  ( 1, 'AFGHANISTAN', FALSE, 'Afganistan', 'AFG' ) ,
  ( 2, 'ÅLAND ISLANDS', FALSE, 'Island Islands', 'ALA' ) ,

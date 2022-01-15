@@ -5,6 +5,7 @@ import secretary.endpoints.login
 import secretary.endpoints.show_sports
 import admin.endpoints.login
 import secretary.endpoints.show_countries
+import user.endpoints.success
 
 @app.errorhandler(400)
 def bad_request(e):
@@ -69,6 +70,14 @@ app.add_url_rule(
 	view_func=admin.endpoints.login.LoginView.as_view("admin_login"),
 	methods=["POST"]
 )
+
+# ----- user rules -----
+app.add_url_rule(
+	"/api/user/success",
+	view_func=user.endpoints.success.ShowSuccessView.as_view("list_success"),
+	methods=["GET"]
+)
+
 
 
 if __name__ == "__main__":
