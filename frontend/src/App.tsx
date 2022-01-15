@@ -4,11 +4,6 @@ import { createBrowserHistory } from 'history';
 import {NotFound} from "pages/not_found/NotFound";
 import {Login} from "components/login/Login";
 import {Logout} from "components/login/Logout";
-import {Nav} from "user/components/Nav"
-import {Export} from "user/pages/export/Export";
-import {Funding} from "user/pages/funding/Funding";
-import {Success} from "user/pages/success/Success";
-import {Interconnectedness} from "user/pages/interconnectedness/Interconnectness";
 import {Home} from "secretary/pages/home/Home";
 import {Sports} from "./secretary/pages/sports/Sports";
 
@@ -22,8 +17,18 @@ import {UploadData} from "./secretary/pages/upload_data/UploadData";
 import {AddSport} from "./secretary/pages/sports/add_sport/AddSport";
 import {AddBranch} from "./secretary/pages/branches/add_branch/AddBranch";
 import {Countries} from "./secretary/pages/countries/Countries";
-import {ToastContainer} from "react-toastify";
-import create_snackbar from 'components/snackbar/Snackbar';
+
+
+
+import Navbar from "./user/components/Navbar";
+import {Rebricek} from "./user/pages/rebricek/rebricek";
+import {Export} from "./user/pages/export/export";
+import {Rozpocty} from "./user/pages/rozpocty/rozpocty";
+import {Uspesnost} from "./user/pages/uspesnost/uspesnost";
+import {Prepojenie} from "./user/pages/prepojenie/prepojenie";
+import Footer from "./user/components/footer";
+import {HomeUser} from "./user/pages/home/homeuser";
+import 'user/pages/styles/site.scss'; //TODO
 
 
 const history = createBrowserHistory();
@@ -64,6 +69,7 @@ const App = () => {
   );
 }
 
+/*
 const UserRouters = () => {
   return (<>
     <Nav />
@@ -74,6 +80,37 @@ const UserRouters = () => {
     <Route exact path="*" component={NotFound} />
   </>)
 }
+*/
+
+const UserRouters = () => {
+    return (
+        <Router>
+            <Navbar />
+            <Switch>
+                <div className="oversite">
+                <div className="site">
+                    <Route path="/sports"><Sports /></Route>
+                <Route path="/home"><HomeUser /></Route>
+                <Route path="/chart"><Rebricek /></Route>
+                <Route path="/export"><Export /></Route>
+                <Route path="/funding"><Rozpocty /></Route>
+                <Route path="/success"><Uspesnost /></Route>
+                <Route path="/interconnectness"><Prepojenie /></Route>
+                </div>
+                </div>
+            </Switch>
+
+
+
+            <Footer />
+
+        </Router>
+
+    );
+}
+
+
+
 
 const SecretaryRoutes = () => {
   // The `path` lets us build <Route> paths that are
