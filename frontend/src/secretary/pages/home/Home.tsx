@@ -1,16 +1,16 @@
-import {Link} from "react-router-dom";
+import {Col, Row} from "react-bootstrap";
 
 export const Home = () => {
-  return (
-  	<>
-		  <h1>Home</h1>
-		  <Link to="/secretary/sports">
-			  Zobraz športy
-		  </Link>
-		  <br/>
-		  <Link to="/secretary/logout">
-			  Logout
-		  </Link>
-	  </>
-  )
+  return (<>
+	  <header>
+		  <h1>Domov</h1>
+	  </header>
+	  <section>
+		  <Row>
+			  <Col>
+				  Úvodný popis, tutoriál, atď. pre sekretárku.
+			  </Col>
+		  </Row>
+	  </section>
+  </>)
 }
