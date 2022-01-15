@@ -23,9 +23,10 @@ export const Sports = () => {
 		},
 		onError: (error) => {
 
+
 		}
 	});
-
+  // TODO: use <Table columnNames={columnNames} rows={sportRows} /> instead of .map
   return (<>
 	  <header>
 	    <h1>Uložené športy</h1>
@@ -35,10 +36,9 @@ export const Sports = () => {
 			  ? <Spinner animation="border" role="status">
 					  <span className="visually-hidden">Loading...</span>
 				  </Spinner>
-			  :
-			  <>
-				  <Table columnNames={columnNames} rows={sportRows} />
-			  </>
+			  : sports?.map((sport, i) => { return (
+					  <p key={`sport-${i}`}>Názov športu: {sport.sport_title}, Kód športu: {sport.sport_code}, Názov odvetvia: {sport.branch_title}, Kód odvetvia: {sport.branch_code}</p>
+				  )})
 		  }
 	  </section>
   </>)

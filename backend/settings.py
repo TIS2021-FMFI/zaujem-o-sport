@@ -40,3 +40,10 @@ dbPool = psycopg2.pool.ThreadedConnectionPool(
 	password=env.get("DB_PASS")
 )
 DB = Database(dbPool)
+
+#print(DB.getBranchesWithSports())
+#print(DB.getSuccessByCountry("SVK"))
+#print(DB.getFundingData("SVK"))
+#print(DB.getSuccessBySport(28))
+#print(DB.getSuccessByCountry("SVK"))
+#print(DB.getInterconnectnessData(1, "SVK"))
