@@ -1,0 +1,113 @@
+DROP TABLE IF EXISTS sport CASCADE;
+
+CREATE TABLE sport
+  (
+     id                SERIAL PRIMARY KEY,
+     code              INTEGER UNIQUE,
+     title             VARCHAR
+  );
+
+
+DROP TABLE IF EXISTS country CASCADE;
+
+CREATE TABLE country
+  (
+     id                SERIAL PRIMARY KEY,
+     name              VARCHAR,
+     active            BOOLEAN,
+     translation       VARCHAR,
+     code              VARCHAR(3) UNIQUE
+  );
+
+
+DROP TABLE IF EXISTS branch CASCADE;
+
+CREATE TABLE branch
+  (
+     id                SERIAL PRIMARY KEY,
+     code              INTEGER,
+     title             VARCHAR,
+     is_combined       BOOLEAN,
+     sport_id          INTEGER REFERENCES sport(id),
+     country_id        INTEGER REFERENCES country(id)
+  );
+
+
+DROP TABLE IF EXISTS combi_branch CASCADE;
+
+CREATE TABLE combi_branch
+  (
+     id                SERIAL PRIMARY KEY,
+     combi_branch_id   INTEGER REFERENCES branch(id),
+     subbranch_id      INTEGER REFERENCES branch(id),
+     coefficient       FLOAT
+  );
+
+
+DROP TABLE IF EXISTS success CASCADE;
+
+CREATE TABLE success
+  (
+     id                SERIAL PRIMARY KEY,
+     country_id        INTEGER REFERENCES country(id),
+     sport_id          INTEGER REFERENCES sport(id),
+     points            FLOAT,
+     orders	       FLOAT
+  );
+
+
+DROP TABLE IF EXISTS parameter CASCADE;
+
+CREATE TABLE parameter
+  (
+     id                SERIAL PRIMARY KEY,
+     code              INTEGER UNIQUE,
+     title             VARCHAR,
+     value             FLOAT
+  );
+
+
+DROP TABLE IF EXISTS interconnectness_type CASCADE;
+
+CREATE TABLE interconnectness_type
+  (
+     id                SERIAL PRIMARY KEY,
+     code              INTEGER UNIQUE,
+     title             VARCHAR
+  );
+
+
+
+DROP TABLE IF EXISTS interconnectness CASCADE;
+
+CREATE TABLE interconnectness
+  (
+     id                SERIAL PRIMARY KEY,
+     type_id           INTEGER REFERENCES interconnectness_type(id),
+     country_one_id    INTEGER REFERENCES country(id),
+     country_two_id    INTEGER REFERENCES country(id),
+     value             FLOAT
+  );
+
+
+DROP TABLE IF EXISTS funding CASCADE;
+
+CREATE TABLE funding
+  (
+     id                SERIAL PRIMARY KEY,
+     country_id        INTEGER REFERENCES country(id),
+     branch_id         INTEGER REFERENCES branch(id),
+     relative_funding  FLOAT,
+     absolute_funding  FLOAT,
+     currency          VARCHAR
+  );
+
+DROP TABLE IF EXISTS users CASCADE;
+
+CREATE TABLE users
+  (
+     id                SERIAL PRIMARY KEY,
+     email             VARCHAR UNIQUE,
+     password          VARCHAR(320),
+     type              VARCHAR CHECK (type = 'admin' or type = 'secretary')
+  );
