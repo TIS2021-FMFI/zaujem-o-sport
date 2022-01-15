@@ -3,6 +3,7 @@ import settings
 from settings import app, jwt
 import secretary.endpoints.login
 import secretary.endpoints.show_sports
+import admin.endpoints.login
 import secretary.endpoints.show_countries
 
 @app.errorhandler(400)
@@ -41,6 +42,8 @@ def revoked_token_callback(jwt_header, jwt_payload):
 def unathorized_callback(callback):
 	return {"message": "Missing Authorization Header", "data": {}}, 401
 
+# ----- secretary rules -----
+
 app.add_url_rule(
 	"/api/secretary/login",
 	view_func=secretary.endpoints.login.LoginView.as_view("secretary_login"),
@@ -57,6 +60,14 @@ app.add_url_rule(
 	"/api/secretary/countries",
 	view_func=secretary.endpoints.show_countries.ShowCountriesView.as_view("list_countries"),
 	methods=["GET"]
+)
+
+# ----- admin rules -----
+
+app.add_url_rule(
+	"/api/admin/login",
+	view_func=admin.endpoints.login.LoginView.as_view("admin_login"),
+	methods=["POST"]
 )
 
 

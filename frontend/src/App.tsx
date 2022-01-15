@@ -15,7 +15,7 @@ import {Sports} from "./secretary/pages/sports/Sports";
 
 import {setupInterceptors} from "app/axios_provider";
 import {Sidebar, SidebarLinksProp} from "./components/sidebar/Sidebar";
-import {PlusLg, HouseDoor, List, Upload, ImageAlt} from "react-bootstrap-icons";
+import {PlusLg, HouseDoor, List, Upload, ImageAlt, Pen} from "react-bootstrap-icons";
 import globalStyles from "styles/global.module.scss";
 import {Container} from "react-bootstrap";
 import {UploadData} from "./secretary/pages/upload_data/UploadData";
@@ -24,7 +24,6 @@ import {AddBranch} from "./secretary/pages/branches/add_branch/AddBranch";
 import {Countries} from "./secretary/pages/countries/Countries";
 import {ToastContainer} from "react-toastify";
 import create_snackbar from 'components/snackbar/Snackbar';
-import {Countries} from "./secretary/pages/countries/Countries";
 
 
 const history = createBrowserHistory();
@@ -54,7 +53,7 @@ const App = () => {
         <Route path="/secretary" component={SecretaryRoutes} />
 
         <AdminAuthRoute exact path="/auth/admin/login">
-          <Login userType="admin" />
+          <Login userType="admin" lang="en" />
         </AdminAuthRoute>
         <Route path="/admin" component={AdminRoutes} />
 
@@ -133,7 +132,9 @@ const SecretaryRoutes = () => {
             <SecretaryAuthRoute exact path={`${path}/sports/add`} component={AddSport} />
             <SecretaryAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
             <SecretaryAuthRoute exact path={`${path}/countries/list`} component={Countries} />
-            <Route exact path={`${path}/logout`} component={Logout} />
+            <Route exact path={`${path}/logout`}>
+              <Logout userType="secretary" />
+            </Route>
             <SecretaryAuthRoute path="*" component={NotFound} />
           </Switch>
         </div>
@@ -143,8 +144,86 @@ const SecretaryRoutes = () => {
 }
 
 const AdminRoutes = () => {
+  // The `path` lets us build <Route> paths that are
+  // relative to the parent route, while the `url` lets
+  // us build relative links.
+  let { path, url } = useRouteMatch();
+
+  console.log(path, url);
+
+  const adminHeader = "Admin panel";
+
+  const adminSidebarLinks: SidebarLinksProp[] = [
+    {
+      route: `${url}`,
+      name: "Home",
+      icon: HouseDoor
+    },
+    {
+      route: `${url}/data/upload`,
+      name: "Upload data",
+      icon: Upload
+    },
+    {
+      route: `${url}/sports/add`,
+      name: "Add sport",
+      icon: PlusLg
+    },
+    {
+      route: `${url}/branches/add`,
+      name: "Add branch",
+      icon: PlusLg
+    },
+    {
+      route: `${url}/countries/add`,
+      name: "Add country",
+      icon: PlusLg
+    },
+    {
+      route: `${url}/sports/update`,
+      name: "Update sport",
+      icon: Pen
+    },
+    {
+      route: `${url}/sports/list`,
+      name: "Show sports",
+      icon: List
+    },
+    {
+      route: `${url}/countries/list`,
+      name: "Show countries",
+      icon: ImageAlt
+    }
+  ]
+
   return (
-    <h1>TODO</h1>
+    <>
+      <Sidebar
+        header={adminHeader}
+        links={adminSidebarLinks}
+        logoutRoute={`${path}/logout`}
+        lang={"en"}
+      />
+      <Container fluid="lg">
+        <div style={{marginLeft: globalStyles.sidebarWidth}}>
+          <Switch>
+            {/* TODO: define components */}
+            <AdminAuthRoute exact path={path} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/data/upload`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/sports/add`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/branches/add`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/countries/add`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/sports/update`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/sports/list`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/countries/list`} component={NotFound} />
+            <Route exact path={`${path}/logout`}>
+              <Logout userType="admin" />
+            </Route>
+            <AdminAuthRoute path="*" component={NotFound} />
+          </Switch>
+        </div>
+      </Container>
+    </>
   )
 }
 

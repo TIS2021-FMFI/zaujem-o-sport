@@ -5,14 +5,19 @@ import styles from "./styles/login.module.scss";
 import React, {useState} from "react";
 import {isEmailValid} from "helpers/validation";
 import {useHistory} from "react-router-dom";
+import {Language} from "../../app/string";
+import textLang from "app/string";
 
 export interface LoginFormProps {
-	userType: UserType
+	userType: UserType,
+	lang?: Language
 }
 
 /** Try to login admin or secretary based on `userType`. */
-export const Login = ({userType}: LoginFormProps) => {
+export const Login = ({userType, lang = "sk"}: LoginFormProps) => {
 	const history = useHistory();
+
+	const text = textLang[lang];
 
 	const [email, _setEmail] = useState<string>("");
 	const [emailValid, setEmailValid] = useState<boolean>(false);
@@ -63,7 +68,7 @@ export const Login = ({userType}: LoginFormProps) => {
 					<section className={`w-100 h-100vh d-flex justify-content-center align-items-center`}>
 						<Form className={`${styles.loginForm}`} onSubmit={submitForm}>
 							<header className={`text-center`}>
-								<h1>Prihlásenie</h1>
+								<h1>{text.loginHeader}</h1>
 							</header>
 							{ serverErrorMessage.length !== 0 &&
               <>
@@ -89,16 +94,16 @@ export const Login = ({userType}: LoginFormProps) => {
 										/>
 										{ !emailValid &&
                     <Form.Control.Feedback type="invalid">
-                      Neplatný email.
+	                    { text.invalidEmail }
                     </Form.Control.Feedback>
 										}
 									</FloatingLabel>
 								</Col>
 							</Form.Group>
-							<Form.Group as={Row} className="mb-4" controlId="formHorizontalEmail">
+							<Form.Group as={Row} className="mb-4" controlId="formHorizontalPassword">
 								<Col>
-									<FloatingLabel controlId="floatingPassword" label="Heslo">
-										<Form.Control type="password" placeholder="Heslo"
+									<FloatingLabel controlId="floatingPassword" label={text.password}>
+										<Form.Control type="password" placeholder={text.password}
 										              required
 										              onChange={(e) => setPassword(e.target.value)}
 										/>
@@ -107,7 +112,7 @@ export const Login = ({userType}: LoginFormProps) => {
 							</Form.Group>
 							<Form.Group as={Row} className="mb-3">
 								<Col className={`text-center`}>
-									<Button type="submit">Prihlásiť sa</Button>
+									<Button type="submit">{text.login}</Button>
 								</Col>
 							</Form.Group>
 						</Form>
