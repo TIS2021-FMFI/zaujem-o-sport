@@ -1,13 +1,17 @@
 import {useMutation} from "react-query";
-import {apiSecretaryLogin} from "../../adapters";
+import {apiLogin, UserType} from "components/adapters";
 import {Button, Col, Container, FloatingLabel, Form, Row} from "react-bootstrap";
 import styles from "./styles/login.module.scss";
 import React, {useState} from "react";
 import {isEmailValid} from "helpers/validation";
 import {useHistory} from "react-router-dom";
 
-/** Secretary Login. */
-export const Login = () => {
+export interface LoginFormProps {
+	userType: UserType
+}
+
+/** Try to login admin or secretary based on `userType`. */
+export const Login = ({userType}: LoginFormProps) => {
 	const history = useHistory();
 
 	const [email, _setEmail] = useState<string>("");
@@ -28,15 +32,15 @@ export const Login = () => {
 		setServerErrorMessage("");
 	}
 
-	/** Async query to login secretary called on form submission. */
-	const { mutateAsync: loginSecretary } = useMutation(["secretary_login", email, password],
-		() => apiSecretaryLogin(email, password),
+	/** Async query to login secretary or admin called on form submission. */
+	const { mutateAsync: asyncLogin } = useMutation([`${userType}_login`, email, password],
+		() => apiLogin(email, password, userType),
 		{
 			onSuccess: (response) => {
 				// store access token and redirect to secretaries home page
 				const serverData = response.data.data;
-				localStorage.setItem("secretaryAccessToken", serverData.accessToken!);
-				history.push("/secretary");
+				localStorage.setItem(`${userType}AccessToken`, serverData.accessToken!);
+				history.push(`/${userType}`);
 			},
 			onError: (error) => {
 				const serverData = (error as any).response.data;
@@ -45,11 +49,11 @@ export const Login = () => {
 		}
 	);
 
-	/** Submit form - use `loginSecretary` if the email and password are valid against our criteria. */
+	/** Submit form - use `asyncLogin` if the email and password are valid against our criteria. */
 	const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (emailValid && password.length !== 0)
-			loginSecretary();
+			asyncLogin();
 	}
 
 	return (
@@ -62,12 +66,12 @@ export const Login = () => {
 								<h1>Prihlásenie</h1>
 							</header>
 							{ serverErrorMessage.length !== 0 &&
-								<>
-									<hr className={`mt-4 mb-4`}/>
-									<div>
-										<span className={`text-danger`}>{serverErrorMessage}</span>
-									</div>
-								</>
+              <>
+                <hr className={`mt-4 mb-4`}/>
+                <div>
+                  <span className={`text-danger`}>{serverErrorMessage}</span>
+                </div>
+              </>
 							}
 							<hr className={`mt-4 mb-4`} />
 							<Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
@@ -84,9 +88,9 @@ export const Login = () => {
 										              onChange={(e) => setEmail(e.target.value)}
 										/>
 										{ !emailValid &&
-											<Form.Control.Feedback type="invalid">
-												Neplatný email.
-											</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                      Neplatný email.
+                    </Form.Control.Feedback>
 										}
 									</FloatingLabel>
 								</Col>

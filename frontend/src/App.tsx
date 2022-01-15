@@ -2,13 +2,13 @@ import React from "react";
 import {BrowserRouter as Router, Redirect, Route, Switch, useRouteMatch} from "react-router-dom";
 import { createBrowserHistory } from 'history';
 import {NotFound} from "pages/not_found/NotFound";
-import {Login} from "secretary/pages/login/Login";
+import {Login} from "components/login/Login";
+import {Logout} from "components/login/Logout";
 import {Nav} from "user/components/Nav"
 import {Export} from "user/pages/export/Export";
 import {Funding} from "user/pages/funding/Funding";
 import {Success} from "user/pages/success/Success";
 import {Interconnectedness} from "user/pages/interconnectedness/Interconnectness";
-import {Logout} from "./secretary/pages/login/Logout";
 import {Home} from "secretary/pages/home/Home";
 import {Sports} from "./secretary/pages/sports/Sports";
 
@@ -48,8 +48,16 @@ const App = () => {
   <>
     <Router>
       <Switch>
-        <SecretaryAuthRoute exact path="/auth/secretary/login" component={Login} />
+        <SecretaryAuthRoute exact path="/auth/secretary/login">
+          <Login userType="secretary" />
+        </SecretaryAuthRoute>
         <Route path="/secretary" component={SecretaryRoutes} />
+
+        <AdminAuthRoute exact path="/auth/admin/login">
+          <Login userType="admin" />
+        </AdminAuthRoute>
+        <Route path="/admin" component={AdminRoutes} />
+
         <Route path="/" component={UserRouters} />
       </Switch>
     </Router>
@@ -135,7 +143,9 @@ const SecretaryRoutes = () => {
 }
 
 const AdminRoutes = () => {
-
+  return (
+    <h1>TODO</h1>
+  )
 }
 
 const SecretaryAuthRoute = ({component: Component, ...routeProps}: any) => {
@@ -159,9 +169,9 @@ const AdminAuthRoute = ({component: Component, ...routeProps}: any) => {
         <Route
             {...routeProps}
             render={(props) => {
-                if (typeof routeProps.path !== "object" && routeProps.path === "/admin/login")
+                if (typeof routeProps.path !== "object" && routeProps.path === "/auth/admin/login")
                     return !isAdminLoggedIn ? <Component {...props}/> : <Redirect to="/admin"/>;
-                return isAdminLoggedIn ? <Component {...props}/> : <Redirect to="/admin/login"/>;
+                return isAdminLoggedIn ? <Component {...props}/> : <Redirect to="/auth/admin/login"/>;
             }}
         />
     );

@@ -1,20 +1,25 @@
 import React, {useEffect} from "react";
 import {Redirect, useLocation} from "react-router-dom";
+import {UserType} from "../adapters";
 
-/** Logout secretary. */
-export const Logout = () => {
+export interface LogoutFormProps {
+	userType: UserType
+}
+
+/** Logout secretary or admin based on `userType`. */
+export const Logout = ({userType}: LogoutFormProps) => {
 	const location = useLocation();
 
 	useEffect(() => {
 		 const clearLocalStorage = async () => {
-			localStorage.removeItem("secretaryAccessToken");
+			localStorage.removeItem(`${userType}AccessToken`);
 		}
 		clearLocalStorage();
 	}, []);
 
 	return (
 		<Redirect to={{
-			pathname: "/secretary/login",
+			pathname: `/${userType}/login`,
 			state: location.state === undefined ? {} : location.state
 		}}/>
 	);
