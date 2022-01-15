@@ -4,6 +4,7 @@ from settings import app, jwt
 import secretary.endpoints.login
 import secretary.endpoints.show_sports
 import admin.endpoints.login
+import secretary.endpoints.show_countries
 
 @app.errorhandler(400)
 def bad_request(e):
@@ -55,6 +56,12 @@ app.add_url_rule(
 	methods=["GET"]
 )
 
+app.add_url_rule(
+	"/api/secretary/countries",
+	view_func=secretary.endpoints.show_countries.ShowCountriesView.as_view("list_countries"),
+	methods=["GET"]
+)
+
 # ----- admin rules -----
 
 app.add_url_rule(
@@ -62,6 +69,7 @@ app.add_url_rule(
 	view_func=admin.endpoints.login.LoginView.as_view("admin_login"),
 	methods=["POST"]
 )
+
 
 if __name__ == "__main__":
 	ip = None
