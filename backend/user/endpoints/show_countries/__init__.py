@@ -3,9 +3,8 @@ from verification.jwt import is_secretary
 from settings import DB
 
 
-class ShowSuccessView(SwaggerView):
+class ShowCountriesView(SwaggerView):
 
     def get(self):
-        res = {"message": "ok", "data": DB.getSuccessByCountry("SVK")}
-        print(res)
+        res = {"message": "ok", "data": DB.getAllCountries()}
         return res

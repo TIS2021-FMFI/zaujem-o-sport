@@ -87,7 +87,6 @@ const UserRouters = () => {
         <Router>
             <Navbar />
             <Switch>
-                <div className="oversite">
                 <div className="site">
                     <Route path="/sports"><Sports /></Route>
                 <Route path="/home"><HomeUser /></Route>
@@ -96,7 +95,6 @@ const UserRouters = () => {
                 <Route path="/funding"><Rozpocty /></Route>
                 <Route path="/success"><Uspesnost /></Route>
                 <Route path="/interconnectness"><Prepojenie /></Route>
-                </div>
                 </div>
             </Switch>
 

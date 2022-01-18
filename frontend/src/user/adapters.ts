@@ -1,11 +1,12 @@
-/** API adapters for the secretary part of the app. */
+/** API adapters for the user part of the app. */
 
 import {axiosProvider as axios} from "app/axios_provider";
 import {AxiosResponse} from "axios";
 
+//------------- Pre success ---------
 
 export type successType = {
-    title: string,
+    sport_name: string,
     points: number,
     order: number
 }
@@ -13,7 +14,7 @@ export type successType = {
 export interface ApiListSuccess {
     message: string,
     data: {
-       successes: successType[]
+       success: successType[]
     }
 }
 
@@ -22,4 +23,50 @@ export const apiListSuccess = ()
 {
     return axios.get("/user/success");
 
+}
+
+//----------Pre chart ----------
+
+
+export type chartType = {
+    name: string,
+    points: string,
+    order : string
+}
+
+export interface ApiListChartType {
+    message: string,
+    data: {
+        success: chartType[]
+    }
+}
+
+export const apiListChart = ()
+    : Promise<AxiosResponse<ApiListChartType>> =>
+{
+
+    return axios.get("/user/chart");
+}
+
+
+//----------Pre countries ----------
+
+
+export type countryType = {
+    code: string,
+    name: string
+}
+
+export interface ApiListCountryType {
+    message: string,
+    data: {
+        countries: countryType[]
+    }
+}
+
+export const apiListCountry = ()
+    : Promise<AxiosResponse<ApiListCountryType>> =>
+{
+
+    return axios.get("/user/countries");
 }
