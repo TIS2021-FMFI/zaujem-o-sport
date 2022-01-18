@@ -25,6 +25,8 @@ class Computations:
         self.points_data = DB.getPoints()
         self.max_points_data = DB.getMaxPoints()
         self.num_countries_in_sport_data = DB.getNumCountriesInSport()
+        self.total_country_points_data = DB.getTotalCountryPoints()
+        self.min_order_data = DB.getMinOrder()
 
 
     def allCountryIds(self):
@@ -142,10 +144,10 @@ class Computations:
         return self.num_countries_in_sport_data[sportN]
 
     def total_points(self, countryK : id) -> float:
-        return self.DUMMY
+        return self.total_country_points_data[countryK]
 
     def min_order(self, countryK : id) -> float:
-        return self.DUMMY
+        return self.min_order_data[countryK]
 
     def norm_BGS(self, sportN : id) -> float:
 
@@ -172,4 +174,5 @@ c = Computations()
 #print(c.points(77,10)) # returns 13549.68, correct
 #print(c.max_points(56)) # returns 5500.2, correct
 #print(c.num_countries_in_sport(194)) # returns 160, correct
-#print(c.importance(0,0))
+#print(c.total_points(27)) # returns 19309.310000000005, correct
+#print(c.min_order(55)) # returns 56, correct

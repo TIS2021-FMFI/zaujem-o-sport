@@ -221,7 +221,7 @@ class Database:
 			# print(result)
 			return result
 
-	def addSport(self, data : dict) -> str:
+	def addSport(self, data : dict):
 		if "code" not in data:
 			raise DataError("sport data do not contain code")
 		if "title" not in data:
@@ -412,3 +412,64 @@ class Database:
 
 			return final_result
 
+	def getTotalCountryPoints(self):
+
+		sql = "select country_id, sum(points) from success group by country_id"
+		result = {"sum": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						country_id, suma = tmp
+						result["sum"].append({"country_id": country_id, "sum": suma})
+						tmp = cursor.fetchone()
+
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+			final_result = {}
+
+			for record in result["sum"]:
+
+				country_id, suma = record["country_id"], record["sum"]
+
+				final_result[country_id] = suma
+
+			return final_result
+
+	def getMinOrder(self):
+
+		sql = "select country_id, min(orders) from success group by country_id"
+		result = {"order": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						country_id, order = tmp
+						result["order"].append({"country_id": country_id, "order": order})
+						tmp = cursor.fetchone()
+
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+			final_result = {}
+
+			for record in result["order"]:
+
+				country_id, order = record["country_id"], record["order"]
+
+				final_result[country_id] = order
+
+			return final_result
