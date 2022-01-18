@@ -254,6 +254,9 @@ class Database:
 	def importInterconnectnessData(self):
 		...
 
+
+	# getters for DB mirroring in data computation modul
+
 	def getBGS(self):
 
 		sql = "select sport_id, value from BGS"
@@ -471,5 +474,71 @@ class Database:
 				country_id, order = record["country_id"], record["order"]
 
 				final_result[country_id] = order
+
+			return final_result
+
+	def getEconIntercon(self):
+
+		sql = "select country_one_id, country_two_id, value from interconnectness where type_id = 1"
+		result = {"inter": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						country_one_id, country_two_id, value = tmp
+						result["inter"].append({"country_one_id": country_one_id, "country_two_id": country_two_id, "value": value})
+						tmp = cursor.fetchone()
+
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+			final_result = {}
+
+			for record in result["inter"]:
+				country_one_id, country_two_id, value = record["country_one_id"], record["country_two_id"], record["value"]
+
+				if country_one_id not in final_result:
+					final_result[country_one_id] = {}
+
+				final_result[country_one_id][country_two_id] = value
+
+			return final_result
+
+	def getNonEconIntercon(self):
+
+		sql = "select country_one_id, country_two_id, value from interconnectness where type_id = 2"
+		result = {"inter": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						country_one_id, country_two_id, value = tmp
+						result["inter"].append({"country_one_id": country_one_id, "country_two_id": country_two_id, "value": value})
+						tmp = cursor.fetchone()
+
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+			final_result = {}
+
+			for record in result["inter"]:
+				country_one_id, country_two_id, value = record["country_one_id"], record["country_two_id"], record["value"]
+
+				if country_one_id not in final_result:
+					final_result[country_one_id] = {}
+
+				final_result[country_one_id][country_two_id] = value
 
 			return final_result

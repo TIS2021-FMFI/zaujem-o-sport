@@ -1,5 +1,3 @@
-#import sys, os # temporarily use this to fix problem with importing settings to this file
-#sys.path.append('/home/sabinka/Desktop/semester/TIS/git/zaujem-o-sport/backend') # temporarily use this to fix problem with importing settings to this file
 
 from settings import DB
 
@@ -27,6 +25,8 @@ class Computations:
         self.num_countries_in_sport_data = DB.getNumCountriesInSport()
         self.total_country_points_data = DB.getTotalCountryPoints()
         self.min_order_data = DB.getMinOrder()
+        self.econ_interconnectness_data = DB.getEconIntercon()
+        self.nonecon_interconnectness_data = DB.getNonEconIntercon()
 
 
     def allCountryIds(self):
@@ -64,14 +64,14 @@ class Computations:
         if countryK == countryJ:
             raise CompError("cannot compute econ interconectness for same countries")
 
-        return self.DUMMY
+        return self.econ_interconnectness_data[countryK][countryJ]
 
     def nonecon_interconnectness(self, countryK : id, countryJ : id) -> float:
 
         if countryK == countryJ:
             raise CompError("cannot compute nonecon interconectness for same countries")
 
-        return self.DUMMY
+        return self.nonecon_interconnectness_data[countryK][countryJ]
 
     def sport_importance_in_country(self, sportN : id, countryK : id) -> float:
 
@@ -175,4 +175,6 @@ c = Computations()
 #print(c.max_points(56)) # returns 5500.2, correct
 #print(c.num_countries_in_sport(194)) # returns 160, correct
 #print(c.total_points(27)) # returns 19309.310000000005, correct
+#print(c.econ_interconnectness(234, 237)) # returns 57109.0345, correct
+#print(c.nonecon_interconnectness(160, 199)) # returns 0.0075, correct
 #print(c.min_order(55)) # returns 56, correct
