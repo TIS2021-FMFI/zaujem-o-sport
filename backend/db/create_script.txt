@@ -52,7 +52,7 @@ CREATE TABLE success
      country_id        INTEGER REFERENCES country(id),
      sport_id          INTEGER REFERENCES sport(id),
      points            FLOAT,
-     orders	       FLOAT
+     orders	           FLOAT
   );
 
 
@@ -110,4 +110,13 @@ CREATE TABLE users
      email             VARCHAR UNIQUE,
      password          VARCHAR(320),
      type              VARCHAR CHECK (type = 'admin' or type = 'secretary')
+  );
+
+ DROP TABLE IF EXISTS BGS CASCADE;
+
+CREATE TABLE BGS
+  (
+     id                SERIAL PRIMARY KEY,
+     sport_id          INTEGER UNIQUE,
+     VALUE             INTEGER
   );
