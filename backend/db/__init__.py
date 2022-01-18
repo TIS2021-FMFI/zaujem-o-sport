@@ -316,4 +316,38 @@ class Database:
 
 			return final_result
 
+	def getPoints(self):
+
+		sql = "select country_id, sport_id, points from success"
+		result = {"points": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						country_id, sport_id, points = tmp
+						result["points"].append({"country_id": country_id, "sport_id": sport_id, "points": points})
+						tmp = cursor.fetchone()
+
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print("this err", error)
+		finally:
+			# print(result)
+			final_result = {}
+
+			for record in result["points"]:
+
+				country_id, sport_id, points = record["country_id"], record["sport_id"], record["points"]
+
+				if record["country_id"] not in final_result:
+					final_result[country_id] = {}
+
+				final_result[country_id][sport_id] = points
+
+			return final_result
+
 

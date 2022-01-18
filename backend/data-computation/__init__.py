@@ -23,6 +23,7 @@ class Computations:
         #  local info from db which are frequently used in computations are stored in lists, maps
         self.BGS_data = DB.getBGS()
         self.order_data = DB.getOrder()
+        self.points_data = DB.getPoints()
 
     def allCountryIds(self):
         return [] # TODO
@@ -130,7 +131,7 @@ class Computations:
         return self.order_data[countryK][sportN]
 
     def points(self, countryK : id, sportN : id) -> float:
-        return self.DUMMY
+        return self.points_data[countryK][sportN]
 
     def max_points(self, sportN : id) -> float:
         return self.DUMMY
@@ -166,4 +167,5 @@ class Computations:
 c = Computations()
 #print(c.BGS_data)
 #print(c.order(77,10)) # returns 3, correct
+#print(c.points(77,10)) # returns 13549.68, correct
 #print(c.importance(0,0))
