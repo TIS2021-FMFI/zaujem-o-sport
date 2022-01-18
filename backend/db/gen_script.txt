@@ -1,4 +1,3 @@
--- jednotka je admin = '9b1ucrgk3lha7fviin652dlshkklv3xk', 'xlg3yj1tlkf2d902dp80dgg1v5gqpaa6'
 
 INSERT INTO sport ( id, title, code )
  VALUES 
