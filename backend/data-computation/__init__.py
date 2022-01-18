@@ -11,7 +11,6 @@ class CompError(Exception):
 class Computations:
 
     def __init__(self):
-        # TODO
 
         self.PV1 = 0.5
         self.PV2 = 0.16
@@ -24,6 +23,9 @@ class Computations:
         self.BGS_data = DB.getBGS()
         self.order_data = DB.getOrder()
         self.points_data = DB.getPoints()
+        self.max_points_data = DB.getMaxPoints()
+        self.num_countries_in_sport_data = DB.getNumCountriesInSport()
+
 
     def allCountryIds(self):
         return [] # TODO
@@ -134,10 +136,10 @@ class Computations:
         return self.points_data[countryK][sportN]
 
     def max_points(self, sportN : id) -> float:
-        return self.DUMMY
+        return self.max_points_data[sportN]
 
     def num_countries_in_sport(self, sportN : id) -> float:
-        return self.DUMMY
+        return self.num_countries_in_sport_data[sportN]
 
     def total_points(self, countryK : id) -> float:
         return self.DUMMY
@@ -168,4 +170,6 @@ c = Computations()
 #print(c.BGS_data)
 #print(c.order(77,10)) # returns 3, correct
 #print(c.points(77,10)) # returns 13549.68, correct
+#print(c.max_points(56)) # returns 5500.2, correct
+#print(c.num_countries_in_sport(194)) # returns 160, correct
 #print(c.importance(0,0))

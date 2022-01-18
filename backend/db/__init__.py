@@ -350,4 +350,65 @@ class Database:
 
 			return final_result
 
+	def getMaxPoints(self):
+
+		sql = "select sport_id, max(points) from success group by sport_id"
+		result = {"points": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						sport_id, points = tmp
+						result["points"].append({"sport_id": sport_id, "points": points})
+						tmp = cursor.fetchone()
+
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print("this err", error)
+		finally:
+			# print(result)
+			final_result = {}
+
+			for record in result["points"]:
+
+				sport_id, points = record["sport_id"], record["points"]
+
+				final_result[sport_id] = points
+
+			return final_result
+
+	def getNumCountriesInSport(self):
+
+		sql = "select sport_id, count(id) from success where points > 0 group by sport_id"
+		result = {"num": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						sport_id, num = tmp
+						result["num"].append({"sport_id": sport_id, "num": num})
+						tmp = cursor.fetchone()
+
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+			final_result = {}
+
+			for record in result["num"]:
+
+				sport_id, num = record["sport_id"], record["num"]
+
+				final_result[sport_id] = num
+
+			return final_result
 
