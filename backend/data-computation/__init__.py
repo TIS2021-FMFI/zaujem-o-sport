@@ -1,20 +1,28 @@
+#import sys, os # temporarily use this to fix problem with importing settings to this file
+#sys.path.append('/home/sabinka/Desktop/semester/TIS/git/zaujem-o-sport/backend') # temporarily use this to fix problem with importing settings to this file
+
+from settings import DB
+
 
 class CompError(Exception):
     ...
 
+
 class Computations:
-
-
 
     def __init__(self):
         # TODO
-        # small db mirroring model will be initialize here
-        # local info from db which are frequently used in computations are stored in lists, maps
+
         self.PV1 = 0.5
         self.PV2 = 0.16
         self.PV3 = 0.34
         self.PV4 = 2
         self.DUMMY = 0.1  # to avoid division by zero error
+
+        # small db mirroring model will be initialize here
+        #  local info from db which are frequently used in computations are stored in lists, maps
+        self.BGS_data = DB.getBGS()
+        self.order_data = DB.getOrder()
 
     def allCountryIds(self):
         return [] # TODO
@@ -74,23 +82,18 @@ class Computations:
 
         return self.DUMMY
 
-
     def branch_funding(self, countryK : id, sportN : id, branchB : id) -> float:
         return self.DUMMY
-
 
     def combi_branch_funding(self, countryK : id, combiQ : id) -> float:
         return self.DUMMY
 
-
     def total_country_funding(self, countryK : id) -> float:
         return self.DUMMY
-
 
     def norm_success(self, sportN : id, countryK : id) -> float:
 
         return self.success(sportN, countryK) / self.total_success(countryK)
-
 
     def total_success(self, countryK : id) -> float:
 
@@ -100,7 +103,6 @@ class Computations:
             suma += self.success(sportN, countryK)
 
         return suma
-
 
     def success(self, sportN : id, countryK : id) -> float:
 
@@ -125,27 +127,22 @@ class Computations:
         return res
 
     def order(self, countryK : id, sportN : id) -> float:
-        return self.DUMMY
+        return self.order_data[countryK][sportN]
 
     def points(self, countryK : id, sportN : id) -> float:
         return self.DUMMY
 
-
     def max_points(self, sportN : id) -> float:
         return self.DUMMY
-
 
     def num_countries_in_sport(self, sportN : id) -> float:
         return self.DUMMY
 
-
     def total_points(self, countryK : id) -> float:
         return self.DUMMY
 
-
     def min_order(self, countryK : id) -> float:
         return self.DUMMY
-
 
     def norm_BGS(self, sportN : id) -> float:
 
@@ -163,8 +160,10 @@ class Computations:
         return suma
 
     def BGS(self, sportN : id) -> float:
-        return self.DUMMY
+        return self.BGS_data[id]
 
 
 c = Computations()
+#print(c.BGS_data)
+#print(c.order(77,10)) # returns 3, correct
 #print(c.importance(0,0))

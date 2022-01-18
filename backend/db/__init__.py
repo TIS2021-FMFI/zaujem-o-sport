@@ -54,7 +54,6 @@ class Database:
 		finally:
 			return result
 
-
 	def getAllCountries(self) -> dict:
 
 		sql = "select code, name from country where is_active = true"
@@ -75,7 +74,6 @@ class Database:
 		finally:
 			# print(result)
 			return result
-
 
 	def getAllSports(self) -> dict:
 
@@ -119,7 +117,6 @@ class Database:
 			# print(result)
 			return result
 
-
 	def getBranchesWithSports(self) -> dict:
 
 		sql = "select s.code, s.title, b.code, b.title from sport s join branch b on b.sport_id = s.id"
@@ -140,7 +137,6 @@ class Database:
 		finally:
 			#print(result)
 			return result
-
 
 	def getFundingData(self, country_code: str) -> dict:
 		sql = "select b.title, f.absolute_funding, f.currency from funding f cross join country c join branch b on c.code = %(country_code)s and f.country_id = c.id and b.id = f.branch_id"
@@ -257,5 +253,67 @@ class Database:
 
 	def importInterconnectnessData(self):
 		...
+
+	def getBGS(self):
+
+		sql = "select sport_id, value from BGS"
+		result = {"BGS": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						result["BGS"].append({"sport_id": tmp[0], "value": tmp[1]})
+						tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+
+			result = result["BGS"]
+			final_result = {}
+
+			for record in result:
+				final_result[record["sport_id"]] = record["value"]
+
+			return final_result
+
+	def getOrder(self):
+
+		sql = "select country_id, sport_id, orders from success"
+		result = {"order": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						country_id, sport_id, order = tmp
+						result["order"].append({"country_id": country_id, "sport_id": sport_id, "order":order})
+						tmp = cursor.fetchone()
+
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print("this err", error)
+		finally:
+			# print(result)
+			final_result = {}
+
+			for record in result["order"]:
+
+				country_id, sport_id, order = record["country_id"] , record["sport_id"] , record["order"]
+
+				if record["country_id"] not in final_result:
+					final_result[country_id] = {}
+
+				final_result[country_id][sport_id] = order
+
+			return final_result
 
 
