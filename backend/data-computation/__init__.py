@@ -27,6 +27,7 @@ class Computations:
         self.min_order_data = DB.getMinOrder()
         self.econ_interconnectness_data = DB.getEconIntercon()
         self.nonecon_interconnectness_data = DB.getNonEconIntercon()
+        self.noncombi_funding_data = DB.getNonCombiBranchFunding()
 
 
     def allCountryIds(self):
@@ -88,7 +89,7 @@ class Computations:
         return self.DUMMY
 
     def branch_funding(self, countryK : id, sportN : id, branchB : id) -> float:
-        return self.DUMMY
+        return self.noncombi_funding_data[countryK][sportN][branchB]
 
     def combi_branch_funding(self, countryK : id, combiQ : id) -> float:
         return self.DUMMY

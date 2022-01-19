@@ -542,3 +542,41 @@ class Database:
 				final_result[country_one_id][country_two_id] = value
 
 			return final_result
+
+	def getNonCombiBranchFunding(self):
+
+		sql = "select f.country_id, sport_id, branch_id, sum(absolute_funding)  from funding f join branch b  on b.id = f.branch_id  and is_combined = false group by f.country_id, sport_id, branch_id"
+		result = {"funding": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						country_id, sport_id, branch_id, suma = tmp
+						result["funding"].append(
+							{"country_id":country_id, "sport_id":sport_id, "branch_id": branch_id, "sum": suma})
+						tmp = cursor.fetchone()
+
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+			final_result = {}
+
+			for record in result["funding"]:
+				country_id, sport_id, branch_id, suma  = record["country_id"], record["sport_id"], record["branch_id"], record["sum"]
+
+				if country_id not in final_result:
+					final_result[country_id] = {}
+
+
+				final_result[country_id][sport_id] = suma
+
+			return final_result
+
+
+

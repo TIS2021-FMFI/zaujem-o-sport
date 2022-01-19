@@ -813,7 +813,7 @@ INSERT INTO branch ( id, code , title, is_combined, sport_id, country_id )
  ( 968, 968, 'GYMNASTICS  and  BODYBUILDING', TRUE, NULL, 199 ) ,
  ( 969, 969, 'ARCHERY  and  SHOOTING', TRUE, NULL, 46 ) ,
  ( 970, 970, 'ARCHERY  and  SHOOTING', TRUE, NULL, 84 ) ;
-INSERT INTO combi_branch (  combi_branch_id , subbranch_id, coefficient)
+INSERT INTO combi_branch (combi_branch_id , subbranch_id, coefficient)
  VALUES
  (901, 19, 0.1) ,
  (901, 24, 0.1) ,
