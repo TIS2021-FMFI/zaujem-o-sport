@@ -1,4 +1,3 @@
-
 from settings import DB
 
 
@@ -29,19 +28,34 @@ class Computations:
         self.nonecon_interconnectness_data = DB.getNonEconIntercon()
         self.noncombi_funding_data = DB.getNonCombiBranchFunding()
 
+        self.country_data = DB.getActiveCountryIds()
+        self.sport_data = DB.getSportIds()
 
-    def allCountryIds(self):
-        return [] # TODO
+
+    def allActiveCountryIds(self):
+
+        res = []
+
+        for record in self.country_data:
+            res.append(record["id"])
+
+        return res
 
     def allBranchIds(self):
         return []  # TODO
 
     def allSportIds(self):
-        return []
+
+        res = []
+
+        for record in self.sport_data:
+            res.append(record["id"])
+
+        return res
 
     def importance(self, countryK : id, sportN : id) -> float:
         suma = 0
-        for countryJ in self.allCountryIds():
+        for countryJ in self.allActiveCountryIds():
             suma += self.sport_importance_in_country(sportN, countryJ) * self.norm_interconnectness(countryK, countryJ)
 
         return self.PV3 * self.norm_BGS(sportN) + (1 - self.PV3) * suma
@@ -179,3 +193,5 @@ c = Computations()
 #print(c.econ_interconnectness(234, 237)) # returns 57109.0345, correct
 #print(c.nonecon_interconnectness(160, 199)) # returns 0.0075, correct
 #print(c.min_order(55)) # returns 56, correct
+#print(c.allActiveCountryIds())
+#print(c.allSportIds())

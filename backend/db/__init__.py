@@ -543,7 +543,7 @@ class Database:
 
 			return final_result
 
-	def getNonCombiBranchFunding(self):
+	def getNonCombiBranchFunding(self)  :
 
 		sql = "select f.country_id, sport_id, branch_id, sum(absolute_funding)  from funding f join branch b  on b.id = f.branch_id  and is_combined = false group by f.country_id, sport_id, branch_id"
 		result = {"funding": []}
@@ -578,5 +578,46 @@ class Database:
 
 			return final_result
 
+	def getActiveCountryIds(self) -> dict:
+
+		sql = "select id, name from country where is_active = true"
+		result = {"countries":[]}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						result["countries"].append({"id":tmp[0], "name":tmp[1]})
+						tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+			return result["countries"]
+
+	def getSportIds(self) -> dict:
+
+		sql = "select id, title from sport"
+		result = {"sports":[]}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						result["sports"].append({"id":tmp[0], "title":tmp[1]})
+						tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+			return result["sports"]
 
 
