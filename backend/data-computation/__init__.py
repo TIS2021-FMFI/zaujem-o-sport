@@ -32,7 +32,7 @@ class Computations:
         self.sport_data = DB.getSportIds()
 
 
-    def allActiveCountryIds(self):
+    def allActiveCountryIds(self) -> list:
 
         res = []
 
@@ -41,10 +41,10 @@ class Computations:
 
         return res
 
-    def allBranchIds(self):
+    def allBranchIds(self) -> list:
         return []  # TODO
 
-    def allSportIds(self):
+    def allSportIds(self) -> list:
 
         res = []
 
@@ -107,7 +107,7 @@ class Computations:
 
         return suma
 
-    def total_branch_fundng(self, countryK, sportN, branchB):
+    def total_branch_fundng(self, countryK, sportN, branchB) -> float:
         return self.DUMMY
 
     def branch_funding(self, countryK : id, sportN : id, branchB : id) -> float:
