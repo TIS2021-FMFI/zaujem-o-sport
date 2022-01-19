@@ -77,7 +77,7 @@ app.add_url_rule(
 app.add_url_rule(
 	"/api/user/success",
 	view_func=user.endpoints.success.ShowSuccessView.as_view("list_success"),
-	methods=["GET"]
+	methods=["GET", "POST"]
 )
 
 app.add_url_rule(

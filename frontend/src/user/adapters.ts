@@ -70,3 +70,16 @@ export const apiListCountry = ()
 
     return axios.get("/user/countries");
 }
+
+export interface ApiSuccessType {
+    data: {
+        code: string
+    }
+}
+
+
+export const apiSuccess = (code: string)
+    : Promise<AxiosResponse<ApiListSuccess>> =>
+{
+        return axios.post("/user/success",{ code:code });
+}
