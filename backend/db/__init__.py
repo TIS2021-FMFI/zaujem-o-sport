@@ -239,10 +239,10 @@ class Database:
 			print(error)
 
 
-	def addBranch(self, data : dict) -> str:
+	def addBranch(self, data : dict):
 		...
 
-	def updateSport(self, data: dict) -> str:
+	def updateSport(self, data: dict):
 		...
 
 	def importFundingData(self):
@@ -257,7 +257,7 @@ class Database:
 
 	# getters for DB mirroring in data computation modul
 
-	def getBGS(self):
+	def getBGS(self) -> dict:
 
 		sql = "select sport_id, value from BGS"
 		result = {"BGS": []}
@@ -285,7 +285,7 @@ class Database:
 
 			return final_result
 
-	def getOrder(self):
+	def getOrder(self) -> dict:
 
 		sql = "select country_id, sport_id, orders from success"
 		result = {"order": []}
@@ -319,7 +319,7 @@ class Database:
 
 			return final_result
 
-	def getPoints(self):
+	def getPoints(self) -> dict:
 
 		sql = "select country_id, sport_id, points from success"
 		result = {"points": []}
@@ -353,7 +353,7 @@ class Database:
 
 			return final_result
 
-	def getMaxPoints(self):
+	def getMaxPoints(self) -> dict:
 
 		sql = "select sport_id, max(points) from success group by sport_id"
 		result = {"points": []}
@@ -384,7 +384,7 @@ class Database:
 
 			return final_result
 
-	def getNumCountriesInSport(self):
+	def getNumCountriesInSport(self) -> dict:
 
 		sql = "select sport_id, count(id) from success where points > 0 group by sport_id"
 		result = {"num": []}
@@ -415,7 +415,7 @@ class Database:
 
 			return final_result
 
-	def getTotalCountryPoints(self):
+	def getTotalCountryPoints(self) -> dict:
 
 		sql = "select country_id, sum(points) from success group by country_id"
 		result = {"sum": []}
@@ -446,7 +446,7 @@ class Database:
 
 			return final_result
 
-	def getMinOrder(self):
+	def getMinOrder(self) -> dict:
 
 		sql = "select country_id, min(orders) from success group by country_id"
 		result = {"order": []}
@@ -477,7 +477,7 @@ class Database:
 
 			return final_result
 
-	def getEconIntercon(self):
+	def getEconIntercon(self) -> dict:
 
 		sql = "select country_one_id, country_two_id, value from interconnectness where type_id = 1"
 		result = {"inter": []}
@@ -510,7 +510,7 @@ class Database:
 
 			return final_result
 
-	def getNonEconIntercon(self):
+	def getNonEconIntercon(self) -> dict:
 
 		sql = "select country_one_id, country_two_id, value from interconnectness where type_id = 2"
 		result = {"inter": []}
@@ -543,7 +543,7 @@ class Database:
 
 			return final_result
 
-	def getNonCombiBranchFunding(self)  :
+	def getNonCombiBranchFunding(self) -> dict:
 
 		sql = "select f.country_id, sport_id, branch_id, sum(absolute_funding)  from funding f join branch b  on b.id = f.branch_id  and is_combined = false group by f.country_id, sport_id, branch_id"
 		result = {"funding": []}

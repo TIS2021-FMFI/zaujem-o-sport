@@ -100,6 +100,14 @@ class Computations:
 
     def norm_funding(self, sportN : id, countryK : id) -> float:
 
+        suma = 0
+
+        for branchB in self.allBranchIds():
+            suma += self.total_branch_fundng(countryK, sportN, branchB) / self.total_country_funding(countryK)
+
+        return suma
+
+    def total_branch_fundng(self, countryK, sportN, branchB):
         return self.DUMMY
 
     def branch_funding(self, countryK : id, sportN : id, branchB : id) -> float:
@@ -109,7 +117,14 @@ class Computations:
         return self.DUMMY
 
     def total_country_funding(self, countryK : id) -> float:
-        return self.DUMMY
+
+        suma = 0
+
+        for sportN in self.allSportIds():
+            for branchB in self.allBranchIds():
+                suma += self.total_branch_fundng(countryK, sportN, branchB)
+
+        return suma
 
     def norm_success(self, sportN : id, countryK : id) -> float:
 
