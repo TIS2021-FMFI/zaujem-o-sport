@@ -693,8 +693,11 @@ class Database:
 				if country_id not in final_result:
 					final_result[country_id] = {}
 
+				if sport_id not in final_result[country_id] :
+					final_result[country_id][sport_id] = {}
 
-				final_result[country_id][sport_id] = suma
+
+				final_result[country_id][sport_id][branch_id] = suma
 
 			return final_result
 
@@ -739,5 +742,72 @@ class Database:
 		finally:
 			# print(result)
 			return result["sports"]
+
+	def getCombiFunding(self):
+
+		sql = "select b.country_id,  cb.subbranch_id, cb.combi_branch_id, absolute_funding * coefficient as fund from branch b " \
+			  "join combi_branch cb on b.id = cb.combi_branch_id " \
+			  "join funding f on f.country_id = b.country_id and f.branch_id = cb.combi_branch_id"
+
+		result = {"funding": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						result["funding"].append({"country_id": tmp[0], "subbranch_id": tmp[1], "combi_branch_id": tmp[2], "fund": tmp[3]})
+						tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+			final_result = {}
+
+			for record in result["funding"]:
+
+
+				country_id, subbranch_id, combi_branch_id, fund = record["country_id"], record["subbranch_id"], record["combi_branch_id"], record["fund"]
+
+
+				if country_id not in final_result:
+					final_result[country_id] = {}
+
+				if subbranch_id not in final_result[country_id]:
+					final_result[country_id][subbranch_id] = {}
+
+				if combi_branch_id in final_result[country_id][subbranch_id]:
+					final_result[country_id][subbranch_id][combi_branch_id] += fund
+				else:
+					final_result[country_id][subbranch_id][combi_branch_id] = fund
+
+			return final_result
+
+	def getNonCombiBranchIds(self):
+
+		sql = "select id from branch where is_combined = false"
+		result = {"branches": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						result["branches"].append({"id": tmp[0]})
+						tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+
+			return result["branches"]
+
+
 
 
