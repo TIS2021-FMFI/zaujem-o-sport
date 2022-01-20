@@ -250,8 +250,7 @@ class Database:
 			print(error)
 			return False
 
-
-	def addBranch(self, data : dict):
+	def addBranch(self, data : dict) -> bool:
 
 		if "is_combined" in data:
 			self.addCombiBranch(data)
@@ -292,10 +291,51 @@ class Database:
 			print(error)
 			return False
 
-
-
 	def addCombiBranch(self, data: dict):
 		...
+
+	def addCountry(self, data:dict) -> bool:
+
+		if "name" not in data:
+			raise DataError("country name missing in data")
+
+		if "translation" not in data:
+			raise DataError("translation to slovak missing in data")
+
+		if "code" not in data:
+			raise DataError("country code missing in data")
+
+
+		sql_check = "select name, is_active from country where code=%(code)s"
+		sql_activate = "update country set is_active = true where code = %(code)s"
+		sql_add = "insert into country(name, is_active, translation, code) values ( %(name)s, %(is_active)s, %(translation)s, %(code)s )"
+
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+
+					cursor.execute(sql_check, {"code":data['code']})
+					tmp = cursor.fetchone()
+					if tmp is None: # adding completely new country
+
+						cursor.execute(sql_add, {"name":data["name"], "is_active":True, "translation":data["translation"], "code":data["code"]})
+						dbConn.commit()
+
+					else: # activating country
+
+						if tmp[1] is True or tmp[0] != data["name"]: # country already active
+							raise DataError(f"country with entered code already exists - {tmp[0]}, please select another code")
+
+						cursor.execute(sql_activate, {"code":data["code"]})
+						dbConn.commit()
+
+			self._releaseConnection(dbConn)
+			return True
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+			return False
 
 	def updateSport(self, data: dict) -> bool:
 
@@ -324,7 +364,6 @@ class Database:
 			# TODO: define standard for database error messages
 			print(error)
 			return False
-
 
 	def importFundingData(self):
 		...
@@ -659,7 +698,7 @@ class Database:
 
 			return final_result
 
-	def getActiveCountryIds(self) -> dict:
+	def getActiveCountryIds(self) -> list:
 
 		sql = "select id, name from country where is_active = true"
 		result = {"countries":[]}
@@ -680,7 +719,7 @@ class Database:
 			# print(result)
 			return result["countries"]
 
-	def getSportIds(self) -> dict:
+	def getSportIds(self) -> list:
 
 		sql = "select id, title from sport"
 		result = {"sports":[]}
