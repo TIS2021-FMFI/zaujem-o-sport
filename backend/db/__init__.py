@@ -252,6 +252,49 @@ class Database:
 
 
 	def addBranch(self, data : dict):
+
+		if "is_combined" in data:
+			self.addCombiBranch(data)
+
+		if "sport_code" not in data:
+			raise DataError("sport code missing in data")
+
+		if "branch_code" not in data:
+			raise DataError("branch code not in data")
+
+		if "branch_title" not in data:
+			raise DataError("branch title not in data")
+
+		sql_sport = "select id from sport where code = %(sport_code)s"
+		sql_check = "select s.id, b.title from sport s join branch b on s.id = b.sport_id and s.code = %(sport_code)s and b.code = %(branch_code)s"
+		sql = "insert into branch(code, title, is_combined, sport_id) values ( %(code)s, %(title)s, %(is_combined)s, %(sport_id)s )"
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql_sport, {"sport_code":data["sport_code"]})
+					tmp = cursor.fetchone()
+					if tmp is None:
+						raise DataError(f"unable to insert, sport with entered code doesnt exist, please select another code")
+					sport_id = tmp[0]
+
+					cursor.execute(sql_check, {"sport_code":data['sport_code'], "branch_code":data['branch_code']})
+					tmp = cursor.fetchone()
+					if tmp is not None: # branch code already exists
+						raise DataError(f"unable to insert, branch with entered code already exists - {tmp[1]}, please select another code")
+
+					cursor.execute(sql, {"code":data['branch_code'], "title":data['branch_title'], "is_combined":'false',"sport_id":sport_id})
+					dbConn.commit()
+			self._releaseConnection(dbConn)
+			return True
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+			return False
+
+
+
+	def addCombiBranch(self, data: dict):
 		...
 
 	def updateSport(self, data: dict) -> bool:
