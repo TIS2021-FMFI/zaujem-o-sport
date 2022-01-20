@@ -34,6 +34,7 @@ class Computations:
         # zrkadlenie na urychlenie vypoctov
         self.total_BGS_data = None
         self.total_country_fund_data = None
+        self.total_success_of_country_data = {}
 
     def allActiveCountryIds(self) -> list:
 
@@ -59,6 +60,14 @@ class Computations:
 
         for record in self.sport_data:
             res.append(record["id"])
+
+        return res
+
+    def allSportImportance(self, countryK : id) -> dict:
+
+        res = {}
+        for sport in self.allSportIds():
+            res[sport] = self.importance(countryK, sport)
 
         return res
 
@@ -103,7 +112,6 @@ class Computations:
             return self.nonecon_interconnectness_data[countryK][countryJ]
         except KeyError:
             return 0
-
 
     def sport_importance_in_country(self, sportN : id, countryK : id) -> float:
 
@@ -170,12 +178,16 @@ class Computations:
 
     def total_success(self, countryK : id) -> float:
 
-        suma = 0
+        if countryK in self.total_success_of_country_data:
+            return self.total_success_of_country_data[countryK]
+        else:
+            suma = 0
 
-        for sportN in self.allSportIds():
-            suma += self.success(sportN, countryK)
+            for sportN in self.allSportIds():
+                suma += self.success(sportN, countryK)
 
-        return suma
+            self.total_success_of_country_data[countryK] = suma
+            return suma
 
     def success(self, sportN : id, countryK : id) -> float:
 
@@ -212,10 +224,16 @@ class Computations:
             return 0
 
     def max_points(self, sportN : id) -> float:
-        return self.max_points_data[sportN]
+        try:
+            return self.max_points_data[sportN]
+        except KeyError:
+            return 0
 
     def num_countries_in_sport(self, sportN : id) -> float:
-        return self.num_countries_in_sport_data[sportN]
+        try:
+            return self.num_countries_in_sport_data[sportN]
+        except KeyError:
+            return 0
 
     def total_points(self, countryK : id) -> float:
         try:
@@ -223,10 +241,11 @@ class Computations:
         except:
             return 0
 
-
-
     def min_order(self, countryK : id) -> float:
-        return self.min_order_data[countryK]
+        try:
+            return self.min_order_data[countryK]
+        except:
+            return 0
 
     def norm_BGS(self, sportN : id) -> float:
 
@@ -252,7 +271,7 @@ class Computations:
             return 0
 
 
-c = Computations()
+
 #print(c.BGS_data)
 #print(c.order(77,10)) # returns 3, correct
 #print(c.points(77,10)) # returns 13549.68, correct
@@ -265,5 +284,7 @@ c = Computations()
 #print(c.allActiveCountryIds())
 #print(c.allSportIds())
 
-print(c.importance(204, 25))
+
+for i, j in c.allSportImportance(204).items():
+    print(i, j)
 #print(c.norm_BGS(25))
