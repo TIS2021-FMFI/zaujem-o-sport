@@ -30,6 +30,11 @@ class Computations:
         self.sport_data = DB.getSportIds()
         self.noncombi_branch_data = DB.getNonCombiBranchIds()
 
+
+        # zrkadlenie na urychlenie vypoctov
+        self.total_BGS_data = None
+        self.total_country_fund_data = None
+
     def allActiveCountryIds(self) -> list:
 
         res = []
@@ -60,7 +65,8 @@ class Computations:
     def importance(self, countryK : id, sportN : id) -> float:
         suma = 0
         for countryJ in self.allActiveCountryIds():
-            suma += self.sport_importance_in_country(sportN, countryJ) * self.norm_interconnectness(countryK, countryJ)
+            if countryK != countryJ:
+                suma += self.sport_importance_in_country(sportN, countryJ) * self.norm_interconnectness(countryK, countryJ)
 
         return self.PV3 * self.norm_BGS(sportN) + (1 - self.PV3) * suma
 
@@ -83,14 +89,21 @@ class Computations:
         if countryK == countryJ:
             raise CompError("cannot compute econ interconectness for same countries")
 
-        return self.econ_interconnectness_data[countryK][countryJ]
+        try:
+            return self.econ_interconnectness_data[countryK][countryJ]
+        except KeyError:
+            return 0
 
     def nonecon_interconnectness(self, countryK : id, countryJ : id) -> float:
 
         if countryK == countryJ:
             raise CompError("cannot compute nonecon interconectness for same countries")
 
-        return self.nonecon_interconnectness_data[countryK][countryJ]
+        try:
+            return self.nonecon_interconnectness_data[countryK][countryJ]
+        except KeyError:
+            return 0
+
 
     def sport_importance_in_country(self, sportN : id, countryK : id) -> float:
 
@@ -137,15 +150,21 @@ class Computations:
 
     def total_country_funding(self, countryK : id) -> float:
 
-        suma = 0
+        if self.total_country_fund_data is not None:
+            return self.total_country_fund_data
+        else:
+            suma = 0
 
-        for sportN in self.allSportIds():
-            for branchB in self.allBranchIds():
-                suma += self.total_branch_fundng(countryK, sportN, branchB)
+            for sportN in self.allSportIds():
+                for branchB in self.allBranchIds():
+                    suma += self.total_branch_fundng(countryK, sportN, branchB)
 
-        return suma
+            self.total_country_fund_data = suma
+            return suma
 
     def norm_success(self, sportN : id, countryK : id) -> float:
+
+        if self.total_success(countryK) == 0: return 0
 
         return self.success(sportN, countryK) / self.total_success(countryK)
 
@@ -199,7 +218,12 @@ class Computations:
         return self.num_countries_in_sport_data[sportN]
 
     def total_points(self, countryK : id) -> float:
-        return self.total_country_points_data[countryK]
+        try:
+            return self.total_country_points_data[countryK]
+        except:
+            return 0
+
+
 
     def min_order(self, countryK : id) -> float:
         return self.min_order_data[countryK]
@@ -210,15 +234,22 @@ class Computations:
 
     def total_BGS(self) -> float:
 
-        suma = 0
+        if self.total_BGS_data != None:
+            return self.total_BGS_data
 
-        for sportN in self.allSportIds():
-            suma += self.BGS(sportN)
+        else:
+            suma = 0
 
-        return suma
+            for sportN in self.allSportIds():
+                suma += self.BGS(sportN)
+            self.total_BGS_data = suma
+            return suma
 
     def BGS(self, sportN : id) -> float:
-        return self.BGS_data[id]
+        try:
+            return self.BGS_data[sportN]
+        except KeyError:
+            return 0
 
 
 c = Computations()
@@ -235,3 +266,4 @@ c = Computations()
 #print(c.allSportIds())
 
 print(c.importance(204, 25))
+#print(c.norm_BGS(25))
