@@ -13,6 +13,8 @@ class Database:
 	def __init__(self, dbPool: psycopg2.pool.ThreadedConnectionPool):
 		self.dbPool = dbPool
 
+	# simple getters to display data
+
 	def _getConnection(self) -> psycopg2.extensions.connection:
 		dbConn = self.dbPool.getconn()
 		return dbConn
@@ -221,29 +223,65 @@ class Database:
 			# print(result)
 			return result
 
-	def addSport(self, data : dict):
+	# inputs to DB
+
+	def addSport(self, data : dict) -> bool:
 		if "code" not in data:
 			raise DataError("sport data do not contain code")
 		if "title" not in data:
 			raise DataError("sport data do not contain title")
 
+		sql_check = "select * from sport where code = %(code)s"
 		sql = "insert into sport(code, title) values (%(code)s, %(title)s);"
 		try:
 			with self._getConnection() as dbConn:
 				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql_check, {"code":data['code']})
+					tmp = cursor.fetchone()
+					if tmp != None: # sport code already exists
+						raise DataError("unable to insert, sport with entered code already exists, please select another code")
 					cursor.execute(sql, {"code":data['code'], "title":data['title'] })
+					dbConn.commit()
 			self._releaseConnection(dbConn)
+			return True
 		except psycopg2.DatabaseError as error:
 			# TODO: logging
 			# TODO: define standard for database error messages
 			print(error)
+			return False
 
 
 	def addBranch(self, data : dict):
 		...
 
-	def updateSport(self, data: dict):
-		...
+	def updateSport(self, data: dict) -> bool:
+
+		if "old_code" not in data:
+			raise DataError("sport data do not contain old code")
+		if "new_code" not in data:
+			raise DataError("sport data do not contain new code")
+		if "new_title" not in data:
+			raise DataError("sport data do not contain new title")
+
+		sql_check = "select id from sport where code = %(old_code)s"
+		sql = "update sport set code=%(new_code)s, title= %(new_title)s where id= %(id)s"
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql_check, {"old_code": data['old_code']})
+					tmp = cursor.fetchone()
+					if tmp is None:  # sport doesnt exist
+						raise DataError("unable to update sport, sport with entered code doesnt exist")
+					cursor.execute(sql, {"new_code": data['new_code'], "new_title": data['new_title'], "id": tmp[0]})
+				dbConn.commit()
+			self._releaseConnection(dbConn)
+			return True
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+			return False
+
 
 	def importFundingData(self):
 		...
