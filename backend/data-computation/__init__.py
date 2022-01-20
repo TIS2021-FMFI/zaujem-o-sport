@@ -1,9 +1,7 @@
 from settings import DB
 
-
 class CompError(Exception):
     ...
-
 
 class Computations:
 
@@ -13,7 +11,6 @@ class Computations:
         self.PV2 = 0.16
         self.PV3 = 0.34
         self.PV4 = 2
-        self.DUMMY = 0.1  # to avoid division by zero error
 
         # small db mirroring model will be initialize here
         #  local info from db which are frequently used in computations are stored in lists, maps
@@ -27,10 +24,11 @@ class Computations:
         self.econ_interconnectness_data = DB.getEconIntercon()
         self.nonecon_interconnectness_data = DB.getNonEconIntercon()
         self.noncombi_funding_data = DB.getNonCombiBranchFunding()
+        self.combi_funding = DB.getCombiFunding()
 
         self.country_data = DB.getActiveCountryIds()
         self.sport_data = DB.getSportIds()
-
+        self.noncombi_branch_data = DB.getNonCombiBranchIds()
 
     def allActiveCountryIds(self) -> list:
 
@@ -42,7 +40,13 @@ class Computations:
         return res
 
     def allBranchIds(self) -> list:
-        return []  # TODO
+
+        res = []
+
+        for item in self.noncombi_branch_data:
+            res.append(item["id"])
+
+        return res
 
     def allSportIds(self) -> list:
 
@@ -100,6 +104,9 @@ class Computations:
 
     def norm_funding(self, sportN : id, countryK : id) -> float:
 
+        if self.total_country_funding(countryK) == 0:
+            return 0
+
         suma = 0
 
         for branchB in self.allBranchIds():
@@ -108,13 +115,25 @@ class Computations:
         return suma
 
     def total_branch_fundng(self, countryK, sportN, branchB) -> float:
-        return self.DUMMY
+
+        res = self.branch_funding(countryK,sportN, branchB)
+
+        try:
+            data = self.combi_funding[countryK][branchB].items()
+        except KeyError:
+            data = []
+
+
+        for combi, fund in data:
+            res += fund
+
+        return res
 
     def branch_funding(self, countryK : id, sportN : id, branchB : id) -> float:
-        return self.noncombi_funding_data[countryK][sportN][branchB]
-
-    def combi_branch_funding(self, countryK : id, combiQ : id) -> float:
-        return self.DUMMY
+        try:
+            return self.noncombi_funding_data[countryK][sportN][branchB]
+        except KeyError:
+            return 0
 
     def total_country_funding(self, countryK : id) -> float:
 
@@ -162,10 +181,16 @@ class Computations:
         return res
 
     def order(self, countryK : id, sportN : id) -> float:
-        return self.order_data[countryK][sportN]
+        try:
+            return self.order_data[countryK][sportN]
+        except:
+            return 0
 
     def points(self, countryK : id, sportN : id) -> float:
-        return self.points_data[countryK][sportN]
+        try:
+            return self.points_data[countryK][sportN]
+        except:
+            return 0
 
     def max_points(self, sportN : id) -> float:
         return self.max_points_data[sportN]
@@ -184,8 +209,6 @@ class Computations:
         return self.BGS(sportN) / self.total_BGS()
 
     def total_BGS(self) -> float:
-
-        # return self.DUMMY # -> this one is suming to 0, to test without errors, use this dummy constant
 
         suma = 0
 
@@ -210,3 +233,5 @@ c = Computations()
 #print(c.min_order(55)) # returns 56, correct
 #print(c.allActiveCountryIds())
 #print(c.allSportIds())
+
+print(c.importance(204, 25))
