@@ -5,6 +5,9 @@ import secretary.endpoints.login
 import secretary.endpoints.show_sports
 import admin.endpoints.login
 import secretary.endpoints.show_countries
+import user.endpoints.success
+import user.endpoints.chart
+import user.endpoints.show_countries
 
 @app.errorhandler(400)
 def bad_request(e):
@@ -70,6 +73,24 @@ app.add_url_rule(
 	methods=["POST"]
 )
 
+# ----- user rules -----
+app.add_url_rule(
+	"/api/user/success",
+	view_func=user.endpoints.success.ShowSuccessView.as_view("list_success"),
+	methods=["GET", "POST"]
+)
+
+app.add_url_rule(
+	"/api/user/chart",
+	view_func=user.endpoints.chart.ShowChartView.as_view("list_chart"),
+	methods=["GET"]
+)
+
+app.add_url_rule(
+	"/api/user/countries",
+	view_func=user.endpoints.show_countries.ShowCountriesView.as_view("list_countries2"),
+	methods=["GET"]
+)
 
 if __name__ == "__main__":
 	ip = None
