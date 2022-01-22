@@ -1,0 +1,14 @@
+.main-navbar a{
+    color: white !important;
+    font-size: x-large;
+
+}
+
+.main-navbar a:hover{
+    background-color: #0092ff;
+
+
+}
+.main-navbar {
+    background-color: #0d6efd ;
+}
