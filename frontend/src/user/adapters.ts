@@ -1,6 +1,6 @@
 /** API adapters for the user part of the app. */
 
-import {axiosProvider as axios} from "app/axios_provider";
+import {generalAxiosProvider as axios} from "app/axios_provider";
 import {AxiosResponse} from "axios";
 
 //------------- Pre success ---------

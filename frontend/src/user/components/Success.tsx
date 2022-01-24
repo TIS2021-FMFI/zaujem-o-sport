@@ -2,7 +2,7 @@ import {useState} from "react";
 import {useQuery} from "react-query";
 import {apiListSports} from "./adapters";
 import {Spinner} from "react-bootstrap";
-import {TableColumnNameType, Table, TableRowsType} from "./table/Table";
+import {TableColumnNameType, Table, TableRowsType} from "components/table/Table";
 import Select from "react-select";
 import {Col, Row, Form, Button} from "react-bootstrap";
 
