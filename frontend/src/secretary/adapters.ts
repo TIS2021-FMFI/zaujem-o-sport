@@ -11,7 +11,6 @@ export interface ApiListSportsType {
 	}
 }
 
-
 export const apiListSports = ()
 	: Promise<AxiosResponse<ApiListSportsType>> =>
 {
@@ -30,9 +29,12 @@ export interface ApiListCountriesType {
 	}
 }
 
-export const apiListCountries = ()
-	: Promise<AxiosResponse<ApiListCountriesType>> =>
-{
-
+export const apiListCountries = (): Promise<AxiosResponse<ApiListCountriesType>> => {
 	return axios.get("/secretary/countries");
+}
+
+export const apiUploadFunding = (csvFile: File): Promise<AxiosResponse<{}>> => {
+	const formData = new FormData();
+	formData.append("file", csvFile);
+	return axios.post("/secretary/funding/upload", formData);
 }
