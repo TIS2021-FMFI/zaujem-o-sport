@@ -7,7 +7,7 @@ import {RootState} from "../../../app/store";
 import {clearState, IncorrectRowStates, IncorrectRowType, updateRow} from "./incorrectRowsSlice";
 
 // TODO: props: number of row in files, suggestion, ...
-// TODO: Table prop for not ordering and adding onClick functionality for cell (component instead of string)
+// TODO: table prop for not ordering and adding onClick functionality for cell (component instead of string)
 
 interface IncorrectRowsProps {
 	tableRowValues: TableCellValueOnly[][]

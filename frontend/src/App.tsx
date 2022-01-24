@@ -21,13 +21,13 @@ import {Countries} from "./secretary/pages/countries/Countries";
 
 
 import Navbar from "./user/components/Navbar";
-import {Rebricek} from "./user/pages/rebricek/rebricek";
-import {Export} from "./user/pages/export/export";
-import {Rozpocty} from "./user/pages/rozpocty/rozpocty";
-import {Uspesnost} from "./user/pages/uspesnost/uspesnost";
-import {Prepojenie} from "./user/pages/prepojenie/prepojenie";
+import {Chart} from "./user/pages/chart/Chart";
+import {Export} from "./user/pages/export/Export";
+import {Fundings} from "./user/pages/fundings/Fundings";
+import {Success} from "./user/pages/success/Success";
+import {Interconnectness} from "./user/pages/interconnectness/Interconnectness";
 import Footer from "./user/components/footer";
-import {HomeUser} from "./user/pages/home/homeuser";
+import {HomeUser} from "./user/pages/home/HomeUser";
 import 'user/pages/styles/site.scss'; //TODO
 
 
@@ -75,7 +75,7 @@ const UserRouters = () => {
     <Nav />
     <Route exact path="/export" component={Export} />
     <Route exact path="/funding" component={Funding} />
-    <Route exact path="/success" component={Success} />
+    <Route exact path="/success" component={success} />
     <Route exact path="/interconnectedness" component={Interconnectedness} />
     <Route exact path="*" component={NotFound} />
   </>)
@@ -90,11 +90,11 @@ const UserRouters = () => {
                 <div className="site">
                     <Route path="/sports"><Sports /></Route>
                 <Route path="/home"><HomeUser /></Route>
-                <Route path="/chart"><Rebricek /></Route>
+                <Route path="/chart"><Chart /></Route>
                 <Route path="/export"><Export /></Route>
-                <Route path="/funding"><Rozpocty /></Route>
-                <Route path="/success"><Uspesnost /></Route>
-                <Route path="/interconnectness"><Prepojenie /></Route>
+                <Route path="/funding"><Fundings /></Route>
+                <Route path="/success"><Success /></Route>
+                <Route path="/interconnectness"><Interconnectness /></Route>
                 </div>
             </Switch>
 
