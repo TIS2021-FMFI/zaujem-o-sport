@@ -33,8 +33,9 @@ class Computations:
 
         # zrkadlenie na urychlenie vypoctov
         self.total_BGS_data = None
-        self.total_country_fund_data = None
+        self.total_country_fund_data = {}
         self.total_success_of_country_data = {}
+
 
     def allActiveCountryIds(self) -> list:
 
@@ -115,8 +116,9 @@ class Computations:
 
     def sport_importance_in_country(self, sportN : id, countryK : id) -> float:
 
-        normFun = self.norm_funding(sportN, countryK)
+        normFun =  self.norm_funding(sportN, countryK)
         normSuc = self.norm_success(sportN, countryK)
+        print(normFun,normSuc, sportN,countryK)
 
         if normFun > 0:
             return (self.PV1 * normFun + self.PV2 * normSuc) / (self.PV1 + self.PV2)
@@ -158,8 +160,8 @@ class Computations:
 
     def total_country_funding(self, countryK : id) -> float:
 
-        if self.total_country_fund_data is not None:
-            return self.total_country_fund_data
+        if countryK in self.total_country_fund_data:
+            return self.total_country_fund_data[countryK]
         else:
             suma = 0
 
@@ -167,7 +169,7 @@ class Computations:
                 for branchB in self.allBranchIds():
                     suma += self.total_branch_fundng(countryK, sportN, branchB)
 
-            self.total_country_fund_data = suma
+            self.total_country_fund_data[countryK] = suma
             return suma
 
     def norm_success(self, sportN : id, countryK : id) -> float:
@@ -284,7 +286,26 @@ class Computations:
 #print(c.allActiveCountryIds())
 #print(c.allSportIds())
 
+import time
 
-for i, j in c.allSportImportance(204).items():
-    print(i, j)
-#print(c.norm_BGS(25))
+t = time.time()
+
+c = Computations()
+#print(t - time.time())
+#for i, j in c.allSportImportance(204).items():
+#    print(i, j)
+#print(c.norm_BGS(2))
+#print(t -time.time())
+
+#print(c.norm_BGS(25)) # correct
+
+#print(c.econ_interconnectness(3, 35))
+#print(c.nonecon_interconnectness(3, 35))
+#print(c.total_interconnectness(3,35))
+#print(c.norm_interconnectness(3,35))
+# need to change econ in db to norm econ and nonecon to norm nonecon
+
+#print(c.sport_importance_in_country(7,3)) # should be 0.0222
+
+#print(c.norm_success(3,3))
+print(c.order_data[3])

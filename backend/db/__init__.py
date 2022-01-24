@@ -808,6 +808,57 @@ class Database:
 
 			return result["branches"]
 
+	def getTotalBranchFunding(self):
+
+		sql = """select country_id, branch_id, sum(absolute_funding) from
+			((
+				select f.country_id, branch_id, absolute_funding
+				from funding f join branch b  
+				on b.id = f.branch_id  and is_combined = false	
+			)
+			union
+			(
+				select b.country_id, cb.subbranch_id as branch_id, absolute_funding * coefficient as absolute_funding 
+				from branch b join combi_branch cb on b.id = cb.combi_branch_id
+				join funding f on f.country_id = b.country_id and f.branch_id = cb.combi_branch_id
+				
+			)) as x
+			
+			group by country_id, branch_id
+			order by country_id, branch_id
+			"""
+
+		result = {"funding": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						result["funding"].append({"country_id":tmp[0], "branch_id":tmp[1], "absolute_funding":tmp[2]})
+						tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+
+			final_result = {}
+
+			for record in result["funding"]:
+				country_id, branch_id, absolute_funding = record["country_id"], record["branch_id"], record["absolute_funding"]
+
+				if country_id not in final_result:
+					final_result[country_id] = {}
+
+				final_result[country_id][branch_id] = absolute_funding
+
+			return final_result
+
+
+
 
 
 
