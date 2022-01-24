@@ -3,7 +3,7 @@ import {useQuery} from "react-query";
 import {apiListChart, chartType} from "../../adapters";
 import {Spinner} from "react-bootstrap";
 
-export const Rebricek = () => {
+export const Chart = () => {
 
 
     const [charts, setChart] = useState<chartType[]>();

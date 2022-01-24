@@ -2,7 +2,7 @@ import {useState} from "react";
 import {useQuery} from "react-query";
 import {Spinner} from "react-bootstrap";
 
-export const Prepojenie = () => {
+export const Interconnectness = () => {
 
     return (<>
         <header>

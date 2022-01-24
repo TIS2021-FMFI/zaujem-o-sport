@@ -4,7 +4,7 @@ import {apiListCountry, apiListSuccess, apiSuccess, countryType, successType} fr
 import {Form, Spinner} from "react-bootstrap";
 import Select from "react-select";
 
-export const Uspesnost = () => {
+export const Success = () => {
     const [countries, setCountry] = useState<countryType[]>();
 
     useQuery("list_countries2", apiListCountry, {

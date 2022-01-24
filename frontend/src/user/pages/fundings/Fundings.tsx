@@ -5,7 +5,7 @@ import {Table} from "components/table/Table";
 import {TableRowsType} from "components/table/Table";
 import {TableColumnNameType} from "components/table/Table";
 
-export const Rozpocty = () => {
+export const Fundings = () => {
 
 
     const [selectedState, setSelectedState] = useState<Country>( { id: 204, code: 'SVK', name: 'SLOVAKIA', translation : 'Slovensko', active : true});

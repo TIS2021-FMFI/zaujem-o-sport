@@ -26,7 +26,7 @@ export const Sports = () => {
 
 		}
 	});*/
-  // TODO: use <Table columnNames={columnNames} rows={sportRows} /> instead of .map
+  // TODO: use <table columnNames={columnNames} rows={sportRows} /> instead of .map
   return (<>
 	  <header>
 	    <h1>Uložené športy</h1>
