@@ -2,29 +2,33 @@ import React from "react";
 import {BrowserRouter as Router, Redirect, Route, Switch, useRouteMatch} from "react-router-dom";
 import { createBrowserHistory } from 'history';
 import {NotFound} from "pages/not_found/NotFound";
-import {Login} from "secretary/pages/login/Login";
-import {Nav} from "user/components/Nav"
-import {Export} from "user/pages/export/Export";
-import {Funding} from "user/pages/funding/Funding";
-import {Success} from "user/pages/success/Success";
-import {Interconnectedness} from "user/pages/interconnectedness/Interconnectness";
-import {Logout} from "./secretary/pages/login/Logout";
+import {Login} from "components/login/Login";
+import {Logout} from "components/login/Logout";
 import {Home} from "secretary/pages/home/Home";
 import {Sports} from "./secretary/pages/sports/Sports";
 
 
 import {setupInterceptors} from "app/axios_provider";
 import {Sidebar, SidebarLinksProp} from "./components/sidebar/Sidebar";
-import {PlusLg, HouseDoor, List, Upload, ImageAlt} from "react-bootstrap-icons";
+import {PlusLg, HouseDoor, List, Upload, ImageAlt, Pen} from "react-bootstrap-icons";
 import globalStyles from "styles/global.module.scss";
 import {Container} from "react-bootstrap";
 import {UploadData} from "./secretary/pages/upload_data/UploadData";
 import {AddSport} from "./secretary/pages/sports/add_sport/AddSport";
 import {AddBranch} from "./secretary/pages/branches/add_branch/AddBranch";
 import {Countries} from "./secretary/pages/countries/Countries";
-import {ToastContainer} from "react-toastify";
-import create_snackbar from 'components/snackbar/Snackbar';
-import {Countries} from "./secretary/pages/countries/Countries";
+
+
+
+import Navbar from "./user/components/Navbar";
+import {Rebricek} from "./user/pages/rebricek/rebricek";
+import {Export} from "./user/pages/export/export";
+import {Rozpocty} from "./user/pages/rozpocty/rozpocty";
+import {Uspesnost} from "./user/pages/uspesnost/uspesnost";
+import {Prepojenie} from "./user/pages/prepojenie/prepojenie";
+import Footer from "./user/components/footer";
+import {HomeUser} from "./user/pages/home/homeuser";
+import 'user/pages/styles/site.scss'; //TODO
 
 
 const history = createBrowserHistory();
@@ -48,8 +52,16 @@ const App = () => {
   <>
     <Router>
       <Switch>
-        <SecretaryAuthRoute exact path="/auth/secretary/login" component={Login} />
+        <SecretaryAuthRoute exact path="/auth/secretary/login">
+          <Login userType="secretary" />
+        </SecretaryAuthRoute>
         <Route path="/secretary" component={SecretaryRoutes} />
+
+        <AdminAuthRoute exact path="/auth/admin/login">
+          <Login userType="admin" lang="en" />
+        </AdminAuthRoute>
+        <Route path="/admin" component={AdminRoutes} />
+
         <Route path="/" component={UserRouters} />
       </Switch>
     </Router>
@@ -57,6 +69,7 @@ const App = () => {
   );
 }
 
+/*
 const UserRouters = () => {
   return (<>
     <Nav />
@@ -67,6 +80,35 @@ const UserRouters = () => {
     <Route exact path="*" component={NotFound} />
   </>)
 }
+*/
+
+const UserRouters = () => {
+    return (
+        <Router>
+            <Navbar />
+            <Switch>
+                <div className="site">
+                    <Route path="/sports"><Sports /></Route>
+                <Route path="/home"><HomeUser /></Route>
+                <Route path="/chart"><Rebricek /></Route>
+                <Route path="/export"><Export /></Route>
+                <Route path="/funding"><Rozpocty /></Route>
+                <Route path="/success"><Uspesnost /></Route>
+                <Route path="/interconnectness"><Prepojenie /></Route>
+                </div>
+            </Switch>
+
+
+
+            <Footer />
+
+        </Router>
+
+    );
+}
+
+
+
 
 const SecretaryRoutes = () => {
   // The `path` lets us build <Route> paths that are
@@ -125,7 +167,9 @@ const SecretaryRoutes = () => {
             <SecretaryAuthRoute exact path={`${path}/sports/add`} component={AddSport} />
             <SecretaryAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
             <SecretaryAuthRoute exact path={`${path}/countries/list`} component={Countries} />
-            <Route exact path={`${path}/logout`} component={Logout} />
+            <Route exact path={`${path}/logout`}>
+              <Logout userType="secretary" />
+            </Route>
             <SecretaryAuthRoute path="*" component={NotFound} />
           </Switch>
         </div>
@@ -135,7 +179,87 @@ const SecretaryRoutes = () => {
 }
 
 const AdminRoutes = () => {
+  // The `path` lets us build <Route> paths that are
+  // relative to the parent route, while the `url` lets
+  // us build relative links.
+  let { path, url } = useRouteMatch();
 
+  console.log(path, url);
+
+  const adminHeader = "Admin panel";
+
+  const adminSidebarLinks: SidebarLinksProp[] = [
+    {
+      route: `${url}`,
+      name: "Home",
+      icon: HouseDoor
+    },
+    {
+      route: `${url}/data/upload`,
+      name: "Upload data",
+      icon: Upload
+    },
+    {
+      route: `${url}/sports/add`,
+      name: "Add sport",
+      icon: PlusLg
+    },
+    {
+      route: `${url}/branches/add`,
+      name: "Add branch",
+      icon: PlusLg
+    },
+    {
+      route: `${url}/countries/add`,
+      name: "Add country",
+      icon: PlusLg
+    },
+    {
+      route: `${url}/sports/update`,
+      name: "Update sport",
+      icon: Pen
+    },
+    {
+      route: `${url}/sports/list`,
+      name: "Show sports",
+      icon: List
+    },
+    {
+      route: `${url}/countries/list`,
+      name: "Show countries",
+      icon: ImageAlt
+    }
+  ]
+
+  return (
+    <>
+      <Sidebar
+        header={adminHeader}
+        links={adminSidebarLinks}
+        logoutRoute={`${path}/logout`}
+        lang={"en"}
+      />
+      <Container fluid="lg">
+        <div style={{marginLeft: globalStyles.sidebarWidth}}>
+          <Switch>
+            {/* TODO: define components */}
+            <AdminAuthRoute exact path={path} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/data/upload`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/sports/add`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/branches/add`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/countries/add`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/sports/update`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/sports/list`} component={NotFound} />
+            <AdminAuthRoute exact path={`${path}/countries/list`} component={NotFound} />
+            <Route exact path={`${path}/logout`}>
+              <Logout userType="admin" />
+            </Route>
+            <AdminAuthRoute path="*" component={NotFound} />
+          </Switch>
+        </div>
+      </Container>
+    </>
+  )
 }
 
 const SecretaryAuthRoute = ({component: Component, ...routeProps}: any) => {
@@ -159,9 +283,9 @@ const AdminAuthRoute = ({component: Component, ...routeProps}: any) => {
         <Route
             {...routeProps}
             render={(props) => {
-                if (typeof routeProps.path !== "object" && routeProps.path === "/admin/login")
+                if (typeof routeProps.path !== "object" && routeProps.path === "/auth/admin/login")
                     return !isAdminLoggedIn ? <Component {...props}/> : <Redirect to="/admin"/>;
-                return isAdminLoggedIn ? <Component {...props}/> : <Redirect to="/admin/login"/>;
+                return isAdminLoggedIn ? <Component {...props}/> : <Redirect to="/auth/admin/login"/>;
             }}
         />
     );

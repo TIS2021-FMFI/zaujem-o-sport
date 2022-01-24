@@ -3,7 +3,11 @@ import settings
 from settings import app, jwt
 import secretary.endpoints.login
 import secretary.endpoints.show_sports
+import admin.endpoints.login
 import secretary.endpoints.show_countries
+import user.endpoints.success
+import user.endpoints.chart
+import user.endpoints.show_countries
 
 @app.errorhandler(400)
 def bad_request(e):
@@ -41,6 +45,8 @@ def revoked_token_callback(jwt_header, jwt_payload):
 def unathorized_callback(callback):
 	return {"message": "Missing Authorization Header", "data": {}}, 401
 
+# ----- secretary rules -----
+
 app.add_url_rule(
 	"/api/secretary/login",
 	view_func=secretary.endpoints.login.LoginView.as_view("secretary_login"),
@@ -59,6 +65,32 @@ app.add_url_rule(
 	methods=["GET"]
 )
 
+# ----- admin rules -----
+
+app.add_url_rule(
+	"/api/admin/login",
+	view_func=admin.endpoints.login.LoginView.as_view("admin_login"),
+	methods=["POST"]
+)
+
+# ----- user rules -----
+app.add_url_rule(
+	"/api/user/success",
+	view_func=user.endpoints.success.ShowSuccessView.as_view("list_success"),
+	methods=["GET", "POST"]
+)
+
+app.add_url_rule(
+	"/api/user/chart",
+	view_func=user.endpoints.chart.ShowChartView.as_view("list_chart"),
+	methods=["GET"]
+)
+
+app.add_url_rule(
+	"/api/user/countries",
+	view_func=user.endpoints.show_countries.ShowCountriesView.as_view("list_countries2"),
+	methods=["GET"]
+)
 
 if __name__ == "__main__":
 	ip = None

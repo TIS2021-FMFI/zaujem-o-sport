@@ -1,6 +1,6 @@
 from functools import wraps
 from flask_jwt_extended import jwt_required, get_jwt
-from app_types import UserTypes
+from app_types import UserTypes, Status, Response
 
 def is_secretary(f):
 	"""
@@ -14,15 +14,20 @@ def is_secretary(f):
 		userType = jwtData.get("userType")
 		if userType == UserTypes.SECRETARY:
 			return f(*args, **kwargs)
-		return {"status": "error", "message": "some default respone to be defined in types.py"}
-
+		return Response.get(status=Status.ERROR, message="Invalid token")
 	return decorated_function
 
 @jwt_required()
 def is_admin(f):
+	"""
+	Request validation with JWT token.
+	Use this decorator on any route that needs authetication of admin.
+	"""
 	@wraps(f)
 	def decorated_function(*args, **kwargs):
-		# TODO
-		return f(*args, **kwargs)
-
+		jwtData = get_jwt()
+		userType = jwtData.get("userType")
+		if userType == UserTypes.ADMIN:
+			return f(*args, **kwargs)
+		return Response.get(status=Status.ERROR, message="Invalid token")
 	return decorated_function
