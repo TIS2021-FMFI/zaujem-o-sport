@@ -30,6 +30,8 @@ class Computations:
         self.sport_data = DB.getSportIds()
         self.noncombi_branch_data = DB.getNonCombiBranchIds()
 
+        self.noncombi_branch_with_sport_data = DB.getNonCombiWithSportBranchIds()
+
 
         # zrkadlenie na urychlenie vypoctov
         self.total_BGS_data = None
@@ -52,6 +54,18 @@ class Computations:
 
         for item in self.noncombi_branch_data:
             res.append(item["id"])
+
+        return res
+
+    def allBranchInSportIds(self, sportN:id) -> list:
+
+        res = []
+
+        try:
+            for item in self.noncombi_branch_with_sport_data[sportN]:
+                res.append(item)
+        except KeyError:
+            ...
 
         return res
 
@@ -118,7 +132,6 @@ class Computations:
 
         normFun =  self.norm_funding(sportN, countryK)
         normSuc = self.norm_success(sportN, countryK)
-        print(normFun,normSuc, sportN,countryK)
 
         if normFun > 0:
             return (self.PV1 * normFun + self.PV2 * normSuc) / (self.PV1 + self.PV2)
@@ -166,8 +179,10 @@ class Computations:
             suma = 0
 
             for sportN in self.allSportIds():
-                for branchB in self.allBranchIds():
-                    suma += self.total_branch_fundng(countryK, sportN, branchB)
+                for branchB in self.allBranchInSportIds(sportN):
+
+                    tmp = self.total_branch_fundng(countryK, sportN, branchB)
+                    suma += tmp
 
             self.total_country_fund_data[countryK] = suma
             return suma
@@ -272,6 +287,24 @@ class Computations:
         except KeyError:
             return 0
 
+    def getFinalOrderById(self, countryK:id) -> dict:
+
+        sportInfo = DB.getAllSportInfo()
+
+        result = {}
+
+        p = []
+        for i, j in c.allSportImportance(104).items():
+            p.append((-j, i))
+        p.sort()
+
+        order = 1
+        for value, id in p:
+            code, title = sportInfo[id]
+            result[order] = [code, title, -value]
+            order += 1
+
+        return result
 
 
 #print(c.BGS_data)
@@ -292,8 +325,13 @@ t = time.time()
 
 c = Computations()
 #print(t - time.time())
-#for i, j in c.allSportImportance(204).items():
-#    print(i, j)
+#p = []
+#for i, j in c.allSportImportance(104).items():
+#    p.append((-j, i))
+#p.sort()
+#for i,j in p:
+#    print(j)
+
 #print(c.norm_BGS(2))
 #print(t -time.time())
 
@@ -308,4 +346,17 @@ c = Computations()
 #print(c.sport_importance_in_country(7,3)) # should be 0.0222
 
 #print(c.norm_success(3,3))
-print(c.order_data[3])
+#print(c.order_data[3])
+#print(c.num_countries_in_sport(4))
+
+#print(c.success(4,11))
+
+#print(c.nonecon_interconnectness(3,11))
+
+#print(c.total_branch_fundng(46, 47, 103)) # correct china, archery only from combi funding
+
+#print(c.total_branch_fundng(160, 18, 31)) # correct new zeland, curling, sum of branch and combi funding
+#print(c.total_country_funding(160)) # incorrect, too big, now too low, missing 15 milions in automobile combi, bcs its not parse
+#print(c.allBranchInSportIds(3))
+
+#print(c.getFinalOrderById(160))

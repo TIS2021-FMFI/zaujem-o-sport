@@ -857,8 +857,60 @@ class Database:
 
 			return final_result
 
+	def getNonCombiWithSportBranchIds(self):
+
+		sql = "select id, sport_id from branch where is_combined = false"
+		result = {"branches": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						result["branches"].append({"id": tmp[0], "sport_id":tmp[1]})
+						tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+
+			final_result = {}
+
+			for record in result["branches"]:
+				sport_id, id = record["sport_id"], record["id"]
+				if sport_id not in final_result:
+					final_result[sport_id] = []
+				final_result[sport_id].append(id)
+			return final_result
 
 
+	def getAllSportInfo(self):
 
+		sql = "select id, code, title from sport"
+		result = {"sports": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						result["sports"].append({"id": tmp[0], "code": tmp[1], "title":tmp[2]})
+						tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
 
+			final_result = {}
+
+			for record in result["sports"]:
+				id, code,title = record["id"], record["code"], record["title"]
+				final_result[id] = (code, title)
+			return final_result
 
