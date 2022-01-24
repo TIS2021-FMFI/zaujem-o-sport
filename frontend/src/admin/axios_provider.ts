@@ -1,7 +1,7 @@
 import axios from "axios";
 import config from "config";
 
-/** Use this API provider to make properly admin calls. */
+/** Use this API provider to make admin calls. */
 export const adminAxiosProvider = axios.create({
 	baseURL: config.API_URL,
 	headers: {

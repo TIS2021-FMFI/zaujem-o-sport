@@ -1,7 +1,7 @@
 import axios from "axios";
 import config from "config";
 
-/** Use this API provider to make properly secretary calls. */
+/** Use this API provider to make secretary calls. */
 export const secretaryAxiosProvider = axios.create({
 	baseURL: config.API_URL,
 	headers: {
