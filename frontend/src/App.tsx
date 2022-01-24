@@ -6,9 +6,8 @@ import {Login} from "components/login/Login";
 import {Logout} from "components/login/Logout";
 import {Home} from "secretary/pages/home/Home";
 import {Sports} from "./secretary/pages/sports/Sports";
-
-
-import {setupInterceptors} from "app/axios_provider";
+import {setupInterceptors as setupSecretaryInterceptors} from "secretary/axios_provider";
+import {setupInterceptors as setupAdminInterceptors} from "admin/axios_provider";
 import {Sidebar, SidebarLinksProp} from "./components/sidebar/Sidebar";
 import {PlusLg, HouseDoor, List, Upload, ImageAlt, Pen} from "react-bootstrap-icons";
 import globalStyles from "styles/global.module.scss";
@@ -17,9 +16,6 @@ import {UploadData} from "./secretary/pages/upload_data/UploadData";
 import {AddSport} from "./secretary/pages/sports/add_sport/AddSport";
 import {AddBranch} from "./secretary/pages/branches/add_branch/AddBranch";
 import {Countries} from "./secretary/pages/countries/Countries";
-
-
-
 import Navbar from "./user/components/Navbar";
 import {Chart} from "./user/pages/chart/Chart";
 import {Export} from "./user/pages/export/Export";
@@ -30,9 +26,9 @@ import Footer from "./user/components/footer";
 import {HomeUser} from "./user/pages/home/HomeUser";
 import 'user/pages/styles/site.scss'; //TODO
 
-
 const history = createBrowserHistory();
-setupInterceptors(history);
+setupSecretaryInterceptors(history);
+setupAdminInterceptors(history);
 
 const App = () => {
   
