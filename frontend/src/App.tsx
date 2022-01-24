@@ -24,7 +24,8 @@ import {Success} from "./user/pages/success/Success";
 import {Interconnectness} from "./user/pages/interconnectness/Interconnectness";
 import Footer from "./user/components/footer";
 import {HomeUser} from "./user/pages/home/HomeUser";
-import 'user/pages/styles/site.scss'; //TODO
+import 'user/pages/styles/site.scss';
+import {ToastContainer} from "react-toastify"; //TODO
 
 const history = createBrowserHistory();
 setupSecretaryInterceptors(history);
@@ -60,6 +61,7 @@ const App = () => {
         <Route path="/" component={UserRouters} />
       </Switch>
     </Router>
+    <ToastContainer />
     </>
   );
 }

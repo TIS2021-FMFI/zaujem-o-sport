@@ -6,7 +6,7 @@ import React, {useState} from "react";
 import {dropzoneFileProp} from "components/drag_and_drop/Dropzone";
 import {IncorrectRows} from "./IncorrectRows";
 import {apiUploadFunding} from "../../adapters";
-import create_snackbar from "../../../components/snackbar/Snackbar";
+import create_snackbar, {SnackTypes} from "../../../components/snackbar/Snackbar";
 
 const acceptedFileExtensions = ".csv";
 
@@ -44,7 +44,7 @@ export const UploadData = () => {
 		if (files.length === 1)
 			mutation.mutate(files[0].file);
 		else
-			create_snackbar("hello from snackbar", snackTypes.info)}
+			create_snackbar("hello from snackbar", SnackTypes.warn);
 	}
 
 	return (<>
