@@ -33,7 +33,6 @@ setupAdminInterceptors(history);
 const App = () => {
   
   {/* example of snackbar usage
-  enum snackTypes{'error', 'info', 'warn', 'success'}  // this will be exported
   <div>
     <button onClick={() => create_snackbar("hello from snackbar", snackTypes.info)}>try info snackbar</button>
     <button onClick={() => create_snackbar("hello from snackbar", snackTypes.warn)}>try warn snackbar</button>

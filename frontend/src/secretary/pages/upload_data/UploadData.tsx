@@ -6,6 +6,7 @@ import React, {useState} from "react";
 import {dropzoneFileProp} from "components/drag_and_drop/Dropzone";
 import {IncorrectRows} from "./IncorrectRows";
 import {apiUploadFunding} from "../../adapters";
+import create_snackbar from "../../../components/snackbar/Snackbar";
 
 const acceptedFileExtensions = ".csv";
 
@@ -40,7 +41,10 @@ export const UploadData = () => {
 		// TODO: errors in some rows in uploaded data load <IncorrectRows />
 		// TODO: with incorrect data.
 		// TODO: Decide how to store/pass correct and incorrect rows.
-		console.log(files);
+		if (files.length === 1)
+			mutation.mutate(files[0].file);
+		else
+			create_snackbar("hello from snackbar", snackTypes.info)}
 	}
 
 	return (<>
