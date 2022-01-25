@@ -150,7 +150,7 @@ class Computations:
 
         return suma
 
-    def total_branch_fundng(self, countryK, sportN, branchB) -> float:
+    def total_branch_funding(self, countryK, sportN, branchB) -> float:
 
         res = self.branch_funding(countryK,sportN, branchB)
 
