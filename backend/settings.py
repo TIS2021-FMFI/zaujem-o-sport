@@ -34,10 +34,10 @@ jwt = JWTManager(app)
 dbPool = psycopg2.pool.ThreadedConnectionPool(
 	minconn=1,
 	maxconn=20,
-	host=env.get("DB_HOST"),
-	database=env.get("DB_NAME"),
-	user=env.get("DB_USER"),
-	password=env.get("DB_PASS")
+	host= env.get("DB_HOST"),
+	database= env.get("DB_NAME"),
+	user= env.get("DB_USER"),
+	password= env.get("DB_PASS")
 )
 DB = Database(dbPool)
 
@@ -47,3 +47,24 @@ DB = Database(dbPool)
 #print(DB.getSuccessBySport(28))
 #print(DB.getSuccessByCountry("SVK"))
 #print(DB.getInterconnectnessData(1, "SVK"))
+#print("res", DB.getBGS())
+#print("res", DB.getPoints())
+#print(DB.getMaxPoints())
+#print(DB.getNumCountriesInSport())
+#print(DB.getTotalCountryPoints())
+#print(DB.getMinOrder())
+#print(DB.getEconIntercon())
+#print(DB.getNonEconIntercon())
+#print(DB.getNonCombiBranchFunding())
+#print(DB.getActiveCountryIds())
+#print(DB.getSportIds())
+#DB.addSport({"code":204, "title":"WHATEVER5"})
+#DB.updateSport({"old_code":202, "new_coprintde":210,"new_title":"UPDATED 2"})
+#print(DB.updateSport({"old_code":210,"new_code":211,"new_title":"UPDATED 3"}))
+#print(DB.addBranch({"sport_code": 3, "branch_code": 7, "branch_title": "TMP 1"}))
+#print(DB.addCountry({"code":"SVK", "name": "haha", "translation":"hahaha"}))
+#print(DB.addCountry({"code":"AFG", "name": "haha", "translation":"hahaha"}))
+#print(DB.getCombiFunding())
+#print(DB.getNonCombiBranchIds())
+#print(DB.getNonCombiWithSportBranchIds())
+#print(DB.getAllSportInfo())
