@@ -5,8 +5,7 @@ import styles from "./styles/login.module.scss";
 import React, {useState} from "react";
 import {isEmailValid} from "helpers/validation";
 import {useHistory} from "react-router-dom";
-import {Language} from "../../app/string";
-import textLang from "app/string";
+import textLang, {Language} from "app/string";
 
 export interface LoginFormProps {
 	userType: UserType,

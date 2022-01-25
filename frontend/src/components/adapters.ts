@@ -1,4 +1,4 @@
-import {axiosProvider as axios} from "app/axios_provider";
+import {generalAxiosProvider as axios} from "app/axios_provider";  // TODO: this will need some more testing in edge scenarios
 import {AxiosResponse} from "axios";
 
 export interface ApiLoginResponseType {

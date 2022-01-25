@@ -1,16 +1,13 @@
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
+export enum SnackTypes{'error', 'info', 'warn', 'success'}
 
-export{}
-
-enum snackTypes{'error', 'info', 'warn', 'success'}
-
-export default function create_snackbar(msg:String, type:snackTypes)
+export default function create_snackbar(msg:String, type:SnackTypes)
 {
     switch (type)
     {
-        case snackTypes.error:
+        case SnackTypes.error:
 
 
             toast.error(msg, {
@@ -24,7 +21,7 @@ export default function create_snackbar(msg:String, type:snackTypes)
             });
             break;
 
-        case snackTypes.success:
+        case SnackTypes.success:
 
             toast.success(msg, {
                 position: "top-right",
@@ -37,7 +34,7 @@ export default function create_snackbar(msg:String, type:snackTypes)
             });
             break;
 
-        case snackTypes.warn:
+        case SnackTypes.warn:
 
             toast.warn(msg, {
                 position: "top-right",
@@ -50,7 +47,7 @@ export default function create_snackbar(msg:String, type:snackTypes)
             });
             break;
 
-        case snackTypes.info:
+        case SnackTypes.info:
 
             toast.info(msg, {
                 position: "top-right",

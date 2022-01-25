@@ -13,10 +13,11 @@ export type dropzoneFileProp = {
 type DropzoneProps = {
 	accept: string,
 	files: dropzoneFileProp[],
-	setFiles: Function
+	setFiles: Function,
+	multipleFiles?: boolean
 };
 
-export const Dropzone = ({accept, files, setFiles}: DropzoneProps) => {
+export const Dropzone = ({accept, files, setFiles, multipleFiles=false}: DropzoneProps) => {
 
 	const onDrop = useCallback(async acceptedFiles => {
 		let droppedFiles = [];
@@ -37,7 +38,7 @@ export const Dropzone = ({accept, files, setFiles}: DropzoneProps) => {
 
 	}, [files, setFiles]);
 
-	const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop, accept})
+	const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop, accept, multiple: multipleFiles})
 
 	return (
 		<div {...getRootProps({className: styles.dropzone})}>

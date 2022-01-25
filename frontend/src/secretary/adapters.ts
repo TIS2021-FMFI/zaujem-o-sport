@@ -1,8 +1,7 @@
 /** API adapters for the secretary part of the app. */
 
-import {axiosProvider as axios} from "app/axios_provider";
+import {secretaryAxiosProvider as axios} from "secretary/axios_provider";
 import {AxiosResponse} from "axios";
-
 
 export interface ApiListSportsType {
 	message: string,
@@ -11,7 +10,6 @@ export interface ApiListSportsType {
 		sports: string[][]
 	}
 }
-
 
 export const apiListSports = ()
 	: Promise<AxiosResponse<ApiListSportsType>> =>
@@ -31,9 +29,12 @@ export interface ApiListCountriesType {
 	}
 }
 
-export const apiListCountries = ()
-	: Promise<AxiosResponse<ApiListCountriesType>> =>
-{
-
+export const apiListCountries = (): Promise<AxiosResponse<ApiListCountriesType>> => {
 	return axios.get("/secretary/countries");
+}
+
+export const apiUploadFunding = (csvFile: File): Promise<AxiosResponse<{}>> => {
+	const formData = new FormData();
+	formData.append("csvFile", csvFile);
+	return axios.post("/secretary/funding/upload", formData);
 }

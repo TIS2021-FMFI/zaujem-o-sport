@@ -37,7 +37,7 @@ export const AddBranch = () => {
 
 	return(<>
 		<header>
-			<h1>Pridanie nového odvetia</h1>
+			<h1>Pridanie nového odvetvia</h1>
 		</header>
 		<section>
 			<Row>
@@ -78,9 +78,9 @@ export const AddBranch = () => {
 
 						<Form.Group as={Row} className="mb-4" controlId="formHorizontalBranchCode">
 							<Col>
-								<FloatingLabel controlId="floatingSportCode" label="Nový kód odvetia">
+								<FloatingLabel controlId="floatingSportCode" label="Nový kód odvetvia">
 									<Form.Control type="text"
-									              placeholder="Nový kód odvetia"
+									              placeholder="Nový kód odvetvia"
 									              defaultValue={newBranchCode.toString()}
 									              disabled />
 								</FloatingLabel>
@@ -92,8 +92,8 @@ export const AddBranch = () => {
 
 						<Form.Group as={Row} className="mb-4" controlId="formHorizontalBranchName">
 							<Col>
-								<FloatingLabel controlId="floatingPassword" label="Názov odvetia">
-									<Form.Control type="text" placeholder="Názov odvetia" />
+								<FloatingLabel controlId="floatingPassword" label="Názov odvetvia">
+									<Form.Control type="text" placeholder="Názov odvetvia" />
 								</FloatingLabel>
 							</Col>
 						</Form.Group>
@@ -104,7 +104,7 @@ export const AddBranch = () => {
 						</Form.Group>
 
 						<Button className={`mt-4`} variant="primary" type="submit">
-							Pridať nové odvetie
+							Pridať nové odvetvie
 						</Button>
 					</Form>
 				</Col>

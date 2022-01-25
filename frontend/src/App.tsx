@@ -6,9 +6,8 @@ import {Login} from "components/login/Login";
 import {Logout} from "components/login/Logout";
 import {Home} from "secretary/pages/home/Home";
 import {Sports} from "./secretary/pages/sports/Sports";
-
-
-import {setupInterceptors} from "app/axios_provider";
+import {setupInterceptors as setupSecretaryInterceptors} from "secretary/axios_provider";
+import {setupInterceptors as setupAdminInterceptors} from "admin/axios_provider";
 import {Sidebar, SidebarLinksProp} from "./components/sidebar/Sidebar";
 import {PlusLg, HouseDoor, List, Upload, ImageAlt, Pen} from "react-bootstrap-icons";
 import globalStyles from "styles/global.module.scss";
@@ -17,9 +16,6 @@ import {UploadData} from "./secretary/pages/upload_data/UploadData";
 import {AddSport} from "./secretary/pages/sports/add_sport/AddSport";
 import {AddBranch} from "./secretary/pages/branches/add_branch/AddBranch";
 import {Countries} from "./secretary/pages/countries/Countries";
-
-
-
 import Navbar from "./user/components/Navbar";
 import {Chart} from "./user/pages/chart/Chart";
 import {Export} from "./user/pages/export/Export";
@@ -28,16 +24,16 @@ import {Success} from "./user/pages/success/Success";
 import {Interconnectness} from "./user/pages/interconnectness/Interconnectness";
 import Footer from "./user/components/footer";
 import {HomeUser} from "./user/pages/home/HomeUser";
-import 'user/pages/styles/site.scss'; //TODO
-
+import 'user/pages/styles/site.scss';
+import {ToastContainer} from "react-toastify"; //TODO
 
 const history = createBrowserHistory();
-setupInterceptors(history);
+setupSecretaryInterceptors(history);
+setupAdminInterceptors(history);
 
 const App = () => {
   
   {/* example of snackbar usage
-  enum snackTypes{'error', 'info', 'warn', 'success'}  // this will be exported
   <div>
     <button onClick={() => create_snackbar("hello from snackbar", snackTypes.info)}>try info snackbar</button>
     <button onClick={() => create_snackbar("hello from snackbar", snackTypes.warn)}>try warn snackbar</button>
@@ -65,6 +61,7 @@ const App = () => {
         <Route path="/" component={UserRouters} />
       </Switch>
     </Router>
+    <ToastContainer />
     </>
   );
 }

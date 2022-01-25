@@ -1,10 +1,12 @@
-import {useQuery} from "react-query";
+import {useMutation, useQuery} from "react-query";
 import Select from "react-select";
 import {Col, Row, Form, Button} from "react-bootstrap";
 import {Dropzone} from "components/drag_and_drop/Dropzone";
 import React, {useState} from "react";
 import {dropzoneFileProp} from "components/drag_and_drop/Dropzone";
 import {IncorrectRows} from "./IncorrectRows";
+import {apiUploadFunding} from "../../adapters";
+import create_snackbar, {SnackTypes} from "../../../components/snackbar/Snackbar";
 
 const acceptedFileExtensions = ".csv";
 
@@ -26,7 +28,17 @@ export const UploadData = () => {
 		{ value: "CZE", label: "Czech Republic" },
 		{ value: "MLT", label: "Malta" },
 		{ value: "GBR", label: "United Kingdom" }
-	]
+	];
+
+	// https://react-query.tanstack.com/guides/mutations
+	const mutation = useMutation(apiUploadFunding, {
+		onSuccess: (response) => {
+			console.log(response);
+		},
+		onError: (error) => {
+			console.log(error);
+		}
+	});
 
 	const handleSubmit = () => {
 		// TODO: Upload data to the backend and by response either
@@ -34,6 +46,10 @@ export const UploadData = () => {
 		// TODO: errors in some rows in uploaded data load <IncorrectRows />
 		// TODO: with incorrect data.
 		// TODO: Decide how to store/pass correct and incorrect rows.
+		if (files.length === 1)
+			mutation.mutate(files[0].file);
+		else
+			create_snackbar("Najskôr je potrebné nahrať dáta vo formáte csv.", SnackTypes.warn);
 	}
 
 	return (<>

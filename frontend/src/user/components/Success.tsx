@@ -1,8 +1,8 @@
 import {useState} from "react";
 import {useQuery} from "react-query";
-import {apiListSports} from "./adapters";
+// import {apiListSports} from "./adapters";  // TODO: fix this
 import {Spinner} from "react-bootstrap";
-import {TableColumnNameType, Table, TableRowsType} from "./table/Table";
+import {TableColumnNameType, Table, TableRowsType} from "components/table/Table";
 import Select from "react-select";
 import {Col, Row, Form, Button} from "react-bootstrap";
 
@@ -24,6 +24,8 @@ function Success(){
     const [columnNames, setColumnsNames] = useState<TableColumnNameType[]>([]);
     const [successRows, setSuccessRows] = useState<TableRowsType>([]);
 
+    const isLoading = true;
+    /* TODO: fix this
     const {isLoading} = useQuery("list_success", apiListSports, {
         onSuccess: (response) => {
             const serverData = response.data.data;
@@ -32,15 +34,15 @@ function Success(){
                     return { name: colName, sortable: true }
                 })
             );
-            /*
+
             setSuccessRows(serverData.success);
 
-             */
         },
         onError: (error) => {
 
         }
     });
+    */
 
     return (<>
         <header>
