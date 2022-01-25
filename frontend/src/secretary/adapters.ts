@@ -35,6 +35,6 @@ export const apiListCountries = (): Promise<AxiosResponse<ApiListCountriesType>>
 
 export const apiUploadFunding = (csvFile: File): Promise<AxiosResponse<{}>> => {
 	const formData = new FormData();
-	formData.append("file", csvFile);
+	formData.append("csvFile", csvFile);
 	return axios.post("/secretary/funding/upload", formData);
 }

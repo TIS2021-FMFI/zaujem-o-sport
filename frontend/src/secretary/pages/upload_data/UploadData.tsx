@@ -31,8 +31,13 @@ export const UploadData = () => {
 	];
 
 	// https://react-query.tanstack.com/guides/mutations
-	const mutation = useMutation((file: File) => {
-		return apiUploadFunding(file);
+	const mutation = useMutation(apiUploadFunding, {
+		onSuccess: (response) => {
+			console.log(response);
+		},
+		onError: (error) => {
+			console.log(error);
+		}
 	});
 
 	const handleSubmit = () => {
@@ -44,7 +49,7 @@ export const UploadData = () => {
 		if (files.length === 1)
 			mutation.mutate(files[0].file);
 		else
-			create_snackbar("hello from snackbar", SnackTypes.warn);
+			create_snackbar("Najskôr je potrebné nahrať dáta vo formáte csv.", SnackTypes.warn);
 	}
 
 	return (<>
