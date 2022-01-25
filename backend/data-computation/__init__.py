@@ -146,7 +146,7 @@ class Computations:
         suma = 0
 
         for branchB in self.allBranchIds():
-            suma += self.total_branch_fundng(countryK, sportN, branchB) / self.total_country_funding(countryK)
+            suma += self.total_branch_funding(countryK, sportN, branchB) / self.total_country_funding(countryK)
 
         return suma
 
@@ -181,7 +181,7 @@ class Computations:
             for sportN in self.allSportIds():
                 for branchB in self.allBranchInSportIds(sportN):
 
-                    tmp = self.total_branch_fundng(countryK, sportN, branchB)
+                    tmp = self.total_branch_funding(countryK, sportN, branchB)
                     suma += tmp
 
             self.total_country_fund_data[countryK] = suma
