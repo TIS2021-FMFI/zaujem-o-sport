@@ -3,6 +3,7 @@ import settings
 from settings import app, jwt
 import secretary.endpoints.login
 import secretary.endpoints.show_sports
+import secretary.endpoints.funding
 import admin.endpoints.login
 import secretary.endpoints.show_countries
 import user.endpoints.success
@@ -11,6 +12,7 @@ import user.endpoints.show_countries
 
 @app.errorhandler(400)
 def bad_request(e):
+	print(e)
 	return {"message": "Bad request.", "data": {}}, 400
 
 @app.errorhandler(404)
@@ -63,6 +65,12 @@ app.add_url_rule(
 	"/api/secretary/countries",
 	view_func=secretary.endpoints.show_countries.ShowCountriesView.as_view("list_countries"),
 	methods=["GET"]
+)
+
+app.add_url_rule(
+	"/api/secretary/funding/upload",
+	view_func=secretary.endpoints.funding.Funding.as_view("secretary_funding_upload"),
+	methods=["POST"]
 )
 
 # ----- admin rules -----
