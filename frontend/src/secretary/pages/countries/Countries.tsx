@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {useQuery} from "react-query";
 import {apiListCountries, countryType} from "secretary/adapters";
 import createSnackbar, {dismissSnackbar, resolveSnackbar, SnackTypes} from "components/snackbar/Snackbar";
+import {Table} from "components/table/Table";
 
 export const Countries = () => {
 
@@ -39,10 +40,10 @@ export const Countries = () => {
 		<header>
 			<h1>Krajiny</h1>
 		</header>
-		{ !isLoading &&
-			countries?.map((country, i) => { return (
-				<p key={`country-${i}`}>Názov: {country.name}, Kód: {country.code}</p>
-			)})
+		{ !isLoading && countries !== undefined &&
+			<Table
+				columnNames={[{name: "Názov"}, {name: "Kód"}]}
+				rows={countries.map((country) => [country.name, country.code])} />
 		}
 	</>)
 }

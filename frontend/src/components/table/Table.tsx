@@ -91,8 +91,10 @@ const TableHead = ({columnNames, sort}: TableHeadProps) => {
           <div
             className={`d-flex align-items-center`}
             onClick={() => {
-              sort(i, iconsSwitch[i]);
-              switchIcon(i);
+              if (column.sortable) {
+                sort(i, iconsSwitch[i]);
+                switchIcon(i);
+              }
             }}
           >
             { column.name }
