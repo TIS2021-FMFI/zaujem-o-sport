@@ -117,11 +117,6 @@ const SecretaryRoutes = () => {
 
   const secretarySidebarLinks: SidebarLinksProp[] = [
     {
-      route: `${url}`,
-      name: "Domov",
-      icon: House
-    },
-    {
       route: `${url}/data/upload`,
       name: "Nahrať dáta",
       icon: Upload
@@ -158,7 +153,9 @@ const SecretaryRoutes = () => {
       <Container fluid="lg">
         <div style={{marginLeft: globalStyles.sidebarWidth}}>
           <Switch>
-            <SecretaryAuthRoute exact path={path} component={Home} />
+            <SecretaryAuthRoute exact path={path}>
+              <Redirect to={`${path}/data/upload`} />
+            </SecretaryAuthRoute>
             <SecretaryAuthRoute exact path={`${path}/data/upload`} component={UploadData} />
             <SecretaryAuthRoute exact path={`${path}/sports/list`} component={Sports} />
             <SecretaryAuthRoute exact path={`${path}/sports/add`} component={AddSport} />
