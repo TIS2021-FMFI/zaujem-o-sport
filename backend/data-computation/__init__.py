@@ -145,8 +145,9 @@ class Computations:
 
         suma = 0
 
-        for branchB in self.allBranchIds():
+        for branchB in self.allBranchInSportIds(sportN):
             suma += self.total_branch_funding(countryK, sportN, branchB) / self.total_country_funding(countryK)
+            if self.total_branch_funding(countryK, sportN, branchB) != 0 : print(branchB, self.total_branch_funding(countryK, sportN, branchB),self.total_country_funding(countryK))
 
         return suma
 
@@ -212,20 +213,18 @@ class Computations:
 
         order = self.order(countryK, sportN)
         if order > 0:
-            res += (1/4) * (self.num_countries_in_sport(sportN) + 1 - (order / self.num_countries_in_sport(sportN)))
+            res += (1/4) * ((self.num_countries_in_sport(sportN) + 1 - order)/ self.num_countries_in_sport(sportN))
 
         points = self.points(countryK, sportN)
         if points > 0:
-            res += (1/4) * ( points / self.max_points(sportN))
+            res += (1/4) * (points / self.max_points(sportN))
 
         totalPoints = self.total_points(countryK)
         if totalPoints > 0:
             res += (1/4) * ((self.points(countryK, sportN)**self.PV4) / (totalPoints**self.PV4))
 
-
         if order > 0:
             res += (1/4) * (self.min_order(countryK) / order)
-
         return res
 
     def order(self, countryK : id, sportN : id) -> float:
@@ -361,3 +360,4 @@ c = Computations()
 
 #print(c.getFinalOrderById(204))
 
+#print(c.norm_funding(18,160))
