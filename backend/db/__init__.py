@@ -914,3 +914,93 @@ class Database:
 				final_result[id] = (code, title)
 			return final_result
 
+
+	def checkCodeTitle(self, sport_code:int, branch_code:int, sport_title:str, branch_title:str) -> bool:
+
+		sql = "select * from sport s join branch b on s.id = b.sport_id and s.code = %(sport_code)s and b.code = %(branch_code)s and s.title = %(sport_title)s and b.title = %(branch_title)s "
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, {"sport_code":sport_code, "branch_code":branch_code, "sport_title":sport_title, "branch_title":branch_title })
+					tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+			return tmp is not None
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+			return False
+
+
+	def findSportByCode(self, sport_code:int) -> str:
+
+		sql = "select title from sport where code = %(sport_code)s"
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, {"sport_code": sport_code})
+					tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+			return tmp
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+			return False
+
+	def findBranchByCode(self, sport_code:int, branch_code:int) -> str:
+		sql = "select b.title from branch b join sport s on s.id = b.sport_id" \
+			  "and s.code = %(sport_code)s and b.code = %(branch_code)s"
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, {"sport_code": sport_code, "branch_code":branch_code})
+					tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+			return tmp
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+			return False
+
+	def getSportBranches(self, sport_code:int) -> dict:
+
+		sql = "select b.code, b.title from branch b join sport s " \
+			  "on b.sport_id = s.id and s.code = %(code)s"
+		result = {"branches": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, {"code":sport_code})
+					tmp = cursor.fetchone()
+					while tmp:
+						result["branches"].append({"code": tmp[0], "title": tmp[1]})
+						tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+			return result["branches"]
+
+	def checkCombi(self, branch_code, country_code):
+
+		sql = "select b.code, b.title from branch b where sport_id = NULL and" \
+			  "b.code = %(code)s and country_code = %(country_code)s"
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, {"code": branch_code, "country_code":country_code})
+					tmp = cursor.fetchone()
+					if tmp is None:
+						return -1, ""
+					else:
+						return tmp[0], tmp[1]
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
