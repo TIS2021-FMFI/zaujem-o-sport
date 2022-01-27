@@ -475,7 +475,7 @@ class Database:
 
 	def getMaxPoints(self) -> dict:
 
-		sql = "select sport_id, max(points) from success group by sport_id"
+		sql = "select sport_id, points from MAX_POINTS_IN_SPORT"
 		result = {"points": []}
 		try:
 			with self._getConnection() as dbConn:
@@ -506,7 +506,7 @@ class Database:
 
 	def getNumCountriesInSport(self) -> dict:
 
-		sql = "select sport_id, count(id) from success where points > 0 group by sport_id"
+		sql = "select sport_id, num_countries from NUM_IN_SPORT"
 		result = {"num": []}
 		try:
 			with self._getConnection() as dbConn:
@@ -537,7 +537,7 @@ class Database:
 
 	def getTotalCountryPoints(self) -> dict:
 
-		sql = "select country_id, sum(points) from success group by country_id"
+		sql = "select country_id, points from TOTAL_COUNTRY_POINTS"
 		result = {"sum": []}
 		try:
 			with self._getConnection() as dbConn:
@@ -568,7 +568,7 @@ class Database:
 
 	def getMinOrder(self) -> dict:
 
-		sql = "select country_id, min(orders) from success group by country_id"
+		sql = "select country_id, best from COUNTRY_BEST_ORDER "
 		result = {"order": []}
 		try:
 			with self._getConnection() as dbConn:
@@ -914,3 +914,28 @@ class Database:
 				final_result[id] = (code, title)
 			return final_result
 
+
+	def showCombiBranches(self):
+
+		sql = "select c.code, c.name, b.code, b.title, b2.code, b2.title, coefficient " \
+			  "from combi_branch cb join branch b on combi_branch_id = b.id " \
+			  "join branch b2 on subbranch_id = b2.id " \
+			  "join country c on b.country_id = c.id"
+		result = {"combi": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						result["combi"].append({ "country_code": tmp[0], "country_name": tmp[1], "combi_code": tmp[2], "combi_title": tmp[3], "sub_code": tmp[4], "sub_title": tmp[5], "coefficient":tmp[6]})
+						tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+
+			return result["combi"]
