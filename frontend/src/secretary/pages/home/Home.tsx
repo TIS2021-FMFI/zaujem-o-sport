@@ -9,7 +9,6 @@ export const Home = () => {
 		  <Row>
 			  <Col>
 				  Úvodný popis, tutoriál, atď. pre sekretárku.
-				  <a href="#">Test</a>
 			  </Col>
 		  </Row>
 	  </section>
