@@ -147,7 +147,6 @@ class Computations:
 
         for branchB in self.allBranchInSportIds(sportN):
             suma += self.total_branch_funding(countryK, sportN, branchB) / self.total_country_funding(countryK)
-            if self.total_branch_funding(countryK, sportN, branchB) != 0 : print(branchB, self.total_branch_funding(countryK, sportN, branchB),self.total_country_funding(countryK))
 
         return suma
 
@@ -361,3 +360,5 @@ c = Computations()
 #print(c.getFinalOrderById(204))
 
 #print(c.norm_funding(18,160))
+
+#print(c.sport_importance_in_country(3,160))
