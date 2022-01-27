@@ -36,7 +36,10 @@ class FundingRecord:
 
 class csvParser:
 
-    def parse(csvFile: str) -> List[FundingRecord]:
+    def __init__(self):
+        self.result = []
+
+    def parse(self, csvFile: str) -> List[FundingRecord]:
 
         with open(csvFile, newline='') as csvfile:
             csvReader = csv.reader(csvfile, delimiter=',', quotechar='|')
@@ -51,6 +54,13 @@ class csvParser:
                 records.append(FundingRecord(*row[:EXPECTED_LEN]))
 
         return records
+
+
+    def findFailures(self, csvFile: List[str], changes:list):
+        return []
+
+    def saveResult(self):
+        ...
 
 
 # example of usage

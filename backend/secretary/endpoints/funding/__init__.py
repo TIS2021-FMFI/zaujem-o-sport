@@ -1,6 +1,7 @@
 from flask import request
 from flasgger import SwaggerView
 from verification.jwt import is_secretary
+from csv_parsers import csvParser
 
 class Funding(SwaggerView):
 
@@ -10,8 +11,24 @@ class Funding(SwaggerView):
 			return {"message": "Missing uploaded file."}, 400
 
 		file = request.files["csvFile"]
-		print(file)
+		if not file:
+			return {"message": "Missing required parameter: `file`.", "data": {}}, 400
 
-		# TODO: file validation, read content, etc.
+		correction = request.json.get("correction")
+		if not correction:
+			return {"message": "Missing required parameter: `correction`.", "data": {}}, 400
+
+		lines = []
+		for line in file:
+			lines.append(line)
+
+		p = csvParser()
+		suggestions = p.findFailures(lines,correction)
+		if len(suggestions) == 0:
+			p.saveResult()
+			return {"message":"ok"}
+
+		else:
+			return {"message":"fail", "data":suggestions}
 
 		return {}
