@@ -17,17 +17,17 @@ export const apiListSports = ()
 	return axios.get("/secretary/sports");
 }
 
-export type countryType = {
+// TODO: move it to app adapters since admin will make use of it
+export type Country = {
 	name: string,
 	code: string
 }
-
-export interface ApiListCountriesType {
+export interface ApiListCountries {
 	message: string,
-	countries: countryType[]
+	countries: Country[]
 }
 
-export const apiListCountries = (): Promise<AxiosResponse<ApiListCountriesType>> => {
+export const apiListCountries = (): Promise<AxiosResponse<ApiListCountries>> => {
 	return axios.get("/secretary/countries");
 }
 

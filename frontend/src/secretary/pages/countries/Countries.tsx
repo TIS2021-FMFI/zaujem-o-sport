@@ -2,10 +2,17 @@ import {Table} from "components/table/Table";
 import {CenteredRow} from "components/basic/CenteredRow";
 import {CSVLink} from "react-csv";
 import {useCountries} from "app/hooks";
+import {useEffect, useState} from "react";
 
 export const Countries = () => {
 
-	const { isLoading, countries } = useCountries();
+	const { isLoading, countries: responseCountries } = useCountries();
+
+	const [countries, setCountries] = useState<string[][]>([]);
+
+	useEffect(() => {
+		setCountries(responseCountries.map((country) => [country.name, country.code]));
+	});
 
 	return (<>
 		<CenteredRow as="header">

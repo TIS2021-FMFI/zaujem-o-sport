@@ -2,33 +2,27 @@ import {useMutation, useQuery} from "react-query";
 import Select from "react-select";
 import {Col, Row, Form, Button} from "react-bootstrap";
 import {Dropzone} from "components/drag_and_drop/Dropzone";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {dropzoneFileProp} from "components/drag_and_drop/Dropzone";
 import {IncorrectRows} from "./IncorrectRows";
 import {apiUploadFunding} from "../../adapters";
 import createSnackbar, {SnackTypes} from "../../../components/snackbar/Snackbar";
+import {useCountries} from "../../../app/hooks";
 
 const acceptedFileExtensions = ".csv";
 
 export const UploadData = () => {
-	/* TODO: fetch countries
-	const {isLoading} = useQuery("endpoint name", apiAdapter, {
-		onSuccess: (response) => {
-			const serverData = response.data.data;
-		},
-		onError: (error) => {}
-	});
-	*/
-	// TODO: snackbar with message "Nahranie dát bolo úspešné" no success.
 
 	const [files, setFiles] = useState<dropzoneFileProp[]>([]);
 
-	const countries = [
-		{ value: "SVK", label: "Slovakia" },
-		{ value: "CZE", label: "Czech Republic" },
-		{ value: "MLT", label: "Malta" },
-		{ value: "GBR", label: "United Kingdom" }
-	];
+	const { countries: responseCountries } = useCountries();
+	const [countries, setCountries] = useState<{value: string, label: string}[]>([]);
+
+	useEffect(() => {
+		setCountries(responseCountries.map((country) => { return {
+			value: country.code, label: `${country.name} (${country.code})`
+		}}));
+	}, [responseCountries]);
 
 	// https://react-query.tanstack.com/guides/mutations
 	const mutation = useMutation(apiUploadFunding, {
