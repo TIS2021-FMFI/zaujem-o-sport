@@ -1,12 +1,7 @@
 import xlrd
 
-heslo1, heslo2 = '9b1ucrgk3lha7fviin652dlshkklv3xk', 'xlg3yj1tlkf2d902dp80dgg1v5gqpaa6'
-hash1 = 'c7656114487fd2aa9b04a8e84a0990290b7cfe5102fc68d7ab385e3893dce0736db4ade885158aa04b8da66931af132f38b7eba714941367452cd8c6f8c9d94333813aa694970907ee5b13d8a149e3e280057154b1bca10c08cac1becdd415691afa3eca8a7851985a148bb9268f0f4a3d54a0ef50d493479faa239ec1ac916c2fc2bac252515779ffca59f2a6cebef8bd2328deaaedb052ee2d854b901ac909'
-hash2 = 'cffb56d78ec5b2b57ae2fa2813f8737cf5503597c855c02ea1839112a4a2a9b63eec7f332a486080ff7814242a0d0c76c67a450819ea521d46817a476c8aefe2b08a560316d6c4ba9a89ccaa72cae95d45e80f3245a0bd275ee7e599d22fd3db6a69dc18fa997fd8119466f9068bae8a3f69deb68024239442ddd3a0c6c7452a29dcd67c3a030c0c9057a3bf3ba0ad420163b3ca9f892d6d8f2a2583bdbe49a4'
 
-
-
-class Prekladac(dict): #https://stackoverflow.com/questions/1456373/two-way-reverse-map ;) 
+class Prekladac(dict): #https://stackoverflow.com/questions/1456373/two-way-reverse-map ;)
     def __setitem__(self, key, value):
         # Remove any previous connections with these values
         if key in self:
@@ -46,7 +41,7 @@ class Country:
 
      def __repr__(self):
         active = str(self.active).upper()
-        return f"( '{self.name}', {active}, '{self.translation}', '{self.code}' )" 
+        return f"( '{self.name}', {active}, '{self.translation}', '{self.code}' )"
 
 
 class Branch:
@@ -60,7 +55,7 @@ class Branch:
 
      def __repr__(self):
         name_ = self.name.replace('/', ' AND ')
-        return f"( {self.code}, '{name_}', {str(self.combined).upper()}, {self.sport_id}, {self.country_id} )" 
+        return f"( {self.code}, '{name_}', {str(self.combined).upper()}, {self.sport_id}, {self.country_id} )"
 
 
 
@@ -71,7 +66,7 @@ countries = {} # name  : Country
 def parse_country():
     sheet = xlrd.open_workbook("preklad krajin .xlsx").sheet_by_index(0)
 
-    actives = set() 
+    actives = set()
     for i in range(0,51):
         actives.add(sheet.cell_value(i,5))
     #print(len(actives))
@@ -81,7 +76,7 @@ def parse_country():
         name = sheet.cell_value(i,1)
         preklad[transl] = name
         kod = sheet.cell_value(i,2)
-        
+
         active = name in actives
         countries[name] = Country( len(countries)+1, name, active, transl, kod )
 
@@ -113,10 +108,10 @@ def parse_succes():
                 sport = sheet.cell_value(1,i)
                 if sport not in sports:
                     sports[sport] = Sport( len(sports)+1 , sport, len(sports)+1)
-                
+
                 sp_id = sports[sport].id
                 j = 3
-                
+
                 try:
                     while sheet.cell_value(j,i) != "":
                         country = sheet.cell_value(j,i)
@@ -139,7 +134,7 @@ def parse_succes():
 
     sheet1 = xlrd.open_workbook("Zahranicny_zaujem_sport_2021.xlsx").sheet_by_index(20)
     sheet2 = xlrd.open_workbook("Zahranicny_zaujem_sport_2021.xlsx").sheet_by_index(21)
-    
+
     for i in range(5,56):
         country_id = countries[preklad[sheet1.cell_value(i,0)]].id
         for j in range(1,112):
@@ -151,11 +146,11 @@ def parse_succes():
             if body > 0:
                 poradie = sheet2.cell_value(i,j)
 
-                succes.append( ( sport_id, country_id, round(body,2), poradie ) ) 
-            
+                succes.append( ( sport_id, country_id, round(body,2), poradie ) )
+
     print("Succes done")
 
-branches = {}  
+branches = {}
 def parse_branch():
     def code_gen( sport_id ):
         def x(  branch, sport_id  ):
@@ -163,7 +158,7 @@ def parse_branch():
                 return 1
             return 0
         return sum ( map( lambda p: x(p, sport_id), branches.values())) + 1
-               
+
     sheet = xlrd.open_workbook("Zahranicny_zaujem_sport_2021.xlsx").sheet_by_index(2)
     for i in *range(5,359), *range(398,502):
         branch = sheet.cell_value(i,3)
@@ -171,7 +166,7 @@ def parse_branch():
             continue
 
         sport = sheet.cell_value(i,1)
-        
+
         sport_id = sports[sport].id
         br_code = code_gen(sport_id)
         br_id = len(branches)+1
@@ -181,13 +176,13 @@ def parse_branch():
             while branch_key in branches:
                 branch_key = branch + str(i)
                 i += 1
- 
-        branches[branch_key] = Branch( br_id, br_code, branch, False, sport_id) 
-        
+
+        branches[branch_key] = Branch( br_id, br_code, branch, False, sport_id)
+
         for j in range(5,56):
             #print(i,j)
             if sheet.cell_value(i,j) != "" and type(sheet.cell_value(i,j)) == float :
-                
+
                 if sheet.cell_value(i,j) > 0 :
 
                     krajina = sheet.cell_value(0,j)
@@ -197,11 +192,11 @@ def parse_branch():
 
     print("Branches done")
 
-cm_branches = [] 
+cm_branches = []
 combi = []
 funding = []
 
-def parse_combi(): 
+def parse_combi():
     sheet1 = xlrd.open_workbook("Zahranicny_zaujem_sport_2021.xlsx").sheet_by_index(1) #Parametre
     sheet2 = xlrd.open_workbook("Zahranicny_zaujem_sport_2021.xlsx").sheet_by_index(2) #Zahr. fin.
 
@@ -213,9 +208,9 @@ def parse_combi():
             branch_id = branches[sheet1.cell_value(12 +i,index)].id
             coef = sheet1.cell_value(12 +i,index+1)
             if coef > 0:
-                tmp.append([ branch_id, coef ] ) 
+                tmp.append([ branch_id, coef ] )
             index += 2
-            
+
         name = sheet2.cell_value(360+i,1)
         if "(" in name:
             name = name[:name.find('(')]
@@ -232,12 +227,12 @@ def parse_combi():
     print("Combi done")
 
 
-    
+
 previazanost = []
 def parse_inter():
     sheet1 = xlrd.open_workbook("Zahranicny_zaujem_sport_2021.xlsx").sheet_by_index(11)# Ekonomicka
     sheet2 = xlrd.open_workbook("Zahranicny_zaujem_sport_2021.xlsx").sheet_by_index(17)# Neekonomicka
-    
+
 
 ##    sheet1 = xlrd.open_workbook("Zahranicny_zaujem_sport_2021.xlsx").sheet_by_index(7) #Export
 ##    sheet2 = xlrd.open_workbook("Zahranicny_zaujem_sport_2021.xlsx").sheet_by_index(8) #Import
@@ -245,8 +240,8 @@ def parse_inter():
 ##    sheet4 = xlrd.open_workbook("Zahranicny_zaujem_sport_2021.xlsx").sheet_by_index(13) #Susedne
 ##    sheet5 = xlrd.open_workbook("Zahranicny_zaujem_sport_2021.xlsx").sheet_by_index(14) #Jazyk
 ##    sheet6 = xlrd.open_workbook("Zahranicny_zaujem_sport_2021.xlsx").sheet_by_index(15) #Etnuikum
-    
-    
+
+
     for i in range(1,52):
         for j in range(1,52):
             if i == j:
@@ -256,7 +251,7 @@ def parse_inter():
             if sheet2.cell_value(i,j) != 0:
                 previazanost.append( ( 2, countries[preklad[sheet2.cell_value(i,0)]].id, countries[preklad[sheet2.cell_value(0,j)]].id, round(sheet2.cell_value(i,j),4) ))
     print("Interconnectedness done")
-    
+
 
 bgs = []
 def parse_bgs():
@@ -274,7 +269,7 @@ def parse_bgs():
     print("BGS done")
 
 def zapis_succ(meno_suboru):
-    parse_country()     
+    parse_country()
     parse_sport()
     parse_branch()
     parse_combi()
@@ -326,8 +321,8 @@ def zapis_succ(meno_suboru):
                 subor.write(f" {cb} ;\n")
             else:
                 subor.write(f" {cb} ,\n")
-            
-        
+
+
         #SUCCES sp_id, co_id, sheet.cell_value(j,i+1)
         subor.write("INSERT INTO success ( sport_id, country_id, points, orders  ) \n VALUES \n ")
         for s in succes:
@@ -337,7 +332,7 @@ def zapis_succ(meno_suboru):
                 subor.write(f" {s},\n")
 
 
-        #Funding 
+        #Funding
         subor.write("INSERT INTO funding ( country_id, branch_id, relative_funding, absolute_funding, currency  ) \n VALUES \n ")
         for f in funding:
             #print(f)
@@ -346,14 +341,8 @@ def zapis_succ(meno_suboru):
             else:
                 subor.write(f"{f},\n")
 
-        #User
-        subor.write("INSERT INTO users ( email, password, type ) \n VALUES \n ")
-        subor.write(f"( 'Admin22@gmail.com', '{hash1}', 'admin' ),  \n ")
-        subor.write(f"( 'Secretary1@gmail.com', '{hash2}', 'secretary' ),  \n ")
-        subor.write(f"( 'secretary@uniba.sk', '{hash1}', 'secretary' );  \n ")
-        #Inter_type
 
-    
+        #Inter_type
         subor.write("INSERT INTO interconnectness_type (  code, title ) \n VALUES \n ")
         subor.write("(  1, 'Economic' ),  \n ")
         subor.write("(  2, 'Non-economic' ); \n ")
@@ -366,14 +355,14 @@ def zapis_succ(meno_suboru):
                 subor.write(f"{p} ;\n")
             else:
                 subor.write(f"{p},\n")
-        
+
         #Parametre
         sheet = xlrd.open_workbook("Zahranicny_zaujem_sport_2021.xlsx").sheet_by_index(1)
         subor.write("INSERT INTO parameter ( code, title, value  ) \n VALUES \n ")
-        
+
         for i in [ 1,2,3,5,6,7 ]:
             subor.write(f"( {i}, '{sheet.cell_value(i,1)}' , {sheet.cell_value(i,0)}),  \n ")
-        subor.write(f"( 8, '{sheet.cell_value(8,1)}' , {sheet.cell_value(8,0)});  \n " )  
+        subor.write(f"( 8, '{sheet.cell_value(8,1)}' , {sheet.cell_value(8,0)});  \n " )
 
 
         #BGS
@@ -382,9 +371,9 @@ def zapis_succ(meno_suboru):
             if item == bgs[-1]:
                 subor.write(f"{item} ;\n")
             else:
-                subor.write(f"{item},\n") 
+                subor.write(f"{item},\n")
 
-            
+
     print("hotovo")
 
 
