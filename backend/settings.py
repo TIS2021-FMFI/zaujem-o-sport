@@ -33,11 +33,11 @@ jwt = JWTManager(app)
 """ Database connection pool setup. """
 dbPool = psycopg2.pool.ThreadedConnectionPool(
 	minconn=1,
-	maxconn=20,
-	host= env.get("DB_HOST"),
-	database= env.get("DB_NAME"),
-	user= env.get("DB_USER"),
-	password= env.get("DB_PASS")
+	maxconn=100,
+	host=       env.get("DB_HOST"),
+	database=   env.get("DB_NAME"),
+	user=       env.get("DB_USER"),
+	password=   env.get("DB_PASS")
 )
 DB = Database(dbPool)
 
