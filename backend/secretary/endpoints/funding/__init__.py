@@ -23,12 +23,11 @@ class Funding(SwaggerView):
 			lines.append(line)
 
 		p = csvParser()
-		suggestions = p.findFailures(lines,correction)
+		suggestions = p.findFailures(lines, correction)
+
 		if len(suggestions) == 0:
 			p.saveResult()
-			return {"message":"ok"}
+			return {"message": "ok"}
 
 		else:
-			return {"message":"fail", "data":suggestions}
-
-		return {}
+			return {"message": "fail", "suggestions": suggestions}
