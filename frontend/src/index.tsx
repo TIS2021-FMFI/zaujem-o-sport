@@ -8,13 +8,19 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import {QueryClient, QueryClientProvider} from "react-query";
 import "styles/base.scss";
 
+// `cacheTime`: When all components that used instance of specific query have been unmounted, cacheTime is triggered i.e.
+// data are cached for `cacheTime`ms. If the component that has this instance of query has been re-mounted, cacheTime
+// is being 'restarted' to its initial value provided in the options.
+// Full caching explanation of react-query: https://react-query.tanstack.com/guides/caching
+// All options can be manually changed for specific queries.
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      refetchOnMount: true,
+      refetchOnMount: false,
       refetchOnReconnect: false,
       retry: false,
+      cacheTime: 1000 * 30
     }
   }
 });

@@ -1,63 +1,41 @@
-import {toast, ToastContainer} from "react-toastify";
+import {toast, Bounce} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {ReactText} from "react";
 
-export enum SnackTypes{'error', 'info', 'warn', 'success'}
+export enum SnackTypes {
+    info,
+    warn,
+    error,
+    success,
+    loading
+}
 
-export default function create_snackbar(msg:String, type:SnackTypes)
-{
-    switch (type)
-    {
-        case SnackTypes.error:
+/** Supported toast refs by types. Order must be the same as in `SnackTypes`. */
+const toasts = [toast.info, toast.warn, toast.error, toast.success, toast.loading];
 
+export default function createSnackbar(
+  msg: String,
+  type: SnackTypes,
+  autoClose: number | false = 5000,
+  toastId?: string
+): ReactText {
+    return toasts[type](msg, {
+        toastId: toastId,
+        position: "top-right",
+        autoClose: autoClose,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
+}
 
-            toast.error(msg, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-            break;
-
-        case SnackTypes.success:
-
-            toast.success(msg, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-            break;
-
-        case SnackTypes.warn:
-
-            toast.warn(msg, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-            break;
-
-        case SnackTypes.info:
-
-            toast.info(msg, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-            break;
-    }
+export const resolveSnackbar = (toastId: string, msg: string) => {
+    toast.update(toastId, {
+        render: msg,
+        type: toast.TYPE.SUCCESS,
+        autoClose: 3000,
+        isLoading: false
+    });
 }

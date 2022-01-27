@@ -1,11 +1,11 @@
 from flasgger import SwaggerView
 from verification.jwt import is_secretary
 from settings import DB
+from time import sleep
 
 class ShowCountriesView(SwaggerView):
 
 	@is_secretary
 	def get(self):
-
-		res = { "message":"ok", "data": DB.getAllCountries()}
-		return res
+		sleep(3)
+		return {"message": "ok", "countries": DB.getAllCountries()}

@@ -24,9 +24,7 @@ export type countryType = {
 
 export interface ApiListCountriesType {
 	message: string,
-	data: {
-		countries: countryType[]
-	}
+	countries: countryType[]
 }
 
 export const apiListCountries = (): Promise<AxiosResponse<ApiListCountriesType>> => {
