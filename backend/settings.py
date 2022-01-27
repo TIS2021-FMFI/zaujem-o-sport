@@ -30,7 +30,10 @@ app.config["JWT_SECRET_KEY"] = "development secret key"  # TODO (production): ex
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=24)
 jwt = JWTManager(app)
 
-""" Database connection pool setup. """
+""" 
+Database connection pool setup. 
+Setting up max connections in the pool (great resource: https://www.enterprisedb.com/postgres-tutorials/why-you-should-use-connection-pooling-when-setting-maxconnections-postgres).
+"""
 dbPool = psycopg2.pool.ThreadedConnectionPool(
 	minconn=1,
 	maxconn=100,
