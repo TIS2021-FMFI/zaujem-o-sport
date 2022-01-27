@@ -3,12 +3,15 @@ import {useQuery} from "react-query";
 import {apiListCountries, countryType} from "secretary/adapters";
 import createSnackbar, {dismissSnackbar, resolveSnackbar, SnackTypes} from "components/snackbar/Snackbar";
 import {Table} from "components/table/Table";
+import {Col, Row} from "react-bootstrap";
+import {CenteredRow} from "../../../components/basic/CenteredRow";
+import {CSVLink} from "react-csv";
 
 export const Countries = () => {
 
 	const toastId = "countries_fetching";
 
-	const [countries, setCountries] = useState<countryType[]>();
+	const [countries, setCountries] = useState<string[][]>([]);
 
 	// TODO: maybe custom hook: useQuery/mutation with snackbar
 
@@ -26,7 +29,7 @@ export const Countries = () => {
 
 	useEffect(() => {
 		if (response !== undefined)
-			setCountries(response.data.countries);
+			setCountries(response.data.countries.map((country) => [country.name, country.code]));
 	}, [response]);
 
 	useEffect(() => {
@@ -37,13 +40,28 @@ export const Countries = () => {
 	useEffect(() => { return () => dismissSnackbar(toastId) }, []);
 
 	return (<>
-		<header>
-			<h1>Krajiny</h1>
-		</header>
-		{ !isLoading && countries !== undefined &&
-			<Table
-				columnNames={[{name: "Názov"}, {name: "Kód"}]}
-				rows={countries.map((country) => [country.name, country.code])} />
-		}
+		<CenteredRow as="header">
+			<Col lg={10}>
+				<h1>Krajiny</h1>
+			</Col>
+		</CenteredRow>
+		<CenteredRow as="section" className="mb-3">
+			<Col lg={10}>
+				{countries.length !== 0 &&
+	        <CSVLink role="button" className="btn btn-outline-primary" data={countries} filename="exportovane_krajiny">
+	          Export
+	        </CSVLink>
+				}
+			</Col>
+		</CenteredRow>
+		<CenteredRow as="section">
+			<Col lg={10}>
+				{ !isLoading && countries.length !== 0 &&
+					<Table
+						columnNames={[{name: "Názov", sortable: true}, {name: "Kód", sortable: true}]}
+						rows={countries} />
+				}
+			</Col>
+		</CenteredRow>
 	</>)
 }
