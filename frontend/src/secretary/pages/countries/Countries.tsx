@@ -41,27 +41,21 @@ export const Countries = () => {
 
 	return (<>
 		<CenteredRow as="header">
-			<Col lg={10}>
-				<h1>Krajiny</h1>
-			</Col>
+			<h1>Krajiny</h1>
 		</CenteredRow>
 		<CenteredRow as="section" className="mb-3">
-			<Col lg={10}>
-				{countries.length !== 0 &&
-	        <CSVLink role="button" className="btn btn-outline-primary" data={countries} filename="exportovane_krajiny">
-	          Export
-	        </CSVLink>
-				}
-			</Col>
+			{countries.length !== 0 &&
+        <CSVLink role="button" className="btn btn-outline-primary" data={countries} filename="exportovane_krajiny">
+          Export
+        </CSVLink>
+			}
 		</CenteredRow>
 		<CenteredRow as="section">
-			<Col lg={10}>
-				{ !isLoading && countries.length !== 0 &&
-					<Table
-						columnNames={[{name: "Názov", sortable: true}, {name: "Kód", sortable: true}]}
-						rows={countries} />
-				}
-			</Col>
+			{ !isLoading && countries.length !== 0 &&
+				<Table
+					columnNames={[{name: "Názov", sortable: true}, {name: "Kód", sortable: true}]}
+					rows={countries} />
+			}
 		</CenteredRow>
 	</>)
 }
