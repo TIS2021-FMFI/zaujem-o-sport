@@ -9,8 +9,8 @@ interface IconProps {
 export const IconWithText = ({Icon, text}: IconProps) => {
   return (
   	<div className={`d-flex flex-row align-items-center`}>
-		  <Icon className={`me-3`} />
-		  {text}
+		  <Icon className={`me-3`} style={{fontSize: "1.3em"}} />
+		  <span>{text}</span>
 	  </div>
   )
 }

@@ -9,7 +9,7 @@ import {Sports} from "./secretary/pages/sports/Sports";
 import {setupInterceptors as setupSecretaryInterceptors} from "secretary/axios_provider";
 import {setupInterceptors as setupAdminInterceptors} from "admin/axios_provider";
 import {Sidebar, SidebarLinksProp} from "./components/sidebar/Sidebar";
-import {PlusLg, HouseDoor, List, Upload, ImageAlt, Pen} from "react-bootstrap-icons";
+import {PlusLg, HouseDoor, List, Upload, ImageAlt, Pen, YinYang, House} from "react-bootstrap-icons";
 import globalStyles from "styles/global.module.scss";
 import {Container} from "react-bootstrap";
 import {UploadData} from "./secretary/pages/upload_data/UploadData";
@@ -119,7 +119,7 @@ const SecretaryRoutes = () => {
     {
       route: `${url}`,
       name: "Domov",
-      icon: HouseDoor
+      icon: House
     },
     {
       route: `${url}/data/upload`,
@@ -138,12 +138,12 @@ const SecretaryRoutes = () => {
     },
     {
       route: `${url}/sports/list`,
-      name: "Zobraz športy",
-      icon: List
+      name: "Športy",
+      icon: YinYang
     },
     {
       route: `${url}/countries/list`,
-      name: "Zobraz krajiny",
+      name: "Krajiny",
       icon: ImageAlt
     }
   ]
