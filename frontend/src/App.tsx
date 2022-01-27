@@ -4,12 +4,11 @@ import { createBrowserHistory } from 'history';
 import {NotFound} from "pages/not_found/NotFound";
 import {Login} from "components/login/Login";
 import {Logout} from "components/login/Logout";
-import {Home} from "secretary/pages/home/Home";
 import {Sports} from "./secretary/pages/sports/Sports";
 import {setupInterceptors as setupSecretaryInterceptors} from "secretary/axios_provider";
 import {setupInterceptors as setupAdminInterceptors} from "admin/axios_provider";
 import {Sidebar, SidebarLinksProp} from "./components/sidebar/Sidebar";
-import {PlusLg, HouseDoor, List, Upload, ImageAlt, Pen, YinYang, House} from "react-bootstrap-icons";
+import {PlusLg, HouseDoor, List, Upload, ImageAlt, Pen, YinYang} from "react-bootstrap-icons";
 import globalStyles from "styles/global.module.scss";
 import {Container} from "react-bootstrap";
 import {UploadData} from "./secretary/pages/upload_data/UploadData";
@@ -25,23 +24,13 @@ import {Interconnectness} from "./user/pages/interconnectness/Interconnectness";
 import Footer from "./user/components/footer";
 import {HomeUser} from "./user/pages/home/HomeUser";
 import 'user/pages/styles/site.scss';
-import {ToastContainer} from "react-toastify"; //TODO
+import {ToastContainer} from "react-toastify";
 
 const history = createBrowserHistory();
 setupSecretaryInterceptors(history);
 setupAdminInterceptors(history);
 
 const App = () => {
-  
-  {/* example of snackbar usage
-  <div>
-    <button onClick={() => create_snackbar("hello from snackbar", snackTypes.info)}>try info snackbar</button>
-    <button onClick={() => create_snackbar("hello from snackbar", snackTypes.warn)}>try warn snackbar</button>
-    <button onClick={() => create_snackbar("hello from snackbar", snackTypes.error)}>try error snackbar</button>
-    <button onClick={() => create_snackbar("hello from snackbar", snackTypes.success)}>try success snackbar</button>
-    <ToastContainer />
-  </div>
-  */}
   
   return (
 
@@ -133,7 +122,7 @@ const SecretaryRoutes = () => {
     },
     {
       route: `${url}/sports/list`,
-      name: "Športy",
+      name: "Športy a odvetvia",
       icon: YinYang
     },
     {

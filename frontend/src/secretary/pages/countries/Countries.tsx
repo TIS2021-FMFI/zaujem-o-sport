@@ -1,37 +1,46 @@
 import {useEffect, useState} from "react";
 import {useQuery} from "react-query";
 import {apiListCountries, countryType} from "secretary/adapters";
-import createSnackbar, {resolveSnackbar, SnackTypes} from "../../../components/snackbar/Snackbar";
-import {toast} from "react-toastify";
+import createSnackbar, {dismissSnackbar, resolveSnackbar, SnackTypes} from "components/snackbar/Snackbar";
 
 export const Countries = () => {
 
-	const initToastId = "init_countries_loading";
+	const toastId = "countries_fetching";
 
 	const [countries, setCountries] = useState<countryType[]>();
 
-	const {isLoading, data} = useQuery("list_countries", apiListCountries, {
-		onSuccess: (response) => {
-			setCountries(response.data.countries);
-			resolveSnackbar(initToastId, "test");
+	// TODO: maybe custom hook: useQuery/mutation with snackbar
+
+	const {isLoading, data: response} = useQuery("list_countries", apiListCountries, {
+		onSuccess: (successResponse) => {
+			if (response === undefined)
+				resolveSnackbar(toastId, "Dáta úspešne načítané.");
 		},
 		onError: (error) => {
 			console.log(error);
-			resolveSnackbar(initToastId, "Dáta nebolo možné načítať.", false);
+			if (response === undefined)
+				resolveSnackbar(toastId, "Dáta nebolo možné načítať.", false);
 		}
 	});
 
-	console.log(data);
+	useEffect(() => {
+		if (response !== undefined)
+			setCountries(response.data.countries);
+	}, [response]);
 
-	useEffect(() => { return () => toast.dismiss(initToastId) }, []);
+	useEffect(() => {
+		if (isLoading)
+			createSnackbar("Načítavanie krajín...", SnackTypes.loading, false, toastId)
+	}, [isLoading]);
+
+	useEffect(() => { return () => dismissSnackbar(toastId) }, []);
 
 	return (<>
 		<header>
 			<h1>Krajiny</h1>
 		</header>
-		{ isLoading
-			? createSnackbar("Načítavanie krajín...", SnackTypes.loading, false, initToastId)  // TODO: don't do it here
-			: countries?.map((country, i) => { return (
+		{ !isLoading &&
+			countries?.map((country, i) => { return (
 				<p key={`country-${i}`}>Názov: {country.name}, Kód: {country.code}</p>
 			)})
 		}
