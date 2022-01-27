@@ -915,3 +915,27 @@ class Database:
 			return final_result
 
 
+	def showCombiBranches(self):
+
+		sql = "select c.code, c.name, b.code, b.title, b2.code, b2.title, coefficient " \
+			  "from combi_branch cb join branch b on combi_branch_id = b.id " \
+			  "join branch b2 on subbranch_id = b2.id " \
+			  "join country c on b.country_id = c.id"
+		result = {"combi": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						result["combi"].append({ "country_code": tmp[0], "country_name": tmp[1], "combi_code": tmp[2], "combi_title": tmp[3], "sub_code": tmp[4], "sub_title": tmp[5], "coefficient":tmp[6]})
+						tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			# print(result)
+
+			return result["combi"]
