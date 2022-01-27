@@ -95,41 +95,72 @@ def parse_sport():
     print("Sport done")
 
 succes = []
+pocet_statov = []
+max_bodov = []
+
+pocet_bodov = {}
+najvyssie_um = {}
+
 
 def parse_succes():
-    '''
-    book = xlrd.open_workbook("ALL SPORTS RANKING.xlsx")
+    max_body = []
+    book = xlrd.open_workbook("ALL SPORTS RANKING 2019.xlsx")
     for index in range(3):
         sheet = book.sheet_by_index(index)
-
         i = 1
         try:
-            while sheet.cell_value(1,i) != "":
-                sport = sheet.cell_value(1,i)
+            while sheet.cell_value(1, i) != "":
+
+                sport = sheet.cell_value(1, i)
                 if sport not in sports:
-                    sports[sport] = Sport( len(sports)+1 , sport, len(sports)+1)
+                    sports[sport] = Sport(len(sports) + 1, sport, len(sports) + 1)
+                    print(sport, 'nezname')
 
                 sp_id = sports[sport].id
+                pocet_statov.append([sp_id, 0])
+                max_bodov.append((sp_id, round(sheet.cell_value(3, i + 1), 2)))
                 j = 3
 
                 try:
-                    while sheet.cell_value(j,i) != "":
-                        country = sheet.cell_value(j,i)
+                    while sheet.cell_value(j, i) != "":
+                        country = sheet.cell_value(j, i)
+
                         if country not in countries:
-                            ine.add(country)
+                            print(country)
                             co_id = 0
                         else:
                             co_id = countries[country].id
-                        succes.append( ( sp_id, co_id, round(sheet.cell_value(j,i+1),2), int(sheet.cell_value(j,i-1)) ))
+
+                        poradie = int(sheet.cell_value(j, i - 1))
+                        body = round(sheet.cell_value(j, i + 1), 2)
+
+                        if countries[country].active == 'true':
+                            succes.append((sp_id, co_id, body, poradie))
+
+                            if co_id not in pocet_bodov:
+                                pocet_bodov[co_id] = body
+                            else:
+                                pocet_bodov[co_id] += body
+
+                            if co_id not in najvyssie_um:
+                                najvyssie_um[co_id] = poradie
+                            else:
+                                if poradie < najvyssie_um[co_id]:
+                                    najvyssie_um[co_id] = poradie
+                                    print(country, poradie, sport)
+
                         j += 1
+                        pocet_statov[-1][1] += 1
                 except:
                     pass
+
                 i += 4
         except Exception as e:
             if type(e) == IndexError:
                 pass
             else:
                 print(e)
+
     '''
 
     sheet1 = xlrd.open_workbook("Zahranicny_zaujem_sport_2021.xlsx").sheet_by_index(20)
@@ -146,8 +177,13 @@ def parse_succes():
             if body > 0:
                 poradie = sheet2.cell_value(i,j)
 
-                succes.append( ( sport_id, country_id, round(body,2), poradie ) )
+                succes.append( ( sport_id, country_id, round(body,2), poradie ) ) 
+    '''
 
+    # print(pocet_bodov)
+    # print(najvyssie_um)
+    # print(pocet_statov)
+    # print(max_bodov)
     print("Succes done")
 
 branches = {}
