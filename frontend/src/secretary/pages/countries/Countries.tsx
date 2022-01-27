@@ -17,7 +17,7 @@ export const Countries = () => {
 		},
 		onError: (error) => {
 			console.log(error);
-			createSnackbar("Dáta nebolo možné načítať.", SnackTypes.error);
+			resolveSnackbar(initToastId, "Dáta nebolo možné načítať.", false);
 		}
 	});
 
@@ -30,7 +30,7 @@ export const Countries = () => {
 			<h1>Krajiny</h1>
 		</header>
 		{ isLoading
-			? createSnackbar("Načítavanie krajín...", SnackTypes.loading, false, initToastId)
+			? createSnackbar("Načítavanie krajín...", SnackTypes.loading, false, initToastId)  // TODO: don't do it here
 			: countries?.map((country, i) => { return (
 				<p key={`country-${i}`}>Názov: {country.name}, Kód: {country.code}</p>
 			)})

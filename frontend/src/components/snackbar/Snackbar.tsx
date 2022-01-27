@@ -1,4 +1,4 @@
-import {toast, Bounce} from "react-toastify";
+import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {ReactText} from "react";
 
@@ -31,10 +31,10 @@ export default function createSnackbar(
     });
 }
 
-export const resolveSnackbar = (toastId: string, msg: string) => {
+export const resolveSnackbar = (toastId: string, msg: string, success: boolean = true) => {
     toast.update(toastId, {
         render: msg,
-        type: toast.TYPE.SUCCESS,
+        type: success ? toast.TYPE.SUCCESS : toast.TYPE.ERROR,
         autoClose: 3000,
         isLoading: false
     });

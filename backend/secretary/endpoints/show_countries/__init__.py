@@ -7,5 +7,5 @@ class ShowCountriesView(SwaggerView):
 
 	@is_secretary
 	def get(self):
-		sleep(3)
-		return {"message": "ok", "countries": DB.getAllCountries()}
+		sleep(.75)
+		return {"message": "ok", "countries": DB.getAllCountries()}, 400
