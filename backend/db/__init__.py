@@ -475,7 +475,7 @@ class Database:
 
 	def getMaxPoints(self) -> dict:
 
-		sql = "select sport_id, max(points) from success group by sport_id"
+		sql = "select sport_id, points from MAX_POINTS_IN_SPORT"
 		result = {"points": []}
 		try:
 			with self._getConnection() as dbConn:
@@ -506,7 +506,7 @@ class Database:
 
 	def getNumCountriesInSport(self) -> dict:
 
-		sql = "select sport_id, count(id) from success where points > 0 group by sport_id"
+		sql = "select sport_id, num_countries from NUM_IN_SPORT"
 		result = {"num": []}
 		try:
 			with self._getConnection() as dbConn:
@@ -537,7 +537,7 @@ class Database:
 
 	def getTotalCountryPoints(self) -> dict:
 
-		sql = "select country_id, sum(points) from success group by country_id"
+		sql = "select country_id, points from TOTAL_COUNTRY_POINTS"
 		result = {"sum": []}
 		try:
 			with self._getConnection() as dbConn:
@@ -568,7 +568,7 @@ class Database:
 
 	def getMinOrder(self) -> dict:
 
-		sql = "select country_id, min(orders) from success group by country_id"
+		sql = "select country_id, best from COUNTRY_BEST_ORDER "
 		result = {"order": []}
 		try:
 			with self._getConnection() as dbConn:
@@ -913,4 +913,5 @@ class Database:
 				id, code,title = record["id"], record["code"], record["title"]
 				final_result[id] = (code, title)
 			return final_result
+
 
