@@ -4,6 +4,7 @@ from settings import app, jwt
 import secretary.endpoints.login
 import secretary.endpoints.show_sports
 import secretary.endpoints.funding
+import secretary.endpoints.funding_currencies
 import admin.endpoints.login
 import secretary.endpoints.show_countries
 import user.endpoints.success
@@ -49,6 +50,8 @@ def unathorized_callback(callback):
 
 # ----- secretary rules -----
 
+# TODO: decide which of the endpoints are going to be also for admin and/or user
+
 app.add_url_rule(
 	"/api/secretary/login",
 	view_func=secretary.endpoints.login.LoginView.as_view("secretary_login"),
@@ -71,6 +74,12 @@ app.add_url_rule(
 	"/api/secretary/funding/upload",
 	view_func=secretary.endpoints.funding.Funding.as_view("secretary_funding_upload"),
 	methods=["POST"]
+)
+
+app.add_url_rule(
+	"/api/secretary/funding/currencies",
+	view_func=secretary.endpoints.funding_currencies.Funding.as_view("secretary_funding_currencies"),
+	methods=["GET"]
 )
 
 # ----- admin rules -----

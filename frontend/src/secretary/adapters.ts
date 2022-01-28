@@ -37,6 +37,15 @@ export interface ApiUploadFundingProps {
 	currency: string
 }
 
+export interface ApiFundingCurrencies {
+	message: string,
+	currencies: string[]
+}
+
+export const apiListFundingCurrencies = (): Promise<AxiosResponse<ApiFundingCurrencies>> => {
+	return axios.get("/secretary/funding/currencies");
+}
+
 export const apiUploadFunding = ({csvFile, countryCode, currency}: ApiUploadFundingProps): Promise<AxiosResponse<{}>> => {
 	const formData = new FormData();
 	formData.append("csvFile", csvFile);

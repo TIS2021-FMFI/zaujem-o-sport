@@ -160,6 +160,22 @@ class Database:
 			# print(result)
 			return result
 
+	def getFundingDistinctCurrencies(self) -> list:
+		sql = "select distinct currency from funding where currency != '';"
+		results = []
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor() as cursor:
+					cursor.execute(sql)
+					results = cursor.fetchall()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			return results
+
 	def getSuccessBySport(self, sport_code : str) -> dict:
 
 		sql = "select c.name, suc.points, suc.orders from success suc cross join sport sp join country c on suc.sport_id = sp.id and sp.code = %(sport_code)s and suc.country_id = c.id order by suc.orders;"

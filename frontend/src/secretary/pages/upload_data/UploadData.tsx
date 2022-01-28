@@ -7,7 +7,7 @@ import {dropzoneFileProp} from "components/drag_and_drop/Dropzone";
 import {IncorrectRows} from "./IncorrectRows";
 import {apiUploadFunding} from "../../adapters";
 import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
-import {useCountries} from "app/hooks";
+import {useCountries, useFundingCurrencies} from "app/hooks";
 
 const acceptedFileExtensions = ".csv";
 
@@ -15,8 +15,12 @@ export const UploadData = () => {
 
 	const [files, setFiles] = useState<dropzoneFileProp[]>([]);
 
-	const { countries: responseCountries } = useCountries();
+	const {countries: responseCountries} = useCountries();
 	const [countries, setCountries] = useState<{value: string, label: string}[]>([]);
+	// TODO: fetch currencies and another select for currencies (meny)
+	const {currencies: responseCurrencies} = useFundingCurrencies();
+
+	console.log(responseCurrencies);
 
 	useEffect(() => {
 		setCountries(responseCountries.map((country) => { return {
@@ -24,7 +28,6 @@ export const UploadData = () => {
 		}}));
 	}, [responseCountries]);
 
-	// TODO: fetch currencies and another select for currencies (meny)
 
 	const uploadMutation = useMutation(apiUploadFunding, {
 		onSuccess: (response) => {
