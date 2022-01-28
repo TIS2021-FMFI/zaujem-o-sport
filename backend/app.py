@@ -5,6 +5,8 @@ import secretary.endpoints.login
 import secretary.endpoints.show_sports
 import secretary.endpoints.funding
 import secretary.endpoints.funding_currencies
+import secretary.endpoints.branches_with_sports
+import secretary.endpoints.combi_branches
 import secretary.endpoints.sports
 import secretary.endpoints.sport_code
 import admin.endpoints.login
@@ -93,6 +95,18 @@ app.add_url_rule(
 	"/api/secretary/sports/add",
 	view_func=secretary.endpoints.sports.Sports.as_view("secretary_sports"),
 	methods=["POST"]
+)
+
+app.add_url_rule(
+	"/api/secretary/branches-with-sports",
+	view_func=secretary.endpoints.branches_with_sports.BranchesWithSports.as_view("secretary_branches_with_sports"),
+	methods=["GET"]
+)
+
+app.add_url_rule(
+	"/api/secretary/combi-branches",
+	view_func=secretary.endpoints.combi_branches.CombiBranches.as_view("secretary_combi_branches"),
+	methods=["GET"]
 )
 
 # ----- admin rules -----

@@ -3,9 +3,10 @@ import type { RootState, AppDispatch } from './store';
 import {useEffect, useState} from "react";
 import {useMutation, useQuery} from "react-query";
 import {
+	apiGetBranchesWithSports, apiGetCombiBranches,
 	apiGetNewSportCode,
 	apiListCountries,
-	apiListFundingCurrencies,
+	apiListFundingCurrencies, BranchWithSport, CombiBranch,
 	Country,
 	Currency
 } from "../secretary/adapters";
@@ -122,4 +123,38 @@ export const useNewSportCode = (): { isLoading: boolean, newSportCode: string } 
 	}, [response]);
 
 	return { isLoading, newSportCode };
+}
+
+export const useBranchesWithSports = (): { isLoading: boolean, branchesWithSports: BranchWithSport[] } => {
+	const toastId = "fetching_branches_with_sports";
+	const toastMsg = "Načítavanie odvetví so športami...";
+	const queryKey = "get_branches_with_sports";
+
+	const {isLoading, response} = useQueryWithNotifications(toastId, queryKey, apiGetBranchesWithSports, toastMsg);
+
+	const [branchesWithSports, setBranchesWithSports] = useState<BranchWithSport[]>([]);
+
+	useEffect(() => {
+		if (response !== undefined)
+			setBranchesWithSports(response.data.branchesWithSports);
+	}, [response]);
+
+	return { isLoading, branchesWithSports };
+}
+
+export const useCombiBranches = (): { isLoading: boolean, combiBranches: CombiBranch[] } => {
+	const toastId = "fetching_combi_branches";
+	const toastMsg = "Načítavanie kombinovaných odvetví...";
+	const queryKey = "get_combi_branches";
+
+	const {isLoading, response} = useQueryWithNotifications(toastId, queryKey, apiGetCombiBranches, toastMsg);
+
+	const [combiBranches, setCombiBranches] = useState<CombiBranch[]>([]);
+
+	useEffect(() => {
+		if (response !== undefined)
+			setCombiBranches(response.data.combiBranches);
+	}, [response]);
+
+	return { isLoading, combiBranches };
 }

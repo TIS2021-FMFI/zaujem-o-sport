@@ -20,7 +20,7 @@ export const Countries = () => {
 		</CenteredRow>
 		<CenteredRow as="section" className="mb-3">
 			{countries.length !== 0 &&
-        <CSVLink role="button" className="btn btn-outline-primary" data={countries} filename="exportovane_krajiny">
+        <CSVLink role="button" className="btn btn-outline-primary" data={countries} filename="export_krajiny">
           Export
         </CSVLink>
 			}

@@ -69,6 +69,41 @@ export const apiAddNewSport = ({sportCode, sportTitle}: ApiAddNewSportProps): Pr
 	return axios.post("/secretary/sports/add", {code: sportCode, title: sportTitle});
 }
 
+export interface BranchWithSport {
+	sportCode: string,
+	sportTitle: string,
+	branchCode: string,
+	branchTitle: string
+}
+
+export interface ApiBranchesWithSports {
+	message: string,
+	branchesWithSports: BranchWithSport[]
+}
+
+export const apiGetBranchesWithSports = (): Promise<AxiosResponse<ApiBranchesWithSports>> => {
+	return axios.get("/secretary/branches-with-sports");
+}
+
+export interface CombiBranch {
+	countryCode: string,
+	countryName: string,
+	combiCode: string,
+	combiTitle: string,
+	subCode: string,
+	subTitle: string,
+	coefficient: number
+}
+
+export interface ApiCombiBranches {
+	message: string,
+	combiBranches: CombiBranch[]
+}
+
+export const apiGetCombiBranches = (): Promise<AxiosResponse<ApiCombiBranches>> => {
+	return axios.get("/secretary/combi-branches");
+}
+
 // TODO: return type
 export const apiUploadFunding = ({csvFile, countryCode, currency}: ApiUploadFundingProps): Promise<AxiosResponse<{}>> => {
 	const formData = new FormData();

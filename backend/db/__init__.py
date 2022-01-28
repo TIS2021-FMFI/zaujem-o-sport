@@ -122,14 +122,14 @@ class Database:
 	def getBranchesWithSports(self) -> dict:
 
 		sql = "select s.code, s.title, b.code, b.title from sport s join branch b on b.sport_id = s.id"
-		result = {"sports": []}
+		results = []
 		try:
 			with self._getConnection() as dbConn:
 				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
 					cursor.execute(sql)
 					tmp = cursor.fetchone()
 					while tmp:
-						result["sports"].append({"sport_code": tmp[0], "sport_title": tmp[1], "branch_code": tmp[2], "branch_title": tmp[3]})
+						results.append({"sportCode": tmp[0], "sportTitle": tmp[1], "branchCode": tmp[2], "branchTitle": tmp[3]})
 						tmp = cursor.fetchone()
 			self._releaseConnection(dbConn)
 		except psycopg2.DatabaseError as error:
@@ -137,8 +137,7 @@ class Database:
 			# TODO: define standard for database error messages
 			print(error)
 		finally:
-			#print(result)
-			return result
+			return results
 
 	def getFundingData(self, country_code: str) -> dict:
 		sql = "select b.title, f.absolute_funding, f.currency from funding f cross join country c join branch b on c.code = %(country_code)s and f.country_id = c.id and b.id = f.branch_id"
@@ -926,20 +925,21 @@ class Database:
 			return final_result
 
 
-	def showCombiBranches(self):
+	def showCombiBranches(self) -> list:
 
 		sql = "select c.code, c.name, b.code, b.title, b2.code, b2.title, coefficient " \
 			  "from combi_branch cb join branch b on combi_branch_id = b.id " \
 			  "join branch b2 on subbranch_id = b2.id " \
 			  "join country c on b.country_id = c.id"
-		result = {"combi": []}
+		results = []
 		try:
 			with self._getConnection() as dbConn:
 				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
 					cursor.execute(sql)
 					tmp = cursor.fetchone()
 					while tmp:
-						result["combi"].append({ "country_code": tmp[0], "country_name": tmp[1], "combi_code": tmp[2], "combi_title": tmp[3], "sub_code": tmp[4], "sub_title": tmp[5], "coefficient":tmp[6]})
+						results.append({"countryCode": tmp[0], "countryName": tmp[1], "combiCode": tmp[2], "combiTitle": tmp[3],
+						                "subCode": tmp[4], "subTitle": tmp[5], "coefficient":tmp[6]})
 						tmp = cursor.fetchone()
 			self._releaseConnection(dbConn)
 		except psycopg2.DatabaseError as error:
@@ -947,9 +947,7 @@ class Database:
 			# TODO: define standard for database error messages
 			print(error)
 		finally:
-			# print(result)
-
-			return result["combi"]
+			return results
 
 	def suggestNewSportCode(self):
 
