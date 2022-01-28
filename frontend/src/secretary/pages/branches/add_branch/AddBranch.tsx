@@ -1,6 +1,7 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Col, FloatingLabel, Form, Row} from "react-bootstrap";
 import Select from "react-select";
+//import {useSports, useCountries, useNewBranchCode, useUncombiBrances} from "app/hooks";
 
 interface SelectedOption {
 	value: string,
@@ -9,12 +10,30 @@ interface SelectedOption {
 
 export const AddBranch = () => {
 
-	// TODO: get new code from the backend
-	const [newBranchCode, setNewBranchCode] = useState<number>(1826);
+	const newBranchCode = 1024;
+
+	/*
+	const {newBranchCode} = useNewBranchCode();
+	const {sports} = useSports();
+	const {countries: responseCountries} = useCountries();
+	const [countries, setCountries] = useState<{value: string, label: string}[]>([]);
+	const {uncombiBranches} = useUncombiBrances();
+
+	useEffect(() => {
+		setCountries(responseCountries.map((country) => { return {
+			value: country.code, label: `${country.name} (${country.code})`
+		}}));
+	}, [responseCountries]);
+
+	 */
+
+	const [checkedCombined, setCheckedCombined] = useState<boolean>(false);
+
+	useEffect(() => {
+		// TODO: maybe
+	}, [checkedCombined]);
 
 	const [selectedSport, setSelectedSport] = useState<SelectedOption>();
-
-	// TODO: fetch sports (codes and names) - maybe reuse listing sports for the table
 
 	const sportCodes: SelectedOption[] = [
 		{ value: "1", label: "1" },
@@ -99,9 +118,19 @@ export const AddBranch = () => {
 						</Form.Group>
 
 						<Form.Group className="mb-3" controlId="formBasicCheckbox">
-							{/* TODO: Adjust with backend - expand next options. */}
-							<Form.Check type="checkbox" label="Kombinované" />
+							<Form.Check type="checkbox" label="Kombinované"
+							            checked={checkedCombined}
+							            onChange={(e) =>
+								            setCheckedCombined((e.currentTarget as HTMLInputElement).checked)}
+							/>
 						</Form.Group>
+
+
+						{checkedCombined &&  // expand, if checked
+							<>
+								asdf
+							</>
+						}
 
 						<Button className={`mt-4`} variant="primary" type="submit">
 							Pridať nové odvetvie
@@ -111,4 +140,11 @@ export const AddBranch = () => {
 			</Row>
 		</section>
 	</>)
+}
+
+// TODO: getter, setter from the parent
+const ExpandedUncombiBranch = () => {
+	return (
+		<></>
+	)
 }
