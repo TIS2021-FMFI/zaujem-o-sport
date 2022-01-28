@@ -17,10 +17,11 @@ export const UploadData = () => {
 
 	const {countries: responseCountries} = useCountries();
 	const [countries, setCountries] = useState<{value: string, label: string}[]>([]);
+	const [selectedCountry, setSelectedCountry] = useState<string | undefined>();
 	// TODO: fetch currencies and another select for currencies (meny)
 	const {currencies: responseCurrencies} = useFundingCurrencies();
-
-	console.log(responseCurrencies);
+	const [currencies, setCurrencies] = useState<{value: string, label: string}[]>([]);
+	const [selectedCurrency, setSelectedCurrency] = useState<string | undefined>();
 
 	useEffect(() => {
 		setCountries(responseCountries.map((country) => { return {
@@ -28,6 +29,11 @@ export const UploadData = () => {
 		}}));
 	}, [responseCountries]);
 
+	useEffect(() => {
+		setCurrencies(responseCurrencies.map((c) => { return {
+			value: c.currency, label: c.currency
+		}}));
+	}, [responseCurrencies]);
 
 	const uploadMutation = useMutation(apiUploadFunding, {
 		onSuccess: (response) => {
@@ -44,8 +50,10 @@ export const UploadData = () => {
 		// TODO: errors in some rows in uploaded data load <IncorrectRows />
 		// TODO: with incorrect data.
 		// TODO: Decide how to store/pass correct and incorrect rows.
-		if (files.length === 1)
-			uploadMutation.mutate({csvFile: files[0].file, countryCode: "TODO", currency: "TODO"});
+		if (selectedCountry === undefined || selectedCurrency === undefined)
+			createSnackbar("Zvoliť krajinu a menu.", SnackTypes.warn);
+		else if (files.length === 1)
+			uploadMutation.mutate({csvFile: files[0].file, countryCode: selectedCountry, currency: selectedCurrency});
 		else
 			createSnackbar("Najskôr je potrebné nahrať dáta vo formáte csv.", SnackTypes.warn);
 	}
@@ -63,6 +71,18 @@ export const UploadData = () => {
 						id="country"
 						options={countries}
 					  placeholder="Zvoľte krajinu"
+						onChange={(selectedCountry) => setSelectedCountry(selectedCountry?.value)}
+					/>
+				</Col>
+			</Row>
+			<Row>
+				<Col lg={5} md={6} sm={8} xs={12}>
+					<Form.Label>Meny</Form.Label>
+					<Select
+						id="currency"
+						options={currencies}
+						placeholder="Zvoľte menu"
+						onChange={(selectedCurrency) => setSelectedCurrency(selectedCurrency?.value)}
 					/>
 				</Col>
 			</Row>

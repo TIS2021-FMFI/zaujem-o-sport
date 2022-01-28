@@ -18,7 +18,7 @@ export const apiListSports = ()
 }
 
 // TODO: move it to app adapters since admin will make use of it
-export type Country = {
+export interface Country {
 	name: string,
 	code: string
 }
@@ -37,9 +37,13 @@ export interface ApiUploadFundingProps {
 	currency: string
 }
 
+export interface Currency {
+	currency: string
+}
+
 export interface ApiFundingCurrencies {
 	message: string,
-	currencies: string[]
+	currencies: Currency[]
 }
 
 export const apiListFundingCurrencies = (): Promise<AxiosResponse<ApiFundingCurrencies>> => {

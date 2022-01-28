@@ -165,7 +165,7 @@ class Database:
 		results = []
 		try:
 			with self._getConnection() as dbConn:
-				with dbConn.cursor() as cursor:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
 					cursor.execute(sql)
 					results = cursor.fetchall()
 			self._releaseConnection(dbConn)

@@ -2,7 +2,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from './store';
 import {useEffect, useState} from "react";
 import {useQuery} from "react-query";
-import {apiListCountries, apiListFundingCurrencies, Country} from "../secretary/adapters";
+import {apiListCountries, apiListFundingCurrencies, Country, Currency} from "../secretary/adapters";
 import createSnackbar, {dismissSnackbar, resolveSnackbar, SnackTypes} from "../components/snackbar/Snackbar";
 import {AxiosResponse} from "axios";
 
@@ -30,61 +30,44 @@ const useApiFetchWithNotifications = (
 
 	useEffect(() => {
 		if (isLoading)
-			createSnackbar(initToastMsg, SnackTypes.loading, false, toastId)
+			createSnackbar(initToastMsg, SnackTypes.loading, false, toastId);
 	}, [isLoading]);
 
 	useEffect(() => { return () => dismissSnackbar(toastId) }, []);
 
-	return { isLoading, response }
+	return { isLoading, response };
 }
 
 export const useCountries = (): { isLoading: boolean, countries: Country[] } => {
-
 	const toastId = "countries_fetching";
+	const toastMsg = "Načítavanie krajín...";
+	const queryKey = "list_countries";
+
+	const {isLoading, response} = useApiFetchWithNotifications(toastId, queryKey, apiListCountries, toastMsg);
 
 	const [countries, setCountries] = useState<Country[]>([]);
-
-	const {isLoading, data: response} = useQuery("list_countries", apiListCountries, {
-		onSuccess: (successResponse) => {
-			if (response === undefined)
-				resolveSnackbar(toastId, "Dáta úspešne načítané.");
-		},
-		onError: (error) => {
-			console.log(error);
-			if (response === undefined)
-				resolveSnackbar(toastId, "Dáta nebolo možné načítať.", false);
-		}
-	});
 
 	useEffect(() => {
 		if (response !== undefined)
 			setCountries(response.data.countries);
 	}, [response]);
 
-	useEffect(() => {
-		if (isLoading)
-			createSnackbar("Načítavanie krajín...", SnackTypes.loading, false, toastId)
-	}, [isLoading]);
-
-	useEffect(() => { return () => dismissSnackbar(toastId) }, []);
-
-	return { isLoading, countries }
+	return { isLoading, countries };
 }
 
-export const useFundingCurrencies = (): { isLoading: boolean, currencies: string[] } => {
-
+export const useFundingCurrencies = (): { isLoading: boolean, currencies: Currency[] } => {
 	const toastId = "funding_currencies_fetching";
 	const toastMsg = "Načítavanie mien...";
 	const queryKey = "list_funding_currencies";
 
 	const {isLoading, response} = useApiFetchWithNotifications(toastId, queryKey, apiListFundingCurrencies, toastMsg);
 
-	const [currencies, setCurrencies] = useState<string[]>([]);
+	const [currencies, setCurrencies] = useState<Currency[]>([]);
 
 	useEffect(() => {
 		if (response !== undefined)
 			setCurrencies(response.data.currencies);
 	}, [response]);
 
-	return { isLoading, currencies }
+	return { isLoading, currencies };
 }
