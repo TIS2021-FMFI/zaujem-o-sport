@@ -1,4 +1,4 @@
-import {useMutation, useQuery} from "react-query";
+import {useMutation} from "react-query";
 import Select from "react-select";
 import {Col, Row, Form, Button} from "react-bootstrap";
 import {Dropzone} from "components/drag_and_drop/Dropzone";
@@ -6,8 +6,8 @@ import React, {useEffect, useState} from "react";
 import {dropzoneFileProp} from "components/drag_and_drop/Dropzone";
 import {IncorrectRows} from "./IncorrectRows";
 import {apiUploadFunding} from "../../adapters";
-import createSnackbar, {SnackTypes} from "../../../components/snackbar/Snackbar";
-import {useCountries} from "../../../app/hooks";
+import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
+import {useCountries} from "app/hooks";
 
 const acceptedFileExtensions = ".csv";
 
@@ -24,8 +24,9 @@ export const UploadData = () => {
 		}}));
 	}, [responseCountries]);
 
-	// https://react-query.tanstack.com/guides/mutations
-	const mutation = useMutation(apiUploadFunding, {
+	// TODO: fetch currencies and another select for currencies (meny)
+
+	const uploadMutation = useMutation(apiUploadFunding, {
 		onSuccess: (response) => {
 			console.log(response);
 		},
@@ -41,7 +42,7 @@ export const UploadData = () => {
 		// TODO: with incorrect data.
 		// TODO: Decide how to store/pass correct and incorrect rows.
 		if (files.length === 1)
-			mutation.mutate(files[0].file);
+			uploadMutation.mutate({csvFile: files[0].file, countryCode: "TODO", currency: "TODO"});
 		else
 			createSnackbar("Najskôr je potrebné nahrať dáta vo formáte csv.", SnackTypes.warn);
 	}

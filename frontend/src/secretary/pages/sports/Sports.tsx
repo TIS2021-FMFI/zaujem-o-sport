@@ -29,7 +29,7 @@ export const Sports = () => {
   // TODO: use <table columnNames={columnNames} rows={sportRows} /> instead of .map
   return (<>
 	  <header>
-	    <h1>Športy</h1>
+	    <h1>Športy a odvetvia</h1>
 	  </header>
 	  <section>
 		  TODO

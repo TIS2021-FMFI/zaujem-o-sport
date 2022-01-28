@@ -31,8 +31,15 @@ export const apiListCountries = (): Promise<AxiosResponse<ApiListCountries>> => 
 	return axios.get("/secretary/countries");
 }
 
-export const apiUploadFunding = (csvFile: File): Promise<AxiosResponse<{}>> => {
+export interface ApiUploadFundingProps {
+	csvFile: File,
+	countryCode: string,
+	currency: string
+}
+
+export const apiUploadFunding = ({csvFile, countryCode, currency}: ApiUploadFundingProps): Promise<AxiosResponse<{}>> => {
 	const formData = new FormData();
 	formData.append("csvFile", csvFile);
+	formData.append("json", JSON.stringify({countryCode: countryCode, currency: currency}))
 	return axios.post("/secretary/funding/upload", formData);
 }

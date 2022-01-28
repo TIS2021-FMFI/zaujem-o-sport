@@ -10,7 +10,8 @@ class Funding(SwaggerView):
 			return {"message": "Missing uploaded file."}, 400
 
 		file = request.files["csvFile"]
-		print(file)
+		requestJSON = request.form["json"]
+		countryCode, currency = requestJSON["countryCode"], requestJSON["currency"]
 
 		# TODO: file validation, read content, etc.
 
