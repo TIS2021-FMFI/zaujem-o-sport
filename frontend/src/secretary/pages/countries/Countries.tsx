@@ -6,13 +6,13 @@ import {useEffect, useState} from "react";
 
 export const Countries = () => {
 
-	const { isLoading, countries: responseCountries } = useCountries();
+	const {isLoading, countries: responseCountries} = useCountries();
 
 	const [countries, setCountries] = useState<string[][]>([]);
 
 	useEffect(() => {
 		setCountries(responseCountries.map((country) => [country.name, country.code]));
-	});
+	}, [responseCountries]);
 
 	return (<>
 		<CenteredRow as="header">
