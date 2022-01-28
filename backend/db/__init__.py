@@ -939,3 +939,49 @@ class Database:
 			# print(result)
 
 			return result["combi"]
+
+	def suggestNewSportCode(self):
+
+		sql = "select max(code)+1 from sport"
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					return tmp[0]
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+
+
+	def suggestNewBranchCode(self, sport_code:int):
+
+		sql = "select max(b.code)+1 from branch b " \
+			  "join sport s on s.id = b.sport_id and s.code = %(sport_code)s"
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, {"sport_code":sport_code})
+					tmp = cursor.fetchone()
+					return tmp[0]
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+
+
+	def suggestNewCombiBranchCode(self):
+
+		sql = "select max(b.code)+1 from branch b where is_combined"
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					return tmp[0]
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+
