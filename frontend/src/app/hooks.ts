@@ -2,7 +2,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from './store';
 import {useEffect, useState} from "react";
 import {useQuery} from "react-query";
-import {apiListCountries, apiListFundingCurrencies, Country, Currency} from "../secretary/adapters";
+import {apiGetNewSportCode, apiListCountries, apiListFundingCurrencies, Country, Currency} from "../secretary/adapters";
 import createSnackbar, {dismissSnackbar, resolveSnackbar, SnackTypes} from "../components/snackbar/Snackbar";
 import {AxiosResponse} from "axios";
 
@@ -14,7 +14,8 @@ const useApiFetchWithNotifications = (
 	toastId: string,
 	queryKey: string,
 	apiFetchFunction: () => Promise<AxiosResponse<any>>,
-	initToastMsg: string
+	initToastMsg: string,
+	cache: boolean = true
 ) => {
 	const {isLoading, data: response} = useQuery(queryKey, apiFetchFunction, {
 		onSuccess: (successResponse) => {
@@ -25,7 +26,8 @@ const useApiFetchWithNotifications = (
 			console.log(error);
 			if (response === undefined)
 				resolveSnackbar(toastId, "Dáta nebolo možné načítať.", false);
-		}
+		},
+		cacheTime: cache ? undefined : 0
 	});
 
 	useEffect(() => {
@@ -70,4 +72,23 @@ export const useFundingCurrencies = (): { isLoading: boolean, currencies: Curren
 	}, [response]);
 
 	return { isLoading, currencies };
+}
+
+export const useNewSportCode = (): { isLoading: boolean, newSportCode: string } => {
+	const toastId = "getting_new_sport_code";
+	const toastMsg = "Zisťuje sa nový kód športu...";
+	const queryKey = "get_new_sport_code";
+
+	const {isLoading, response} = useApiFetchWithNotifications(
+		toastId, queryKey, apiGetNewSportCode, toastMsg, false
+	);
+
+	const [newSportCode, setNewSportCode] = useState<string>("");
+
+	useEffect(() => {
+		if (response !== undefined)
+			setNewSportCode(response.data.newSportCode);
+	}, [response]);
+
+	return { isLoading, newSportCode };
 }

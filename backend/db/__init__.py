@@ -241,22 +241,17 @@ class Database:
 
 	# inputs to DB
 
-	def addSport(self, data : dict) -> bool:
-		if "code" not in data:
-			raise DataError("sport data do not contain code")
-		if "title" not in data:
-			raise DataError("sport data do not contain title")
-
+	def addSport(self, code: str, title: str) -> bool:
 		sql_check = "select * from sport where code = %(code)s"
 		sql = "insert into sport(code, title) values (%(code)s, %(title)s);"
 		try:
 			with self._getConnection() as dbConn:
 				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-					cursor.execute(sql_check, {"code":data['code']})
+					cursor.execute(sql_check, {"code": code})
 					tmp = cursor.fetchone()
 					if tmp != None: # sport code already exists
 						raise DataError("unable to insert, sport with entered code already exists, please select another code")
-					cursor.execute(sql, {"code":data['code'], "title":data['title'] })
+					cursor.execute(sql, {"code": code, "title": title })
 					dbConn.commit()
 			self._releaseConnection(dbConn)
 			return True

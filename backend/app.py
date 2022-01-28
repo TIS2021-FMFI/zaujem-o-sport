@@ -5,6 +5,8 @@ import secretary.endpoints.login
 import secretary.endpoints.show_sports
 import secretary.endpoints.funding
 import secretary.endpoints.funding_currencies
+import secretary.endpoints.sports
+import secretary.endpoints.sport_code
 import admin.endpoints.login
 import secretary.endpoints.show_countries
 import user.endpoints.success
@@ -80,6 +82,17 @@ app.add_url_rule(
 	"/api/secretary/funding/currencies",
 	view_func=secretary.endpoints.funding_currencies.Funding.as_view("secretary_funding_currencies"),
 	methods=["GET"]
+)
+app.add_url_rule(
+	"/api/secretary/sport/new-code",
+	view_func=secretary.endpoints.sport_code.SportCode.as_view("secretary_sport_code"),
+	methods=["GET"]
+)
+
+app.add_url_rule(
+	"/api/secretary/sports/add",
+	view_func=secretary.endpoints.sports.Sports.as_view("secretary_sports"),
+	methods=["POST"]
 )
 
 # ----- admin rules -----

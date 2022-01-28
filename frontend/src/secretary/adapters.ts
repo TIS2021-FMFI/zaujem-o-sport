@@ -41,13 +41,22 @@ export interface Currency {
 	currency: string
 }
 
-export interface ApiFundingCurrencies {
+export interface ApiGetFundingCurrencies {
 	message: string,
 	currencies: Currency[]
 }
 
-export const apiListFundingCurrencies = (): Promise<AxiosResponse<ApiFundingCurrencies>> => {
+export const apiListFundingCurrencies = (): Promise<AxiosResponse<ApiGetFundingCurrencies>> => {
 	return axios.get("/secretary/funding/currencies");
+}
+
+export interface ApiNewSportCode {
+	message: string,
+	newSportCode: string
+}
+
+export const apiGetNewSportCode = (): Promise<AxiosResponse<ApiNewSportCode>> => {
+	return axios.get("/secretary/sport/new-code");
 }
 
 export const apiUploadFunding = ({csvFile, countryCode, currency}: ApiUploadFundingProps): Promise<AxiosResponse<{}>> => {

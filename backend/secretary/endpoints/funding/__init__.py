@@ -1,6 +1,7 @@
 from flask import request
 from flasgger import SwaggerView
 from verification.jwt import is_secretary
+import json
 
 class Funding(SwaggerView):
 
@@ -10,7 +11,7 @@ class Funding(SwaggerView):
 			return {"message": "Missing uploaded file."}, 400
 
 		file = request.files["csvFile"]
-		requestJSON = request.form["json"]
+		requestJSON = json.loads(request.form["json"])
 		countryCode, currency = requestJSON["countryCode"], requestJSON["currency"]
 
 		# TODO: file validation, read content, etc.
