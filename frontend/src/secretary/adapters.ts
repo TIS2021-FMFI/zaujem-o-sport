@@ -59,6 +59,17 @@ export const apiGetNewSportCode = (): Promise<AxiosResponse<ApiNewSportCode>> =>
 	return axios.get("/secretary/sport/new-code");
 }
 
+export interface ApiAddNewSportProps {
+	sportCode: string,
+	sportTitle: string
+}
+
+// TODO: return type
+export const apiAddNewSport = ({sportCode, sportTitle}: ApiAddNewSportProps): Promise<AxiosResponse<{}>> => {
+	return axios.post("/secretary/sports/add", {code: sportCode, title: sportTitle});
+}
+
+// TODO: return type
 export const apiUploadFunding = ({csvFile, countryCode, currency}: ApiUploadFundingProps): Promise<AxiosResponse<{}>> => {
 	const formData = new FormData();
 	formData.append("csvFile", csvFile);

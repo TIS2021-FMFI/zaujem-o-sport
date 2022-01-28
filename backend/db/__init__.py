@@ -249,13 +249,13 @@ class Database:
 				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
 					cursor.execute(sql_check, {"code": code})
 					tmp = cursor.fetchone()
-					if tmp != None: # sport code already exists
+					if tmp is not None: # sport code already exists
 						raise DataError("unable to insert, sport with entered code already exists, please select another code")
 					cursor.execute(sql, {"code": code, "title": title })
 					dbConn.commit()
 			self._releaseConnection(dbConn)
 			return True
-		except psycopg2.DatabaseError as error:
+		except (psycopg2.DatabaseError, DataError) as error:
 			# TODO: logging
 			# TODO: define standard for database error messages
 			print(error)

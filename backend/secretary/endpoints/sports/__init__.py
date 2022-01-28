@@ -10,4 +10,6 @@ class Sports(SwaggerView):
 		code = request.json.get("code")
 		title = request.json.get("title")
 		ok = DB.addSport(code, title)
-		return {"message": "ok"} if ok else {"message": "Database error"}, 400
+		if ok:
+			return {"message": "ok"}
+		return {"message": "Database error"}, 500

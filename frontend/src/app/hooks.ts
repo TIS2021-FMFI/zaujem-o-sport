@@ -1,8 +1,14 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from './store';
 import {useEffect, useState} from "react";
-import {useQuery} from "react-query";
-import {apiGetNewSportCode, apiListCountries, apiListFundingCurrencies, Country, Currency} from "../secretary/adapters";
+import {useMutation, useQuery} from "react-query";
+import {
+	apiGetNewSportCode,
+	apiListCountries,
+	apiListFundingCurrencies,
+	Country,
+	Currency
+} from "../secretary/adapters";
 import createSnackbar, {dismissSnackbar, resolveSnackbar, SnackTypes} from "../components/snackbar/Snackbar";
 import {AxiosResponse} from "axios";
 
@@ -10,10 +16,10 @@ import {AxiosResponse} from "axios";
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-const useApiFetchWithNotifications = (
+const useQueryWithNotifications = (
 	toastId: string,
 	queryKey: string,
-	apiFetchFunction: () => Promise<AxiosResponse<any>>,
+	apiFetchFunction: (...args: any[]) => Promise<AxiosResponse<any>>,
 	initToastMsg: string,
 	cache: boolean = true
 ) => {
@@ -40,12 +46,37 @@ const useApiFetchWithNotifications = (
 	return { isLoading, response };
 }
 
+export const useMutationWithNotifications = (
+	toastId: string,
+	apiFetchFunction: (...args: any[]) => Promise<AxiosResponse<any>>,
+	initToastMsg: string
+) => {
+	const mutation = useMutation(apiFetchFunction, {
+		onSuccess: (successResponse) => {
+			resolveSnackbar(toastId, "Dáta boli úspešne uložené.");
+		},
+		onError: (error) => {
+			console.log(error);
+			resolveSnackbar(toastId, "Dáta nebolo možné uložiť.", false);
+		},
+	});
+
+	useEffect(() => {
+		if (mutation.isLoading)
+			createSnackbar(initToastMsg, SnackTypes.loading, false, toastId);
+	}, [mutation.isLoading]);
+
+	useEffect(() => { return () => dismissSnackbar(toastId) }, []);
+
+	return mutation;
+}
+
 export const useCountries = (): { isLoading: boolean, countries: Country[] } => {
 	const toastId = "countries_fetching";
 	const toastMsg = "Načítavanie krajín...";
 	const queryKey = "list_countries";
 
-	const {isLoading, response} = useApiFetchWithNotifications(toastId, queryKey, apiListCountries, toastMsg);
+	const {isLoading, response} = useQueryWithNotifications(toastId, queryKey, apiListCountries, toastMsg);
 
 	const [countries, setCountries] = useState<Country[]>([]);
 
@@ -62,7 +93,7 @@ export const useFundingCurrencies = (): { isLoading: boolean, currencies: Curren
 	const toastMsg = "Načítavanie mien...";
 	const queryKey = "list_funding_currencies";
 
-	const {isLoading, response} = useApiFetchWithNotifications(toastId, queryKey, apiListFundingCurrencies, toastMsg);
+	const {isLoading, response} = useQueryWithNotifications(toastId, queryKey, apiListFundingCurrencies, toastMsg);
 
 	const [currencies, setCurrencies] = useState<Currency[]>([]);
 
@@ -79,7 +110,7 @@ export const useNewSportCode = (): { isLoading: boolean, newSportCode: string } 
 	const toastMsg = "Zisťuje sa nový kód športu...";
 	const queryKey = "get_new_sport_code";
 
-	const {isLoading, response} = useApiFetchWithNotifications(
+	const {isLoading, response} = useQueryWithNotifications(
 		toastId, queryKey, apiGetNewSportCode, toastMsg, false
 	);
 

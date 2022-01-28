@@ -1,19 +1,20 @@
 import React, {useState} from "react";
 import {Button, Col, FloatingLabel, Form, Row} from "react-bootstrap";
-import { useNewSportCode} from "app/hooks";
+import {useMutationWithNotifications, useNewSportCode} from "app/hooks";
 import {CenteredRow} from "components/basic/CenteredRow";
-
+import {apiAddNewSport} from "../../../adapters";
 
 export const AddSport = () => {
 
   const {newSportCode} = useNewSportCode();
-
   const [sportTitle, setSportTitle] = useState<string>("");
+  const addNewSportMutation = useMutationWithNotifications(
+    "adding_new_sport", apiAddNewSport, "Prebieha pridávanie nového športu..."
+  );
 
   const handleAddNewSportSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: api call
-
+    addNewSportMutation.mutate({sportCode: newSportCode, sportTitle: sportTitle});
   }
 
   return(<>
