@@ -21,6 +21,7 @@ import {Export} from "./user/pages/export/Export";
 import {Fundings} from "./user/pages/fundings/Fundings";
 import {Success} from "./user/pages/success/Success";
 import {Interconnectness} from "./user/pages/interconnectness/Interconnectness";
+import {UploadData as AdminUploadData} from "./admin/pages/upload_data/UploadData";
 import Footer from "./user/components/footer";
 import {HomeUser} from "./user/pages/home/HomeUser";
 import 'user/pages/styles/site.scss';
@@ -196,7 +197,7 @@ const AdminRoutes = () => {
 						<AdminAuthRoute exact path={path}>
 							<Redirect to={`${path}/data/upload`} />
 						</AdminAuthRoute>
-						<AdminAuthRoute exact path={`${path}/data/upload`} component={NotFound} />
+						<AdminAuthRoute exact path={`${path}/data/upload`} component={AdminUploadData} />
 						<AdminAuthRoute exact path={`${path}/sports/add`} component={NotFound} />
 						<AdminAuthRoute exact path={`${path}/branches/add`} component={NotFound} />
 						<AdminAuthRoute exact path={`${path}/countries/add`} component={NotFound} />

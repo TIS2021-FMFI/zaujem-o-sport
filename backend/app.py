@@ -12,6 +12,7 @@ import secretary.endpoints.sports
 import secretary.endpoints.sport_code
 import secretary.endpoints.branches.new_code
 import admin.endpoints.login
+import admin.endpoints.upload
 import secretary.endpoints.show_countries
 import user.endpoints.success
 import user.endpoints.chart
@@ -137,6 +138,12 @@ app.add_url_rule(
 app.add_url_rule(
 	"/api/admin/login",
 	view_func=admin.endpoints.login.LoginView.as_view("admin_login"),
+	methods=["POST"]
+)
+
+app.add_url_rule(
+	"/api/admin/upload",
+	view_func=admin.endpoints.upload.UploadView.as_view("admin_upload"),
 	methods=["POST"]
 )
 

@@ -16,8 +16,6 @@ export const UploadData = () => {
 
 	const [files, setFiles] = useState<dropzoneFileProp[]>([]);
 
-	console.log(files);
-
 	const {countries: responseCountries} = useCountries();
 	const [countries, setCountries] = useState<{value: string, label: string}[]>([]);
 	const [selectedCountry, setSelectedCountry] = useState<string | undefined>();
