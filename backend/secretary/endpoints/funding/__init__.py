@@ -11,6 +11,7 @@ class Funding(SwaggerView):
 		if len(request.files) == 0:
 			return {"message": "Missing uploaded file."}, 400
 
+
 		file = request.files["csvFile"]
 		if not file:
 			return {"message": "Missing required parameter: `file`.", "data": {}}, 400
@@ -32,10 +33,10 @@ class Funding(SwaggerView):
 			lines.append(line.decode("utf-8").strip())
 
 		p = parser.csvParser()
-		suggestions = p.findFailures(lines, correction, country_code)
+		suggestions = p.findFailures(lines, correction, country_code, currency)
 
 		if len(suggestions) == 0:
-			p.saveResult()
+			p.saveResults()
 			return {"message": "ok"}
 
 		else:
