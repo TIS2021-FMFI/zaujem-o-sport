@@ -7,6 +7,7 @@ import {Logout} from "admin_secretary_shared/components/login/Logout";
 import {SportsWithBranches} from "admin_secretary_shared/pages/sports/SportsWithBranches";
 import {setupInterceptors as setupSecretaryInterceptors} from "secretary/axios_provider";
 import {setupInterceptors as setupAdminInterceptors} from "admin/axios_provider";
+import {setupInterceptors as setupAdminSecretaryInterceptors} from "admin_secretary_shared/axios_provider";
 import {Sidebar, SidebarLinksProp} from "./components/sidebar/Sidebar";
 import {PlusLg, List, Upload, ImageAlt, Pen, YinYang} from "react-bootstrap-icons";
 import globalStyles from "styles/global.module.scss";
@@ -30,6 +31,7 @@ import {ToastContainer} from "react-toastify";
 const history = createBrowserHistory();
 setupSecretaryInterceptors(history);
 setupAdminInterceptors(history);
+setupAdminSecretaryInterceptors(history);
 
 const App = () => {
 	return (<>
@@ -117,20 +119,20 @@ const SecretaryRoutes = () => {
 			/>
 			<div style={{marginLeft: globalStyles.sidebarWidth}}>
 				<Container fluid="lg">
-						<Switch>
-							<SecretaryAuthRoute exact path={path}>
-								<Redirect to={`${path}/data/upload`} />
-							</SecretaryAuthRoute>
-							<SecretaryAuthRoute exact path={`${path}/data/upload`} component={UploadData} />
-							<SecretaryAuthRoute exact path={`${path}/sports/list`} component={SportsWithBranches} />
-							<SecretaryAuthRoute exact path={`${path}/sports/add`} component={AddSport} />
-							<SecretaryAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
-							<SecretaryAuthRoute exact path={`${path}/countries/list`} component={Countries} />
-							<Route exact path={`${path}/logout`}>
-								<Logout userType="secretary" />
-							</Route>
-							<SecretaryAuthRoute path="*" component={NotFound} />
-						</Switch>
+					<Switch>
+						<SecretaryAuthRoute exact path={path}>
+							<Redirect to={`${path}/data/upload`} />
+						</SecretaryAuthRoute>
+						<SecretaryAuthRoute exact path={`${path}/data/upload`} component={UploadData} />
+						<SecretaryAuthRoute exact path={`${path}/sports/list`} component={SportsWithBranches} />
+						<SecretaryAuthRoute exact path={`${path}/sports/add`} component={AddSport} />
+						<SecretaryAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
+						<SecretaryAuthRoute exact path={`${path}/countries/list`} component={Countries} />
+						<Route exact path={`${path}/logout`}>
+							<Logout userType="secretary" />
+						</Route>
+						<SecretaryAuthRoute path="*" component={NotFound} />
+					</Switch>
 				</Container>
 			</div>
 		</>
@@ -191,8 +193,8 @@ const AdminRoutes = () => {
 				logoutRoute={`${path}/logout`}
 				lang={"en"}
 			/>
-			<Container fluid="lg">
-				<div style={{marginLeft: globalStyles.sidebarWidth}}>
+			<div style={{marginLeft: globalStyles.sidebarWidth}}>
+				<Container fluid="lg">
 					<Switch>
 						<AdminAuthRoute exact path={path}>
 							<Redirect to={`${path}/data/upload`} />
@@ -209,8 +211,8 @@ const AdminRoutes = () => {
 						</Route>
 						<AdminAuthRoute path="*" component={NotFound} />
 					</Switch>
-				</div>
-			</Container>
+				</Container>
+			</div>
 		</>
 	)
 }

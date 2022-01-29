@@ -1,5 +1,10 @@
+/**
+ * API adapters, which can be used by anyone anywhere.
+ * All API urls should start with "/".
+ */
+
 import {AxiosResponse} from "axios";
-import {secretaryAxiosProvider as axios} from "../secretary/axios_provider";
+import {generalAxiosProvider as axios} from "app/axios_provider";
 
 export interface Country {
 	name: string,
@@ -11,5 +16,5 @@ export interface ApiListCountries {
 }
 
 export const apiListCountries = (): Promise<AxiosResponse<ApiListCountries>> => {
-	return axios.get("/secretary/countries");   // TODO: isn't restricted to anyone
+	return axios.get("/countries");
 }

@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Button, Col, FloatingLabel, Form, Row} from "react-bootstrap";
 import Select from "react-select";
-import {useNewBranchCode, useNewCombiBranchCode, useSports} from "secretary/hooks";
+import {useNewBranchCode, useNewCombiBranchCode, useSports} from "admin_secretary_shared/hooks";
 import {useQuery} from "react-query";
-import {apiGetNewBranchCode} from "../../../adapters";
+import {apiGetNewBranchCode} from "admin_secretary_shared/adapters";
 
 interface SelectedOption {
 	value: string,

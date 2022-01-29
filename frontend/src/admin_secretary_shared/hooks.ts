@@ -1,11 +1,11 @@
-import {useQueryWithNotifications} from "../app/hooks";
+import {useQueryWithNotifications} from "app/hooks";
 import {
 	apiGetBranchesWithSports,
 	apiGetCombiBranches,
-	apiGetNewSportCode,
 	BranchWithSport,
-	CombiBranch
-} from "../secretary/adapters";
+	CombiBranch,
+	apiGetNewSportCode, apiGetNewCombiBranchCode, apiGetNewBranchCode, Sport, apiGetSports
+} from "admin_secretary_shared/adapters";
 import {useEffect, useState} from "react";
 
 export const useNewSportCode = (): { isLoading: boolean, newSportCode: string } => {
@@ -59,4 +59,59 @@ export const useCombiBranches = (): { isLoading: boolean, combiBranches: CombiBr
 	}, [response]);
 
 	return { isLoading, combiBranches };
+}
+
+export const useNewCombiBranchCode = (): { isLoading: boolean, newCombiBranchCode: string } => {
+	const toastId = "getting_new_combi_branch_code";
+	const toastMsg = "Zisťuje sa nový kód odvetvia...";
+	const queryKey = "get_new_combi_branch_code";
+
+	const {isLoading, response} = useQueryWithNotifications(
+		toastId, queryKey, apiGetNewCombiBranchCode, toastMsg, false
+	);
+
+	const [newCombiBranchCode, setNewCombiBranchCode] = useState<string>("");
+
+	useEffect(() => {
+		if (response !== undefined)
+			setNewCombiBranchCode(response.data.newCombiBranchCode);
+	}, [response]);
+
+	return { isLoading, newCombiBranchCode };
+}
+
+export const useNewBranchCode = (sportCode: string): { isLoading: boolean, newBranchCode: string } => {
+	const toastId = "getting_new_branch_code";
+	const toastMsg = "Zisťuje sa nový kód odvetvia...";
+	const queryKey = "get_new_branch_code";
+
+	const {isLoading, response} = useQueryWithNotifications(
+		toastId, queryKey, apiGetNewBranchCode, toastMsg, false
+	);
+
+	const [newBranchCode, setNewBranchCode] = useState<string>("");
+
+	useEffect(() => {
+		if (response !== undefined)
+			setNewBranchCode(response.data.newBranchCode);
+	}, [response]);
+
+	return { isLoading, newBranchCode };
+}
+
+export const useSports = (): { isLoading: boolean, sports: Sport[] } => {
+	const toastId = "fetching_sports";
+	const toastMsg = "Načítavanie športov...";
+	const queryKey = "get_sports";
+
+	const {isLoading, response} = useQueryWithNotifications(toastId, queryKey, apiGetSports, toastMsg);
+
+	const [sports, setSports] = useState<Sport[]>([]);
+
+	useEffect(() => {
+		if (response !== undefined)
+			setSports(response.data.sports);
+	}, [response]);
+
+	return { isLoading, sports };
 }

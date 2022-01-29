@@ -8,7 +8,6 @@ import {IncorrectRows} from "./IncorrectRows";
 import {apiUploadFunding} from "../../adapters";
 import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
 import {useCountries} from "app/hooks";
-import {useFundingCurrencies} from "secretary/hooks";
 import {currencies} from "../../../data/active_currency_codes";
 
 const acceptedFileExtensions = ".csv";
