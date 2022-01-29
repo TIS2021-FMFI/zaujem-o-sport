@@ -20,7 +20,7 @@ class FundingRecord:
         self.currency = currency
 
     def save(self):
-        ...
+        DB.importFundingData(self.country_id, self.branch_id, self.amount, self.currency)
 
     def __repr__(self) -> str:
         return repr(f"{self.country_id} {self.branch_id} {self.amount} {self.currency}")

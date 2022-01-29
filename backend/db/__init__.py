@@ -365,8 +365,26 @@ class Database:
 			print(error)
 			return False
 
-	def importFundingData(self):
-		...
+	def importFundingData(self, country_id : id, branch_id:id, amount:float, currency:str):
+
+		sql_del = "delete from funding where country_id=%(country_id)s and branch_id=%(branch_id)s"
+
+		sql = "insert into funding(country_id, branch_id, absolute_funding, currency) values (%(country_id)s, %(branch_id)s, %(amount)s, %(currency)s)"
+
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql_del, {"country_id": country_id, "branch_id":branch_id})
+					cursor.execute(sql, {"country_id": country_id, "branch_id":branch_id,"amount": amount, "currency":currency})
+				dbConn.commit()
+			self._releaseConnection(dbConn)
+			return True
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+			return False
+
 
 	def importSuccessdata(self):
 		...
