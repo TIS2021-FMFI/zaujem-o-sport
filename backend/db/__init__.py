@@ -374,8 +374,26 @@ class Database:
 			print(error)
 			return False
 
-	def importFundingData(self):
-		...
+	def importFundingData(self, country_id : id, branch_id:id, amount:float, currency:str):
+
+		sql_del = "delete from funding where country_id=%(country_id)s and branch_id=%(branch_id)s"
+
+		sql = "insert into funding(country_id, branch_id, absolute_funding, currency) values (%(country_id)s, %(branch_id)s, %(amount)s, %(currency)s)"
+
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql_del, {"country_id": country_id, "branch_id":branch_id})
+					cursor.execute(sql, {"country_id": country_id, "branch_id":branch_id,"amount": amount, "currency":currency})
+				dbConn.commit()
+			self._releaseConnection(dbConn)
+			return True
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+			return False
+
 
 	def importSuccessdata(self):
 		...
@@ -924,6 +942,80 @@ class Database:
 			return final_result
 
 
+	def checkCodeTitle(self, sport_code:int, branch_code:int, sport_title:str, branch_title:str) -> bool:
+
+		sql = "select * from sport s join branch b on s.id = b.sport_id and s.code = %(sport_code)s and b.code = %(branch_code)s and s.title = %(sport_title)s and b.title = %(branch_title)s "
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, {"sport_code":sport_code, "branch_code":branch_code, "sport_title":sport_title, "branch_title":branch_title })
+					tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+			return tmp is not None
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+			return False
+
+
+	def findSportByCode(self, sport_code:int) -> str:
+
+		sql = "select title from sport where code = %(sport_code)s"
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, {"sport_code": sport_code})
+					tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+			return tmp[0] if tmp is not None else None
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+			return False
+
+	def findBranchByCode(self, sport_code:int, branch_code:int) -> str:
+		sql = "select b.title from branch b join sport s on s.id = b.sport_id " \
+			  "and s.code = %(sport_code)s and b.code = %(branch_code)s"
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, {"sport_code": sport_code, "branch_code":branch_code})
+					tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+			return tmp[0] if tmp is not None else None
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+			return False
+
+	def getSportBranches(self, sport_code:int) -> dict:
+
+		sql = "select b.code, b.title from branch b join sport s " \
+			  "on b.sport_id = s.id and s.code = %(code)s"
+		result = {"branches": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, {"code":sport_code})
+					tmp = cursor.fetchone()
+					while tmp:
+						result["branches"].append({"code": tmp[0], "title": tmp[1]})
+						tmp = cursor.fetchone()
+					self._releaseConnection(dbConn)
+
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+
+		finally:
+			# print(result)
+			return result["branches"]
+
+
 	def showCombiBranches(self) -> list:
 
 		sql = "select c.code, c.name, b.code, b.title, b2.code, b2.title, coefficient " \
@@ -946,7 +1038,28 @@ class Database:
 			# TODO: define standard for database error messages
 			print(error)
 		finally:
+			# print(result)
 			return results
+
+	def checkCombi(self, branch_code, country_code):
+
+		sql = "select b.code, b.title from branch b join country c " \
+			  "on c.id = b.country_id and c.code = %(country_code)s and is_combined and b.code = %(branch_code)s "
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, {"branch_code": branch_code, "country_code":country_code})
+					tmp = cursor.fetchone()
+					if tmp is None:
+						return -1, ""
+					else:
+						return tmp[0], tmp[1]
+			self._releaseConnection(dbConn)
+
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
 
 	def suggestNewSportCode(self):
 
@@ -963,6 +1076,25 @@ class Database:
 			print(error)
 
 
+	def countryCodeToID(self, country_code: str) -> id:
+
+		sql = "select id from country where code=%(country_code)s"
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, {"country_code":country_code})
+					tmp = cursor.fetchone()
+					if tmp is None:
+						return -1
+					else:
+						return tmp[0]
+			self._releaseConnection(dbConn)
+
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+
 	def suggestNewBranchCode(self, sport_code:int):
 
 		sql = "select max(b.code)+1 from branch b " \
@@ -978,6 +1110,25 @@ class Database:
 			# TODO: define standard for database error messages
 			print(error)
 
+	def branchCodeToId(self, sport_code: int, branch_code: int) -> id:
+
+		sql = "select b.id from branch b join sport s on s.id = b.sport_id and " \
+			  " b.code = %(branch_code)s and s.code =  %(sport_code)s "
+
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, {"branch_code":branch_code, "sport_code":sport_code})
+					tmp = cursor.fetchone()
+					if tmp is None:
+						return -1
+					else:
+						return tmp[0]
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
 
 	def suggestNewCombiBranchCode(self):
 
@@ -993,3 +1144,22 @@ class Database:
 			# TODO: define standard for database error messages
 			print(error)
 
+
+	def combiBranchCodeToId(self, branch_code:int) -> id:
+
+		sql = "select b.id from branch b where is_combined and code = %(code)s"
+
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, {"code":branch_code})
+					tmp = cursor.fetchone()
+					if tmp is None:
+						return -1
+					else:
+						return tmp[0]
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
