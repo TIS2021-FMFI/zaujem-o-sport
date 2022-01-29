@@ -128,7 +128,7 @@ class Database:
 				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
 					cursor.execute(sql)
 					tmp = cursor.fetchone()
-					while tmp:
+					while tmp: 
 						results.append({"sportCode": tmp[0], "sportTitle": tmp[1], "branchCode": tmp[2], "branchTitle": tmp[3]})
 						tmp = cursor.fetchone()
 			self._releaseConnection(dbConn)

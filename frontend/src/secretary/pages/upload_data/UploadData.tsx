@@ -8,6 +8,7 @@ import {IncorrectRows} from "./IncorrectRows";
 import {apiUploadFunding} from "../../adapters";
 import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
 import {useCountries, useFundingCurrencies} from "app/hooks";
+import {currencies} from "../../../data/active_currency_codes";
 
 const acceptedFileExtensions = ".csv";
 
@@ -18,22 +19,26 @@ export const UploadData = () => {
 	const {countries: responseCountries} = useCountries();
 	const [countries, setCountries] = useState<{value: string, label: string}[]>([]);
 	const [selectedCountry, setSelectedCountry] = useState<string | undefined>();
-	// TODO: fetch currencies and another select for currencies (meny)
+
+	const currencyOptions = currencies.map((currency) => { return {label: currency, value: currency} });
+	const [selectedCurrency, setSelectedCurrency] = useState<string | undefined>();
+
+	/*
 	const {currencies: responseCurrencies} = useFundingCurrencies();
 	const [currencies, setCurrencies] = useState<{value: string, label: string}[]>([]);
 	const [selectedCurrency, setSelectedCurrency] = useState<string | undefined>();
+	useEffect(() => {
+		setCurrencies(responseCurrencies.map((c) => { return {
+			value: c.currency, label: c.currency
+		}}));
+	}, [responseCurrencies]);
+	*/
 
 	useEffect(() => {
 		setCountries(responseCountries.map((country) => { return {
 			value: country.code, label: `${country.name} (${country.code})`
 		}}));
 	}, [responseCountries]);
-
-	useEffect(() => {
-		setCurrencies(responseCurrencies.map((c) => { return {
-			value: c.currency, label: c.currency
-		}}));
-	}, [responseCurrencies]);
 
 	const uploadMutation = useMutation(apiUploadFunding, {
 		onSuccess: (response) => {
@@ -80,7 +85,7 @@ export const UploadData = () => {
 					<Form.Label>Meny</Form.Label>
 					<Select
 						id="currency"
-						options={currencies}
+						options={currencyOptions}
 						placeholder="Zvoľte menu"
 						onChange={(selectedCurrency) => setSelectedCurrency(selectedCurrency?.value)}
 					/>
