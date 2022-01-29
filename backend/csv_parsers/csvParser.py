@@ -32,6 +32,7 @@ class csvParser:
         self.result = []
 
     def findFailures(self, csvFile: List[str], changes:list, country_code:str, currency:str):
+
         reader = csv.reader(csvFile, delimiter=',', quotechar='"')
         parsed_csv = list(reader)
 
@@ -39,9 +40,17 @@ class csvParser:
         suggestions = {}
         counter = 0
 
-        for row in parsed_csv:
+        for r in parsed_csv:
+
+            row = r
 
             counter += 1
+
+            if counter in changes: # changes from user
+                row[0] = changes[counter]["sport_code"]
+                row[1] = changes[counter]["branch_code"]
+                row[2] = changes[counter]["sport_title"]
+                row[3] = changes[counter]["branch_title"]
 
             if len(row) < EXPECTED_LEN:
                 # type 2 -> row too short

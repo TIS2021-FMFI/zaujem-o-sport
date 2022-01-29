@@ -16,7 +16,7 @@ class Funding(SwaggerView):
 		if not file:
 			return {"message": "Missing required parameter: `file`.", "data": {}}, 400
 
-		correction = {} # request.json.get("correction")
+		correction = {7:{"sport_code":1, "branch_code":1, "sport_title":"AIKIDO","branch_title":"Aikido"}} # request.json.get("correction")
 		#if not correction:
 		#	return {"message": "Missing required parameter: `correction`.", "data": {}}, 400
 
