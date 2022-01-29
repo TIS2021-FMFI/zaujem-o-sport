@@ -1,5 +1,5 @@
 import {useMutation} from "react-query";
-import {apiLogin, UserType} from "components/adapters";
+import {apiLogin, UserType} from "admin_secretary_shared/adapters";
 import {Button, Col, Container, FloatingLabel, Form, Row} from "react-bootstrap";
 import styles from "./styles/login.module.scss";
 import React, {useState} from "react";

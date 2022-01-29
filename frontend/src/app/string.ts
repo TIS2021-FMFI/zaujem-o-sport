@@ -8,7 +8,8 @@ const text = {
 		login: "Prihlásiť sa",
 		logout: "Odhlásiť",
 		invalidEmail: "Neplatný email.",
-		password: "Heslo"
+		password: "Heslo",
+		dropzone: "Potiahnite a pustite súbory s dátami sem, alebo kliknite a vyberte súbory."
 	}
 	,
 	en: {
@@ -16,7 +17,8 @@ const text = {
 		login: "Log in",
 		logout: "Logout",
 		invalidEmail: "Invalid email",
-		password: "Password"
+		password: "Password",
+		dropzone: "Drag & drop files here, or click and select files."
 	}
 }
 

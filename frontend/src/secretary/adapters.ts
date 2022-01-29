@@ -17,20 +17,6 @@ export const apiListSports = ()
 	return axios.get("/secretary/sports");
 }
 
-// TODO: move it to app adapters since admin will make use of it
-export interface Country {
-	name: string,
-	code: string
-}
-export interface ApiListCountries {
-	message: string,
-	countries: Country[]
-}
-
-export const apiListCountries = (): Promise<AxiosResponse<ApiListCountries>> => {
-	return axios.get("/secretary/countries");
-}
-
 export interface ApiUploadFundingProps {
 	csvFile: File,
 	countryCode: string,
@@ -75,16 +61,6 @@ export interface ApiNewBranchCode {
 
 export const apiGetNewBranchCode = (sportCode: string): Promise<AxiosResponse<ApiNewBranchCode>> => {
 	return axios.get(`/secretary/branches/${sportCode}/new-code`);
-}
-
-export interface ApiAddNewSportProps {
-	sportCode: string,
-	sportTitle: string
-}
-
-// TODO: return type
-export const apiAddNewSport = ({sportCode, sportTitle}: ApiAddNewSportProps): Promise<AxiosResponse<{}>> => {
-	return axios.post("/secretary/sports/add", {code: sportCode, title: sportTitle});
 }
 
 export interface BranchWithSport {

@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import {Button, Col, FloatingLabel, Form, Row} from "react-bootstrap";
-import {useMutationWithNotifications, useNewSportCode} from "app/hooks";
+import {useMutationWithNotifications} from "app/hooks";
+import {useNewSportCode} from "admin_secretary_shared/hooks";
 import {CenteredRow} from "components/basic/CenteredRow";
-import {apiAddNewSport} from "../../../adapters";
+import {apiAddNewSport} from "admin_secretary_shared/adapters";
 
 export const AddSport = () => {
 

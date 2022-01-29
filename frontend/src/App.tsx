@@ -2,17 +2,17 @@ import React from "react";
 import {BrowserRouter as Router, Redirect, Route, Switch, useRouteMatch} from "react-router-dom";
 import { createBrowserHistory } from 'history';
 import {NotFound} from "pages/not_found/NotFound";
-import {Login} from "components/login/Login";
-import {Logout} from "components/login/Logout";
-import {Sports} from "./secretary/pages/sports/Sports";
+import {Login} from "admin_secretary_shared/components/login/Login";
+import {Logout} from "admin_secretary_shared/components/login/Logout";
+import {SportsWithBranches} from "admin_secretary_shared/pages/sports/SportsWithBranches";
 import {setupInterceptors as setupSecretaryInterceptors} from "secretary/axios_provider";
 import {setupInterceptors as setupAdminInterceptors} from "admin/axios_provider";
 import {Sidebar, SidebarLinksProp} from "./components/sidebar/Sidebar";
-import {PlusLg, HouseDoor, List, Upload, ImageAlt, Pen, YinYang} from "react-bootstrap-icons";
+import {PlusLg, List, Upload, ImageAlt, Pen, YinYang} from "react-bootstrap-icons";
 import globalStyles from "styles/global.module.scss";
 import {Container} from "react-bootstrap";
 import {UploadData} from "./secretary/pages/upload_data/UploadData";
-import {AddSport} from "./secretary/pages/sports/add_sport/AddSport";
+import {AddSport} from "admin_secretary_shared/pages/sports/add_sport/AddSport";
 import {AddBranch} from "./secretary/pages/branches/add_branch/AddBranch";
 import {Countries} from "./secretary/pages/countries/Countries";
 import Navbar from "./user/components/Navbar";
@@ -58,7 +58,7 @@ const UserRouters = () => {
 			<Navbar />
 			<Switch>
 				<div className="site">
-					<Route path="/sports"><Sports /></Route>
+					<Route path="/sports"><SportsWithBranches /></Route>
 					<Route path="/home"><HomeUser /></Route>
 					<Route path="/chart"><Chart /></Route>
 					<Route path="/export"><Export /></Route>
@@ -122,7 +122,7 @@ const SecretaryRoutes = () => {
 								<Redirect to={`${path}/data/upload`} />
 							</SecretaryAuthRoute>
 							<SecretaryAuthRoute exact path={`${path}/data/upload`} component={UploadData} />
-							<SecretaryAuthRoute exact path={`${path}/sports/list`} component={Sports} />
+							<SecretaryAuthRoute exact path={`${path}/sports/list`} component={SportsWithBranches} />
 							<SecretaryAuthRoute exact path={`${path}/sports/add`} component={AddSport} />
 							<SecretaryAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
 							<SecretaryAuthRoute exact path={`${path}/countries/list`} component={Countries} />
@@ -198,7 +198,7 @@ const AdminRoutes = () => {
 							<Redirect to={`${path}/data/upload`} />
 						</AdminAuthRoute>
 						<AdminAuthRoute exact path={`${path}/data/upload`} component={AdminUploadData} />
-						<AdminAuthRoute exact path={`${path}/sports/add`} component={NotFound} />
+						<AdminAuthRoute exact path={`${path}/sports/add`} component={AddSport} />
 						<AdminAuthRoute exact path={`${path}/branches/add`} component={NotFound} />
 						<AdminAuthRoute exact path={`${path}/countries/add`} component={NotFound} />
 						<AdminAuthRoute exact path={`${path}/sports/update`} component={NotFound} />

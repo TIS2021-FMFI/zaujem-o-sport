@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {Redirect, useLocation} from "react-router-dom";
-import {UserType} from "../adapters";
+import {UserType} from "admin_secretary_shared/adapters";
 
 export interface LogoutFormProps {
 	userType: UserType

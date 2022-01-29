@@ -18,3 +18,13 @@ export const apiLogin = (email: string, password: string, userType: UserType)
 		"password": password
 	});
 }
+
+export interface ApiAddNewSportProps {
+	sportCode: string,
+	sportTitle: string
+}
+
+// TODO: return type
+export const apiAddNewSport = ({sportCode, sportTitle}: ApiAddNewSportProps): Promise<AxiosResponse<{}>> => {
+	return axios.post("/secretary/sports/add", {code: sportCode, title: sportTitle});
+}

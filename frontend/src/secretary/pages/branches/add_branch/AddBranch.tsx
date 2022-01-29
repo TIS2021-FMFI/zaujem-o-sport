@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button, Col, FloatingLabel, Form, Row} from "react-bootstrap";
 import Select from "react-select";
-import {useNewBranchCode, useNewCombiBranchCode, useSports} from "app/hooks";
+import {useNewBranchCode, useNewCombiBranchCode, useSports} from "secretary/hooks";
 import {useQuery} from "react-query";
 import {apiGetNewBranchCode} from "../../../adapters";
 

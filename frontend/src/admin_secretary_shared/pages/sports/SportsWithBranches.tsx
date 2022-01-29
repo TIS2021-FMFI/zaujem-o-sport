@@ -3,9 +3,9 @@ import {Tab, Tabs} from "react-bootstrap";
 import {Table} from "components/table/Table";
 import {CenteredRow} from "components/basic/CenteredRow";
 import {CSVLink} from "react-csv";
-import {useBranchesWithSports, useCombiBranches} from "app/hooks";
+import {useBranchesWithSports, useCombiBranches} from "admin_secretary_shared/hooks";
 
-export const Sports = () => {
+export const SportsWithBranches = () => {
 
 	const {isLoading: isLoadingBranchesWithSports, branchesWithSports: responseBranchesWithSports} = useBranchesWithSports();
 	const [branchesWithSports, setBranchesWithSports] = useState<string[][]>([]);

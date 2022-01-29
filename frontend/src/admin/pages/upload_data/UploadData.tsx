@@ -36,7 +36,7 @@ export const UploadData = () => {
 				<h2>Upload funding data</h2>
 			</CenteredRow>
 			<CenteredRow as="section">
-				<Dropzone accept={acceptedFundingFileExtensions} files={fundingFile} setFiles={setFundingFile}/>
+				<Dropzone accept={acceptedFundingFileExtensions} files={fundingFile} setFiles={setFundingFile} lang="en"/>
 				{ fundingFile.length !== 0 &&
         <div className={`w-100 mt-2`}>
           <span>Uploaded files: </span>
@@ -58,7 +58,7 @@ export const UploadData = () => {
 				<h2>Upload success data</h2>
 			</CenteredRow>
 			<CenteredRow as="section">
-				<Dropzone accept={acceptedSuccessFileExtensions} files={successFile} setFiles={setSuccessFile}/>
+				<Dropzone accept={acceptedSuccessFileExtensions} files={successFile} setFiles={setSuccessFile} lang="en"/>
 				{ successFile.length !== 0 &&
         <div className={`w-100 mt-2`}>
           <span>Uploaded files: </span>
@@ -80,7 +80,7 @@ export const UploadData = () => {
 				<h2>Upload interconnectedness data</h2>
 			</CenteredRow>
 			<CenteredRow as="section">
-				<Dropzone accept={acceptedInterconnectednessFileExtensions} files={interconnectednessFile} setFiles={setInterconnectednessFile}/>
+				<Dropzone accept={acceptedInterconnectednessFileExtensions} files={interconnectednessFile} setFiles={setInterconnectednessFile} lang="en"/>
 				{ interconnectednessFile.length !== 0 &&
         <div className={`w-100 mt-2`}>
           <span>Uploaded files: </span>

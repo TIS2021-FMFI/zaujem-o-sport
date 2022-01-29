@@ -55,6 +55,8 @@ def revoked_token_callback(jwt_header, jwt_payload):
 def unathorized_callback(callback):
 	return {"message": "Missing Authorization Header", "data": {}}, 401
 
+# ----- general
+
 # ----- secretary rules -----
 
 # TODO: decide which of the endpoints are going to be also for admin and/or user
@@ -160,11 +162,13 @@ app.add_url_rule(
 	methods=["GET"]
 )
 
+"""
 app.add_url_rule(
 	"/api/user/countries",
 	view_func=user.endpoints.show_countries.ShowCountriesView.as_view("list_countries2"),
 	methods=["GET"]
 )
+"""
 
 if __name__ == "__main__":
 	ip = None
