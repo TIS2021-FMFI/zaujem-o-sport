@@ -2,8 +2,6 @@ import React, {useCallback} from "react";
 import {useDropzone} from "react-dropzone";
 import styles from "./styles/dropzone.module.scss";
 
-// TODO (enhancement): loading while uploading
-
 export type dropzoneFileProp = {
 	id: string,
 	url: string,
@@ -34,7 +32,10 @@ export const Dropzone = ({accept, files, setFiles, multipleFiles=false}: Dropzon
 				});
 			}
 		}
-		setFiles([...files, ...droppedFiles]);
+		if (multipleFiles)
+			setFiles([...files, ...droppedFiles]);
+		else
+			setFiles(droppedFiles);
 
 	}, [files, setFiles]);
 

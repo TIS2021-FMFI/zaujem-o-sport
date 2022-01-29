@@ -13,4 +13,10 @@
   .sidebarHeader {
     font-size: 1.5em;
   }
+
+  .sidebarLink {
+    &:hover, &:focus, &:active {
+      color: #07cdff;
+    }
+  }
 }

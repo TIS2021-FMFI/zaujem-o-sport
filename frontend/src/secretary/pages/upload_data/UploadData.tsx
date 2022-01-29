@@ -1,37 +1,46 @@
-import {useMutation, useQuery} from "react-query";
+import {useMutation} from "react-query";
 import Select from "react-select";
 import {Col, Row, Form, Button} from "react-bootstrap";
 import {Dropzone} from "components/drag_and_drop/Dropzone";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {dropzoneFileProp} from "components/drag_and_drop/Dropzone";
 import {IncorrectRows} from "./IncorrectRows";
 import {apiUploadFunding} from "../../adapters";
-import create_snackbar, {SnackTypes} from "../../../components/snackbar/Snackbar";
+import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
+import {useCountries, useFundingCurrencies} from "app/hooks";
+import {currencies} from "../../../data/active_currency_codes";
 
 const acceptedFileExtensions = ".csv";
 
 export const UploadData = () => {
-	/* TODO: fetch countries
-	const {isLoading} = useQuery("endpoint name", apiAdapter, {
-		onSuccess: (response) => {
-			const serverData = response.data.data;
-		},
-		onError: (error) => {}
-	});
-	*/
-	// TODO: snackbar with message "Nahranie dát bolo úspešné" no success.
 
 	const [files, setFiles] = useState<dropzoneFileProp[]>([]);
 
-	const countries = [
-		{ value: "SVK", label: "Slovakia" },
-		{ value: "CZE", label: "Czech Republic" },
-		{ value: "MLT", label: "Malta" },
-		{ value: "GBR", label: "United Kingdom" }
-	];
+	const {countries: responseCountries} = useCountries();
+	const [countries, setCountries] = useState<{value: string, label: string}[]>([]);
+	const [selectedCountry, setSelectedCountry] = useState<string | undefined>();
 
-	// https://react-query.tanstack.com/guides/mutations
-	const mutation = useMutation(apiUploadFunding, {
+	const currencyOptions = currencies.map((currency) => { return {label: currency, value: currency} });
+	const [selectedCurrency, setSelectedCurrency] = useState<string | undefined>();
+
+	/*
+	const {currencies: responseCurrencies} = useFundingCurrencies();
+	const [currencies, setCurrencies] = useState<{value: string, label: string}[]>([]);
+	const [selectedCurrency, setSelectedCurrency] = useState<string | undefined>();
+	useEffect(() => {
+		setCurrencies(responseCurrencies.map((c) => { return {
+			value: c.currency, label: c.currency
+		}}));
+	}, [responseCurrencies]);
+	*/
+
+	useEffect(() => {
+		setCountries(responseCountries.map((country) => { return {
+			value: country.code, label: `${country.name} (${country.code})`
+		}}));
+	}, [responseCountries]);
+
+	const uploadMutation = useMutation(apiUploadFunding, {
 		onSuccess: (response) => {
 			console.log(response);
 		},
@@ -46,10 +55,12 @@ export const UploadData = () => {
 		// TODO: errors in some rows in uploaded data load <IncorrectRows />
 		// TODO: with incorrect data.
 		// TODO: Decide how to store/pass correct and incorrect rows.
-		if (files.length === 1)
-			mutation.mutate(files[0].file);
+		if (selectedCountry === undefined || selectedCurrency === undefined)
+			createSnackbar("Zvoliť krajinu a menu.", SnackTypes.warn);
+		else if (files.length === 1)
+			uploadMutation.mutate({csvFile: files[0].file, countryCode: selectedCountry, currency: selectedCurrency});
 		else
-			create_snackbar("Najskôr je potrebné nahrať dáta vo formáte csv.", SnackTypes.warn);
+			createSnackbar("Najskôr je potrebné nahrať dáta vo formáte csv.", SnackTypes.warn);
 	}
 
 	return (<>
@@ -65,6 +76,18 @@ export const UploadData = () => {
 						id="country"
 						options={countries}
 					  placeholder="Zvoľte krajinu"
+						onChange={(selectedCountry) => setSelectedCountry(selectedCountry?.value)}
+					/>
+				</Col>
+			</Row>
+			<Row>
+				<Col lg={5} md={6} sm={8} xs={12}>
+					<Form.Label>Meny</Form.Label>
+					<Select
+						id="currency"
+						options={currencyOptions}
+						placeholder="Zvoľte menu"
+						onChange={(selectedCurrency) => setSelectedCurrency(selectedCurrency?.value)}
 					/>
 				</Col>
 			</Row>

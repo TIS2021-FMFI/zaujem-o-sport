@@ -6,15 +6,18 @@ export interface LogoutFormProps {
 	userType: UserType
 }
 
-/** Logout secretary or admin based on `userType`. */
+/**
+ * Logout secretary or admin based on `userType`.
+ * */
 export const Logout = ({userType}: LogoutFormProps) => {
 	const location = useLocation();
 
 	useEffect(() => {
-		 const clearLocalStorage = async () => {
+		const clearLocalStorage = async () => {
 			localStorage.removeItem(`${userType}AccessToken`);
 		}
 		clearLocalStorage();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (

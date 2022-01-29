@@ -4,7 +4,15 @@ from settings import app, jwt
 import secretary.endpoints.login
 import secretary.endpoints.show_sports
 import secretary.endpoints.funding
+import secretary.endpoints.funding_currencies
+import secretary.endpoints.branches_with_sports
+import secretary.endpoints.combi_branches
+import secretary.endpoints.combi_branches.new_code
+import secretary.endpoints.sports
+import secretary.endpoints.sport_code
+import secretary.endpoints.branches.new_code
 import admin.endpoints.login
+import admin.endpoints.upload
 import secretary.endpoints.show_countries
 import user.endpoints.success
 import user.endpoints.chart
@@ -49,15 +57,25 @@ def unathorized_callback(callback):
 
 # ----- secretary rules -----
 
+# TODO: decide which of the endpoints are going to be also for admin and/or user
+
 app.add_url_rule(
 	"/api/secretary/login",
 	view_func=secretary.endpoints.login.LoginView.as_view("secretary_login"),
 	methods=["POST"]
 )
 
+"""
 app.add_url_rule(
 	"/api/secretary/sports",
 	view_func=secretary.endpoints.show_sports.ShowSportsView.as_view("list_sports"),
+	methods=["GET"]
+)
+"""
+
+app.add_url_rule(
+	"/api/secretary/sports/list",
+	view_func=secretary.endpoints.sports.Sports.as_view("list_sports"),
 	methods=["GET"]
 )
 
@@ -73,11 +91,59 @@ app.add_url_rule(
 	methods=["POST"]
 )
 
+app.add_url_rule(
+	"/api/secretary/funding/currencies",
+	view_func=secretary.endpoints.funding_currencies.Funding.as_view("secretary_funding_currencies"),
+	methods=["GET"]
+)
+
+app.add_url_rule(
+	"/api/secretary/sports/new-code",
+	view_func=secretary.endpoints.sport_code.SportCode.as_view("secretary_sport_code"),
+	methods=["GET"]
+)
+
+app.add_url_rule(
+	"/api/secretary/sports/add",
+	view_func=secretary.endpoints.sports.Sports.as_view("secretary_sports"),
+	methods=["POST"]
+)
+
+app.add_url_rule(
+	"/api/secretary/branches-with-sports",
+	view_func=secretary.endpoints.branches_with_sports.BranchesWithSports.as_view("secretary_branches_with_sports"),
+	methods=["GET"]
+)
+
+app.add_url_rule(
+	"/api/secretary/combi-branches",
+	view_func=secretary.endpoints.combi_branches.CombiBranches.as_view("secretary_combi_branches"),
+	methods=["GET"]
+)
+
+app.add_url_rule(
+	"/api/secretary/combi-branches/new-code",
+	view_func=secretary.endpoints.combi_branches.new_code.BranchCode.as_view("secretary_combi_branch_code"),
+	methods=["GET"]
+)
+
+app.add_url_rule(
+	"/api/secretary/branches/:sportCode/new-code",
+	view_func=secretary.endpoints.branches.new_code.BranchCode.as_view("secretary_branch_code"),
+	methods=["GET"]
+)
+
 # ----- admin rules -----
 
 app.add_url_rule(
 	"/api/admin/login",
 	view_func=admin.endpoints.login.LoginView.as_view("admin_login"),
+	methods=["POST"]
+)
+
+app.add_url_rule(
+	"/api/admin/upload",
+	view_func=admin.endpoints.upload.UploadView.as_view("admin_upload"),
 	methods=["POST"]
 )
 

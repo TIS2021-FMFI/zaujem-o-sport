@@ -1,54 +1,55 @@
 import React, {useState} from "react";
 import {Button, Col, FloatingLabel, Form, Row} from "react-bootstrap";
-
+import {useMutationWithNotifications, useNewSportCode} from "app/hooks";
+import {CenteredRow} from "components/basic/CenteredRow";
+import {apiAddNewSport} from "../../../adapters";
 
 export const AddSport = () => {
 
-  // TODO: get new code from the backend
-  const [newSportCode, setNewSportCode] = useState<number>(108);
+  const {newSportCode} = useNewSportCode();
+  const [sportTitle, setSportTitle] = useState<string>("");
+  const addNewSportMutation = useMutationWithNotifications(
+    "adding_new_sport", apiAddNewSport, "Prebieha pridávanie nového športu..."
+  );
 
-  const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAddNewSportSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: backend call
+    addNewSportMutation.mutate({sportCode: newSportCode, sportTitle: sportTitle});
   }
 
   return(<>
-    <header>
+    <CenteredRow as="header" lg={6} md={7}>
       <h1>Pridanie nového športu</h1>
-    </header>
-    <section>
-      <Row>
-        <Col lg={6} md={7}>
-          <Form onSubmit={submitForm}>
-
-            <Form.Group as={Row} className="mb-4" controlId="formHorizontalSportCode">
-              <Col>
-                <FloatingLabel controlId="floatingSportCode" label="Nový kód športu">
-                  <Form.Control type="text"
-                                placeholder="Nový kód športu"
-                                defaultValue={newSportCode.toString()}
-                                disabled />
-                </FloatingLabel>
-                <Form.Text className="text-muted">
-                  Kód bol automaticky vygenerovaný systémom.
-                </Form.Text>
-              </Col>
-            </Form.Group>
-
-            <Form.Group as={Row} className="mb-4" controlId="formHorizontalSportName">
-              <Col>
-                <FloatingLabel controlId="floatingSportName" label="Názov športu">
-                  <Form.Control type="text" placeholder="Názov športu" />
-                </FloatingLabel>
-              </Col>
-            </Form.Group>
-
-            <Button className={`mt-4`} variant="primary" type="submit">
-              Pridať nový šport
-            </Button>
-          </Form>
-        </Col>
-      </Row>
-    </section>
+    </CenteredRow>
+    <CenteredRow as="section" className="mb-3" lg={6} md={7}>
+      <Form onSubmit={handleAddNewSportSubmit}>
+        <Form.Group as={Row} className="mb-4" controlId="formHorizontalSportCode">
+          <Col>
+            <FloatingLabel controlId="floatingSportCode" label="Nový kód športu">
+              <Form.Control type="text"
+                            placeholder="Nový kód športu"
+                            defaultValue={newSportCode.toString()}
+                            disabled />
+            </FloatingLabel>
+            <Form.Text className="text-muted">
+              Kód bol automaticky vygenerovaný systémom.
+            </Form.Text>
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} className="mb-4" controlId="formHorizontalSportName">
+          <Col>
+            <FloatingLabel controlId="floatingSportName" label="Názov športu">
+              <Form.Control type="text" placeholder="Názov športu"
+                            required
+                            onChange={(e) => setSportTitle(e.target.value)}
+              />
+            </FloatingLabel>
+          </Col>
+        </Form.Group>
+        <Button className={`mt-3`} variant="primary" type="submit">
+          Pridať nový šport
+        </Button>
+      </Form>
+    </CenteredRow>
   </>)
 }
