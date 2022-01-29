@@ -7,7 +7,7 @@ import {dropzoneFileProp} from "components/drag_and_drop/Dropzone";
 import {IncorrectRows} from "./IncorrectRows";
 import {apiUploadFunding} from "../../adapters";
 import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
-import {useCountries, useFundingCurrencies} from "app/hooks";
+import {useCountries} from "app/hooks";
 import {currencies} from "../../../data/active_currency_codes";
 
 const acceptedFileExtensions = ".csv";

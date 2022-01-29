@@ -2,19 +2,20 @@ import React from "react";
 import {BrowserRouter as Router, Redirect, Route, Switch, useRouteMatch} from "react-router-dom";
 import { createBrowserHistory } from 'history';
 import {NotFound} from "pages/not_found/NotFound";
-import {Login} from "components/login/Login";
-import {Logout} from "components/login/Logout";
-import {Sports} from "./secretary/pages/sports/Sports";
+import {Login} from "admin_secretary_shared/components/login/Login";
+import {Logout} from "admin_secretary_shared/components/login/Logout";
+import {SportsWithBranches} from "admin_secretary_shared/pages/sports/SportsWithBranches";
 import {setupInterceptors as setupSecretaryInterceptors} from "secretary/axios_provider";
 import {setupInterceptors as setupAdminInterceptors} from "admin/axios_provider";
+import {setupInterceptors as setupAdminSecretaryInterceptors} from "admin_secretary_shared/axios_provider";
 import {Sidebar, SidebarLinksProp} from "./components/sidebar/Sidebar";
-import {PlusLg, HouseDoor, List, Upload, ImageAlt, Pen, YinYang} from "react-bootstrap-icons";
+import {PlusLg, Upload, ImageAlt, Pen, YinYang} from "react-bootstrap-icons";
 import globalStyles from "styles/global.module.scss";
 import {Container} from "react-bootstrap";
 import {UploadData} from "./secretary/pages/upload_data/UploadData";
-import {AddSport} from "./secretary/pages/sports/add_sport/AddSport";
-import {AddBranch} from "./secretary/pages/branches/add_branch/AddBranch";
-import {Countries} from "./secretary/pages/countries/Countries";
+import {AddSport} from "admin_secretary_shared/pages/sports/add_sport/AddSport";
+import {AddBranch} from "admin_secretary_shared/pages/branches/add_branch/AddBranch";
+import {Countries} from "admin_secretary_shared/pages/countries/Countries";
 import Navbar from "./user/components/Navbar";
 import {Chart} from "./user/pages/chart/Chart";
 import {Export} from "./user/pages/export/Export";
@@ -30,6 +31,7 @@ import {ToastContainer} from "react-toastify";
 const history = createBrowserHistory();
 setupSecretaryInterceptors(history);
 setupAdminInterceptors(history);
+setupAdminSecretaryInterceptors(history);
 
 const App = () => {
 	return (<>
@@ -58,7 +60,7 @@ const UserRouters = () => {
 			<Navbar />
 			<Switch>
 				<div className="site">
-					<Route path="/sports"><Sports /></Route>
+					<Route path="/sports"><SportsWithBranches /></Route>
 					<Route path="/home"><HomeUser /></Route>
 					<Route path="/chart"><Chart /></Route>
 					<Route path="/export"><Export /></Route>
@@ -117,20 +119,20 @@ const SecretaryRoutes = () => {
 			/>
 			<div style={{marginLeft: globalStyles.sidebarWidth}}>
 				<Container fluid="lg">
-						<Switch>
-							<SecretaryAuthRoute exact path={path}>
-								<Redirect to={`${path}/data/upload`} />
-							</SecretaryAuthRoute>
-							<SecretaryAuthRoute exact path={`${path}/data/upload`} component={UploadData} />
-							<SecretaryAuthRoute exact path={`${path}/sports/list`} component={Sports} />
-							<SecretaryAuthRoute exact path={`${path}/sports/add`} component={AddSport} />
-							<SecretaryAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
-							<SecretaryAuthRoute exact path={`${path}/countries/list`} component={Countries} />
-							<Route exact path={`${path}/logout`}>
-								<Logout userType="secretary" />
-							</Route>
-							<SecretaryAuthRoute path="*" component={NotFound} />
-						</Switch>
+					<Switch>
+						<SecretaryAuthRoute exact path={path}>
+							<Redirect to={`${path}/data/upload`} />
+						</SecretaryAuthRoute>
+						<SecretaryAuthRoute exact path={`${path}/data/upload`} component={UploadData} />
+						<SecretaryAuthRoute exact path={`${path}/sports/list`} component={SportsWithBranches} />
+						<SecretaryAuthRoute exact path={`${path}/sports/add`} component={AddSport} />
+						<SecretaryAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
+						<SecretaryAuthRoute exact path={`${path}/countries/list`} component={Countries} />
+						<Route exact path={`${path}/logout`}>
+							<Logout userType="secretary" />
+						</Route>
+						<SecretaryAuthRoute path="*" component={NotFound} />
+					</Switch>
 				</Container>
 			</div>
 		</>
@@ -173,12 +175,12 @@ const AdminRoutes = () => {
 		},
 		{
 			route: `${url}/sports/list`,
-			name: "Show sports",
-			icon: List
+			name: "Sports and branches",
+			icon: YinYang
 		},
 		{
 			route: `${url}/countries/list`,
-			name: "Show countries",
+			name: "Countries",
 			icon: ImageAlt
 		}
 	]
@@ -191,26 +193,28 @@ const AdminRoutes = () => {
 				logoutRoute={`${path}/logout`}
 				lang={"en"}
 			/>
-			<Container fluid="lg">
-				<div style={{marginLeft: globalStyles.sidebarWidth}}>
+			<div style={{marginLeft: globalStyles.sidebarWidth}}>
+				<Container fluid="lg">
 					<Switch>
 						<AdminAuthRoute exact path={path}>
 							<Redirect to={`${path}/data/upload`} />
 						</AdminAuthRoute>
 						<AdminAuthRoute exact path={`${path}/data/upload`} component={AdminUploadData} />
-						<AdminAuthRoute exact path={`${path}/sports/add`} component={NotFound} />
+						<AdminAuthRoute exact path={`${path}/sports/add`} >
+							<AddSport lang="en" />
+						</AdminAuthRoute>
 						<AdminAuthRoute exact path={`${path}/branches/add`} component={NotFound} />
-						<AdminAuthRoute exact path={`${path}/countries/add`} component={NotFound} />
+						<AdminAuthRoute exact path={`${path}/countries/add`} component={AddBranch} />
 						<AdminAuthRoute exact path={`${path}/sports/update`} component={NotFound} />
-						<AdminAuthRoute exact path={`${path}/sports/list`} component={NotFound} />
-						<AdminAuthRoute exact path={`${path}/countries/list`} component={NotFound} />
+						<AdminAuthRoute exact path={`${path}/sports/list`} component={SportsWithBranches} />
+						<AdminAuthRoute exact path={`${path}/countries/list`} component={Countries} />
 						<Route exact path={`${path}/logout`}>
 							<Logout userType="admin" />
 						</Route>
 						<AdminAuthRoute path="*" component={NotFound} />
 					</Switch>
-				</div>
-			</Container>
+				</Container>
+			</div>
 		</>
 	)
 }

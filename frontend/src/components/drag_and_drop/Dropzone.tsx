@@ -1,6 +1,7 @@
 import React, {useCallback} from "react";
 import {useDropzone} from "react-dropzone";
 import styles from "./styles/dropzone.module.scss";
+import textLang, {Language} from "../../app/string";
 
 export type dropzoneFileProp = {
 	id: string,
@@ -12,10 +13,13 @@ type DropzoneProps = {
 	accept: string,
 	files: dropzoneFileProp[],
 	setFiles: Function,
-	multipleFiles?: boolean
+	multipleFiles?: boolean,
+	lang?: Language
 };
 
-export const Dropzone = ({accept, files, setFiles, multipleFiles=false}: DropzoneProps) => {
+export const Dropzone = ({accept, files, setFiles, multipleFiles=false, lang = "sk"}: DropzoneProps) => {
+
+	const text = textLang[lang];
 
 	const onDrop = useCallback(async acceptedFiles => {
 		let droppedFiles = [];
@@ -44,9 +48,7 @@ export const Dropzone = ({accept, files, setFiles, multipleFiles=false}: Dropzon
 	return (
 		<div {...getRootProps({className: styles.dropzone})}>
 			<input {...getInputProps()} />
-			<p>
-				Potiahnite a pustite súbory s dátami sem, alebo kliknite a vyberte súbory.
-			</p>
+			<p>{ text.dropzone }</p>
 		</div>
 	);
 }

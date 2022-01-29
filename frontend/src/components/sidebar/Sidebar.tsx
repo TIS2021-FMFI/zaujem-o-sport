@@ -28,7 +28,7 @@ export const Sidebar = ({header, links, logoutRoute, lang = "sk"}: SidebarProps)
 			<hr />
 			<ul className="nav nav-pills flex-column mb-auto">
 				{links.map((link, i) =>
-					<li key={`sidebar-link-${i}`} className="nav-item">
+					<li key={`sidebar-link-${i}`} className={`${styles.sidebarItem} nav-item`}>
 						<Link
 							to={link.route}
 							className={`${ window.location.pathname === link.route ? "active": "" } nav-link ${styles.sidebarLink}`}

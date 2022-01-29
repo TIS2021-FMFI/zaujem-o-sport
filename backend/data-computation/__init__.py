@@ -357,8 +357,10 @@ c = Computations()
 #print(c.total_country_funding(160)) # incorrect, too big, now too low, missing 15 milions in automobile combi, bcs its not parse
 #print(c.allBranchInSportIds(3))
 
+
 #print(c.getFinalOrderById(204))
 
 #print(c.norm_funding(18,160))
 
 #print(c.sport_importance_in_country(3,160))
+

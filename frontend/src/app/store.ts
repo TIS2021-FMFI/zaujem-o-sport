@@ -1,12 +1,8 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import counterReducer from "pages/counter/counterSlice";
 import incorrectRowsReducer from "secretary/pages/upload_data/incorrectRowsSlice";
-
-// TODO: potentially create more stores based on how much reducers we'll have in the end
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
     secretaryUploadIncorrectRows: incorrectRowsReducer
   },
 });
