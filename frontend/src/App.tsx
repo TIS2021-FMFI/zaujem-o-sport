@@ -142,16 +142,9 @@ const AdminRoutes = () => {
 	// us build relative links.
 	let { path, url } = useRouteMatch();
 
-	console.log(path, url);
-
 	const adminHeader = "Admin panel";
 
 	const adminSidebarLinks: SidebarLinksProp[] = [
-		{
-			route: `${url}`,
-			name: "Home",
-			icon: HouseDoor
-		},
 		{
 			route: `${url}/data/upload`,
 			name: "Upload data",
@@ -200,8 +193,9 @@ const AdminRoutes = () => {
 			<Container fluid="lg">
 				<div style={{marginLeft: globalStyles.sidebarWidth}}>
 					<Switch>
-						{/* TODO: define components */}
-						<AdminAuthRoute exact path={path} component={NotFound} />
+						<AdminAuthRoute exact path={path}>
+							<Redirect to={`${path}/data/upload`} />
+						</AdminAuthRoute>
 						<AdminAuthRoute exact path={`${path}/data/upload`} component={NotFound} />
 						<AdminAuthRoute exact path={`${path}/sports/add`} component={NotFound} />
 						<AdminAuthRoute exact path={`${path}/branches/add`} component={NotFound} />
