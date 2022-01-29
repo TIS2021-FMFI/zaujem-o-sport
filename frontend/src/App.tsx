@@ -9,13 +9,13 @@ import {setupInterceptors as setupSecretaryInterceptors} from "secretary/axios_p
 import {setupInterceptors as setupAdminInterceptors} from "admin/axios_provider";
 import {setupInterceptors as setupAdminSecretaryInterceptors} from "admin_secretary_shared/axios_provider";
 import {Sidebar, SidebarLinksProp} from "./components/sidebar/Sidebar";
-import {PlusLg, List, Upload, ImageAlt, Pen, YinYang} from "react-bootstrap-icons";
+import {PlusLg, Upload, ImageAlt, Pen, YinYang} from "react-bootstrap-icons";
 import globalStyles from "styles/global.module.scss";
 import {Container} from "react-bootstrap";
 import {UploadData} from "./secretary/pages/upload_data/UploadData";
 import {AddSport} from "admin_secretary_shared/pages/sports/add_sport/AddSport";
 import {AddBranch} from "./secretary/pages/branches/add_branch/AddBranch";
-import {Countries} from "./secretary/pages/countries/Countries";
+import {Countries} from "admin_secretary_shared/pages/countries/Countries";
 import Navbar from "./user/components/Navbar";
 import {Chart} from "./user/pages/chart/Chart";
 import {Export} from "./user/pages/export/Export";
@@ -175,12 +175,12 @@ const AdminRoutes = () => {
 		},
 		{
 			route: `${url}/sports/list`,
-			name: "Show sports",
-			icon: List
+			name: "Sports and branches",
+			icon: YinYang
 		},
 		{
 			route: `${url}/countries/list`,
-			name: "Show countries",
+			name: "Countries",
 			icon: ImageAlt
 		}
 	]
@@ -200,12 +200,14 @@ const AdminRoutes = () => {
 							<Redirect to={`${path}/data/upload`} />
 						</AdminAuthRoute>
 						<AdminAuthRoute exact path={`${path}/data/upload`} component={AdminUploadData} />
-						<AdminAuthRoute exact path={`${path}/sports/add`} component={AddSport} />
+						<AdminAuthRoute exact path={`${path}/sports/add`} >
+							<AddSport lang="en" />
+						</AdminAuthRoute>
 						<AdminAuthRoute exact path={`${path}/branches/add`} component={NotFound} />
-						<AdminAuthRoute exact path={`${path}/countries/add`} component={NotFound} />
+						<AdminAuthRoute exact path={`${path}/countries/add`} component={AddBranch} />
 						<AdminAuthRoute exact path={`${path}/sports/update`} component={NotFound} />
-						<AdminAuthRoute exact path={`${path}/sports/list`} component={NotFound} />
-						<AdminAuthRoute exact path={`${path}/countries/list`} component={NotFound} />
+						<AdminAuthRoute exact path={`${path}/sports/list`} component={SportsWithBranches} />
+						<AdminAuthRoute exact path={`${path}/countries/list`} component={Countries} />
 						<Route exact path={`${path}/logout`}>
 							<Logout userType="admin" />
 						</Route>
