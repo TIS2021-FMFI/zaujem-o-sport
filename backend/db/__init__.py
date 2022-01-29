@@ -1145,6 +1145,28 @@ class Database:
 			print(error)
 
 
+	def getSportsWithExisitingBranch(self):
+
+		sql = "select s.code, s.title from sport s " \
+			  " where exists(select * from branch where sport_id = s.id) "
+
+		sports = []
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						sports.append({"title": tmp[1], "code": tmp[0]})
+						tmp = cursor.fetchone()
+			self._releaseConnection(dbConn)
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+		finally:
+			return sports
+    
 	def combiBranchCodeToId(self, branch_code:int) -> id:
 
 		sql = "select b.id from branch b where is_combined and code = %(code)s"
@@ -1162,4 +1184,5 @@ class Database:
 		except psycopg2.DatabaseError as error:
 			# TODO: logging
 			# TODO: define standard for database error messages
-			print(error)
+      print(error)
+		
