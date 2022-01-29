@@ -3,12 +3,12 @@ import type { RootState, AppDispatch } from './store';
 import {useEffect, useState} from "react";
 import {useMutation, useQuery} from "react-query";
 import {
-	apiGetBranchesWithSports, apiGetCombiBranches,
-	apiGetNewSportCode,
+	apiGetBranchesWithSports, apiGetCombiBranches, apiGetNewBranchCode, apiGetNewCombiBranchCode,
+	apiGetNewSportCode, apiGetSports,
 	apiListCountries,
 	apiListFundingCurrencies, BranchWithSport, CombiBranch,
 	Country,
-	Currency
+	Currency, Sport
 } from "../secretary/adapters";
 import createSnackbar, {dismissSnackbar, resolveSnackbar, SnackTypes} from "../components/snackbar/Snackbar";
 import {AxiosResponse} from "axios";
@@ -125,6 +125,44 @@ export const useNewSportCode = (): { isLoading: boolean, newSportCode: string } 
 	return { isLoading, newSportCode };
 }
 
+export const useNewCombiBranchCode = (): { isLoading: boolean, newCombiBranchCode: string } => {
+	const toastId = "getting_new_combi_branch_code";
+	const toastMsg = "Zisťuje sa nový kód odvetvia...";
+	const queryKey = "get_new_combi_branch_code";
+
+	const {isLoading, response} = useQueryWithNotifications(
+		toastId, queryKey, apiGetNewCombiBranchCode, toastMsg, false
+	);
+
+	const [newCombiBranchCode, setNewCombiBranchCode] = useState<string>("");
+
+	useEffect(() => {
+		if (response !== undefined)
+			setNewCombiBranchCode(response.data.newCombiBranchCode);
+	}, [response]);
+
+	return { isLoading, newCombiBranchCode };
+}
+
+export const useNewBranchCode = (sportCode: string): { isLoading: boolean, newBranchCode: string } => {
+	const toastId = "getting_new_branch_code";
+	const toastMsg = "Zisťuje sa nový kód odvetvia...";
+	const queryKey = "get_new_branch_code";
+
+	const {isLoading, response} = useQueryWithNotifications(
+		toastId, queryKey, apiGetNewBranchCode, toastMsg, false
+	);
+
+	const [newBranchCode, setNewBranchCode] = useState<string>("");
+
+	useEffect(() => {
+		if (response !== undefined)
+			setNewBranchCode(response.data.newBranchCode);
+	}, [response]);
+
+	return { isLoading, newBranchCode };
+}
+
 export const useBranchesWithSports = (): { isLoading: boolean, branchesWithSports: BranchWithSport[] } => {
 	const toastId = "fetching_branches_with_sports";
 	const toastMsg = "Načítavanie odvetví so športami...";
@@ -157,4 +195,21 @@ export const useCombiBranches = (): { isLoading: boolean, combiBranches: CombiBr
 	}, [response]);
 
 	return { isLoading, combiBranches };
+}
+
+export const useSports = (): { isLoading: boolean, sports: Sport[] } => {
+	const toastId = "fetching_sports";
+	const toastMsg = "Načítavanie športov...";
+	const queryKey = "get_sports";
+
+	const {isLoading, response} = useQueryWithNotifications(toastId, queryKey, apiGetSports, toastMsg);
+
+	const [sports, setSports] = useState<Sport[]>([]);
+
+	useEffect(() => {
+		if (response !== undefined)
+			setSports(response.data.sports);
+	}, [response]);
+
+	return { isLoading, sports };
 }

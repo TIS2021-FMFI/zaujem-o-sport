@@ -80,14 +80,14 @@ class Database:
 	def getAllSports(self) -> dict:
 
 		sql = "select code, title from sport"
-		result = {"sports":[]}
+		sports = []
 		try:
 			with self._getConnection() as dbConn:
 				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
 					cursor.execute(sql)
 					tmp = cursor.fetchone()
 					while tmp:
-						result["sports"].append({"title":tmp[1], "code":tmp[0]})
+						sports.append({"title":tmp[1], "code":tmp[0]})
 						tmp = cursor.fetchone()
 			self._releaseConnection(dbConn)
 		except psycopg2.DatabaseError as error:
@@ -95,8 +95,7 @@ class Database:
 			# TODO: define standard for database error messages
 			print(error)
 		finally:
-			# print(result)
-			return result
+			return sports
 
 	def getInactiveCountries(self) -> dict:
 
@@ -128,7 +127,7 @@ class Database:
 				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
 					cursor.execute(sql)
 					tmp = cursor.fetchone()
-					while tmp: 
+					while tmp:
 						results.append({"sportCode": tmp[0], "sportTitle": tmp[1], "branchCode": tmp[2], "branchTitle": tmp[3]})
 						tmp = cursor.fetchone()
 			self._releaseConnection(dbConn)

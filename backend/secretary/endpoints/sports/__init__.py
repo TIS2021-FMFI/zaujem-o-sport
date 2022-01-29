@@ -6,6 +6,10 @@ from settings import DB
 class Sports(SwaggerView):
 
 	@is_secretary
+	def get(self):
+		return {"message": "ok", "sports": DB.getAllSports()}
+
+	@is_secretary
 	def post(self):
 		code = request.json.get("code")
 		title = request.json.get("title")

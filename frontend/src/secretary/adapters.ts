@@ -56,7 +56,25 @@ export interface ApiNewSportCode {
 }
 
 export const apiGetNewSportCode = (): Promise<AxiosResponse<ApiNewSportCode>> => {
-	return axios.get("/secretary/sport/new-code");
+	return axios.get("/secretary/sports/new-code");
+}
+
+export interface ApiNewCombiBranchCode {
+	message: string,
+	newCombiBranchCode: string
+}
+
+export const apiGetNewCombiBranchCode = (): Promise<AxiosResponse<ApiNewCombiBranchCode>> => {
+	return axios.get("/secretary/combi-branches/new-code");
+}
+
+export interface ApiNewBranchCode {
+	message: string,
+	newBranchCode: string
+}
+
+export const apiGetNewBranchCode = (sportCode: string): Promise<AxiosResponse<ApiNewBranchCode>> => {
+	return axios.get(`/secretary/branches/${sportCode}/new-code`);
 }
 
 export interface ApiAddNewSportProps {
@@ -102,6 +120,20 @@ export interface ApiCombiBranches {
 
 export const apiGetCombiBranches = (): Promise<AxiosResponse<ApiCombiBranches>> => {
 	return axios.get("/secretary/combi-branches");
+}
+
+export interface Sport {
+	title: string,
+	code: string
+}
+
+export interface ApiSports {
+	message: string,
+	sports: Sport[]
+}
+
+export const apiGetSports = (): Promise<AxiosResponse<ApiSports>> => {
+	return axios.get("/secretary/sports/list");
 }
 
 // TODO: return type

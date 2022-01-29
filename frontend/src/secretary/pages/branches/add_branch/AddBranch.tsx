@@ -1,23 +1,52 @@
 import React, {useEffect, useState} from "react";
 import {Button, Col, FloatingLabel, Form, Row} from "react-bootstrap";
 import Select from "react-select";
-//import {useSports, useCountries, useNewBranchCode, useUncombiBrances} from "app/hooks";
+import {useNewBranchCode, useNewCombiBranchCode, useSports} from "app/hooks";
+import {useQuery} from "react-query";
+import {apiGetNewBranchCode} from "../../../adapters";
 
 interface SelectedOption {
 	value: string,
 	label: string
 }
 
+interface UncombiBranchesRow {
+	uncombiBranchCode: string,
+	coefficient: number
+}
+
 export const AddBranch = () => {
 
 	const newBranchCode = 1024;
 
-	/*
-	const {newBranchCode} = useNewBranchCode();
 	const {sports} = useSports();
+	const [sportCodes, setSportCodes] = useState<SelectedOption[]>([]);
+	const [sportNames, setSportNames] = useState<SelectedOption[]>([]);
+
+	useEffect(() => {
+		setSportCodes(sports.map((sport) => { return { value: sport.code, label: sport.code } }));
+		setSportNames(sports.map((sport) => { return { value: sport.code, label: sport.title } }));
+	}, [sports]);
+
+	const [selectedSport, setSelectedSport] = useState<SelectedOption>();
+
+	const {newCombiBranchCode} = useNewCombiBranchCode();
+
+	const { data, refetch } = useQuery(
+		["key", selectedSport?.value],
+		() => {
+			if (selectedSport !== undefined) return apiGetNewBranchCode(selectedSport.value);
+		},
+		{ enabled: false }
+	);
+
+	// const {newBranchCode} = useNewBranchCode("ATHLETICS");
+
+	/*
+	const {newBranchCode} = useNewBranchCode();  // TODO: both uncombi and combi new codes
 	const {countries: responseCountries} = useCountries();
 	const [countries, setCountries] = useState<{value: string, label: string}[]>([]);
-	const {uncombiBranches} = useUncombiBrances();
+	const {uncombiBranches} = useUncombiBrances();  // TODO: code + name
 
 	useEffect(() => {
 		setCountries(responseCountries.map((country) => { return {
@@ -28,26 +57,16 @@ export const AddBranch = () => {
 	 */
 
 	const [checkedCombined, setCheckedCombined] = useState<boolean>(false);
+	// relevant once checkCombined = true
+	const [branchCountry, setBranchCountry] = useState<string>("");
+	const [uncombiBranchesRows, setUncombiBranchesRows] = useState<UncombiBranchesRow[]>([]);
 
 	useEffect(() => {
-		// TODO: maybe
+		if (checkedCombined) {
+			setBranchCountry("");
+			setUncombiBranchesRows([]);
+		}
 	}, [checkedCombined]);
-
-	const [selectedSport, setSelectedSport] = useState<SelectedOption>();
-
-	const sportCodes: SelectedOption[] = [
-		{ value: "1", label: "1" },
-		{ value: "2", label: "2" },
-		{ value: "3", label: "3" },
-		{ value: "4", label: "4" }
-	]
-
-	const sportNames: SelectedOption[] = [
-		{ value: "1", label: "Football" },
-		{ value: "2", label: "Basketball" },
-		{ value: "3", label: "Baseball" },
-		{ value: "4", label: "Soccer" }
-	]
 
 	const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -67,7 +86,7 @@ export const AddBranch = () => {
 							<Col>
 								<Form.Label>Kód športu</Form.Label>
 								<Select
-									id="sport_code"
+									id="sportCodesSelect"
 									options={sportCodes}
 									placeholder="Napíšte alebo zvoľte kód športu"
 									value={ sportCodes.find( (code) => code.value === selectedSport?.value ) }
@@ -83,7 +102,7 @@ export const AddBranch = () => {
 							<Col>
 								<Form.Label>Názov športu</Form.Label>
 								<Select
-									id="sport_name"
+									id="sportNamesSelect"
 									options={sportNames}
 									placeholder="Napíšte alebo zvoľte názov športu"
 									value={ sportNames.find( (sportName) => sportName.value === selectedSport?.value ) }
@@ -126,9 +145,37 @@ export const AddBranch = () => {
 						</Form.Group>
 
 
-						{checkedCombined &&  // expand, if checked
+						{checkedCombined &&  // expand, if checked  // TODO: select country
 							<>
-								asdf
+                <Select
+                  id="uncombiBranchesSelect"
+                  options={sportCodes}  // TODO: uncombiBranches
+                  placeholder="Odvetvia"
+                  isMulti={true}
+									/*
+									value={ sportNames.find( (sportName) => sportName.value === selectedSport?.value ) }
+									onChange={ (selectedOption) => {
+										if (selectedOption !== null)
+											setSelectedSport(selectedOption)
+									} }
+									 */
+                />
+								{uncombiBranchesRows.map((uncombiBranch, i) => { return (
+									<>
+										<Select
+											id={`uncombiBranchCodeSelect${i}`}
+											options={sportCodes}  // TODO: uncombiBranches
+											placeholder="Kód odvetvia"
+											/*  // TODO: updating also value in `uncombiBranchesRows`
+											value={ sportNames.find( (sportName) => sportName.value === selectedSport?.value ) }
+											onChange={ (selectedOption) => {
+												if (selectedOption !== null)
+													setSelectedSport(selectedOption)
+											} }
+											 */
+										/>
+									</>
+								)})}
 							</>
 						}
 
@@ -142,9 +189,16 @@ export const AddBranch = () => {
 	</>)
 }
 
+/*
+interface ExpandedUncombiBranchProps {
+	uncombiBranch: UncombiBranchesRow,
+	index: number
+}
+
 // TODO: getter, setter from the parent
-const ExpandedUncombiBranch = () => {
+const ExpandedUncombiBranch = ({uncombiBranch, index}: ExpandedUncombiBranchProps) => {
 	return (
-		<></>
+
 	)
 }
+ */
