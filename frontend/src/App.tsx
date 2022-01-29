@@ -14,7 +14,7 @@ import globalStyles from "styles/global.module.scss";
 import {Container} from "react-bootstrap";
 import {UploadData} from "./secretary/pages/upload_data/UploadData";
 import {AddSport} from "admin_secretary_shared/pages/sports/add_sport/AddSport";
-import {AddBranch} from "./secretary/pages/branches/add_branch/AddBranch";
+import {AddBranch} from "admin_secretary_shared/pages/branches/add_branch/AddBranch";
 import {Countries} from "admin_secretary_shared/pages/countries/Countries";
 import Navbar from "./user/components/Navbar";
 import {Chart} from "./user/pages/chart/Chart";
