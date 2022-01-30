@@ -49,7 +49,7 @@ export const AddUncombiBranch = () => {
 	}, [newBranchCodeData]);
 
 	const addNewBranchMutation = useMutationWithNotifications(
-		"adding_new_uncombi_branch", apiAddNewUncombiBranch, "TODO"
+		"adding_new_uncombi_branch", apiAddNewUncombiBranch, "Prebieha vytváranie nového odvetvia..."
 	);
 
 	const submitForm = (e: React.FormEvent<HTMLFormElement>) => {

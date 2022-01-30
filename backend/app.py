@@ -103,6 +103,12 @@ app.add_url_rule(
 )
 
 app.add_url_rule(
+	"/api/adminsecretary/combi-branches/add",
+	view_func=admin_secretary.endpoints.combi_branches.CombiBranches.as_view("adminsecretary_add_combi_branch"),
+	methods=["POST"]
+)
+
+app.add_url_rule(
 	"/api/adminsecretary/combi-branches/new-code",
 	view_func=admin_secretary.endpoints.combi_branches.new_code.BranchCode.as_view("adminsecretary_combi_branch_code"),
 	methods=["GET"]

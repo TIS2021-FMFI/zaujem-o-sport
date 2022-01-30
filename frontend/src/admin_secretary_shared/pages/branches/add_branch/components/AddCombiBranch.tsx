@@ -2,8 +2,9 @@ import React, {useEffect, useState} from "react";
 import {useBranchesWithSports, useNewCombiBranchCode} from "admin_secretary_shared/hooks";
 import {Button, Col, FloatingLabel, Form, Row} from "react-bootstrap";
 import Select from "react-select";
-import {useCountries} from "app/hooks";
-import {BranchWithSport} from "../../../../adapters";
+import {useCountries, useMutationWithNotifications} from "app/hooks";
+import {apiAddNewCombiBranch, apiAddNewUncombiBranch, BranchWithSport, SubBranch} from "../../../../adapters";
+import createSnackbar, {SnackTypes} from "../../../../../components/snackbar/Snackbar";
 
 export const AddCombiBranch = () => {
 
@@ -15,6 +16,7 @@ export const AddCombiBranch = () => {
 	const {branchesWithSports: responseBranchesWithSports} = useBranchesWithSports();
 	const [branchesWithSports, setBranchesWithSports] = useState<{value: BranchWithSport, label: string}[]>([]);
 	const [selectedBranchesWithSports, setSelectedBranchesWithSports] = useState<BranchWithSport[]>([]);
+	const [coefficients, setCoefficients] = useState<string[]>([]);
 
 	const strBranch = (branchWithSport: BranchWithSport) => {
 		const b = branchWithSport;
@@ -33,8 +35,38 @@ export const AddCombiBranch = () => {
 		}}));
 	}, [responseBranchesWithSports]);
 
-	const submitForm = () => {
+	const addNewCombiBranchMutation = useMutationWithNotifications(
+		"adding_new_combi_branch", apiAddNewCombiBranch, "Prebieha vytváranie nového odvetvia..."
+	);
+	const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 
+		const coefficientsSum: number = coefficients.reduce((partialSum, c) => partialSum + parseFloat(c), 0);
+
+		if (branchTitle.length === 0 || newCombiBranchCode.length === 0 || selectedCountry === undefined) {
+			createSnackbar("Všetky polia musia byť vyplnené.", SnackTypes.warn); return;
+		}
+		if (selectedBranchesWithSports.length === 0) {
+			createSnackbar("Je potrebné zvoliť aspoň jedno sub-odvetvie.", SnackTypes.warn); return;
+		}
+		if (isNaN(coefficientsSum)) {
+			createSnackbar("Neplatné koeficienty.", SnackTypes.warn); return;
+		}
+		if (coefficientsSum !== 1) {
+			createSnackbar("Suma koeficientov sa nerovná jednej.", SnackTypes.warn); return;
+		}
+
+		const subBranches: SubBranch[] = [];
+		selectedBranchesWithSports.forEach((b, i) => {
+			subBranches.push({branchCode: b.branchCode, sportCode: b.sportCode, coefficient: parseFloat(coefficients[i])});
+		});
+
+		addNewCombiBranchMutation.mutate({
+			branchCode: newCombiBranchCode,
+			branchTitle: branchTitle,
+			countryCode: selectedCountry,
+			subBranches: subBranches
+		});
 	}
 
 	return (
@@ -91,6 +123,7 @@ export const AddCombiBranch = () => {
 						onChange={(branchWithSport) => {
 							if (branchWithSport !== null) {
 								setSelectedBranchesWithSports([...selectedBranchesWithSports, branchWithSport.value]);
+								setCoefficients([...coefficients, "0"]);
 								setBranchesWithSports(branchesWithSports.filter(b => b.value !== branchWithSport.value));
 							}
 						}}
@@ -104,6 +137,12 @@ export const AddCombiBranch = () => {
 						<FloatingLabel controlId={`floatingCoefficient${i}`} label={`Coefficient of ${strBranch(branchWithSport)}`}>
 							<Form.Control type="text"
 							              placeholder={`Coefficient of ${strBranch(branchWithSport)}`}
+							              value={coefficients[i]}
+							              onChange={(e) => {
+							              	const _coefficients = [...coefficients];
+							              	_coefficients[i] = (e.currentTarget as HTMLInputElement).value;
+							              	setCoefficients(_coefficients);
+							              }}
 							/>
 						</FloatingLabel>
 					</Col>

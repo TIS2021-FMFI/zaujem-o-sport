@@ -54,6 +54,29 @@ export const apiAddNewUncombiBranch = ({sportCode, branchCode, branchTitle}: Api
 	return axios.post("/adminsecretary/branches/add", {sportCode: sportCode, branchCode: branchCode, branchTitle: branchTitle});
 }
 
+export interface SubBranch {
+	sportCode: string,
+	branchCode: string,
+	coefficient: number
+}
+
+export interface ApiAddNewCombiBranchProps {
+	branchCode: string,
+	branchTitle: string
+	countryCode: string,
+	subBranches: SubBranch[]
+}
+
+// TODO: return type
+export const apiAddNewCombiBranch = ({branchCode, branchTitle, countryCode, subBranches}: ApiAddNewCombiBranchProps): Promise<AxiosResponse<{}>> => {
+	return axios.post("/adminsecretary/combi-branches/add", {
+		branchCode: branchCode,
+		branchTitle: branchTitle,
+		countryCode: countryCode,
+		subBranches: subBranches
+	});
+}
+
 export interface BranchWithSport {
 	sportCode: string,
 	sportTitle: string,

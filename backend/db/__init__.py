@@ -323,26 +323,23 @@ class Database:
         if "branchTitle" not in data:
             raise DataError("branch title missing in data")
 
-        if "isCombined" not in data:
-            raise DataError("missing parameter is combined in data")
-
         if "countryCode" not in data:
             raise DataError("country code missing in data")
 
-        if "subbranch" not in data:
-            raise DataError("subbranch data missing")
+        if "subBranches" not in data:
+            raise DataError("subBranches data missing")
 
-        if not isinstance(data["subbranch"], list):
-            raise DataError("invalid subbranch data structure")
+        if not isinstance(data["subBranches"], list):
+            raise DataError("invalid subBranches data structure")
 
         suma = 0
         try:
-            for i in data["subbranch"]:
+            for i in data["subBranches"]:
                 suma += i["coefficient"]
             if suma != 1:
                 raise DataError("coefficients sum is not 1")
         except KeyError:
-            raise DataError("invalid subbranch data structure")
+            raise DataError("invalid subBranches data structure")
 
 
         sql_check_unique = "select * from branch where code = %(branch_code)s"
@@ -374,14 +371,14 @@ class Database:
                         raise DataError("country with entered code does not exist")
                     country_id = tmp[0]
 
-                    for sub in data["subbranch"]:
+                    for sub in data["subBranches"]:
                         try:
                             cursor.execute(sql_sub_exists, {"sport_code":sub["sportCode"], "branch_code":sub["branchCode"] })
                         except KeyError:
-                            raise DataError("invalid subbranch data structure")
+                            raise DataError("invalid subBranches data structure")
                         tmp = cursor.fetchone()
                         if tmp is None:
-                            raise DataError("subbranch does not exist")
+                            raise DataError("subBranches does not exist")
                         else:
                             inserting_data.append((tmp[0], sub["coefficient"]))
 
