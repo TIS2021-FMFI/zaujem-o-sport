@@ -30,6 +30,6 @@ export interface ApiUploadFundingProps {
 export const apiUploadFunding = ({csvFile, countryCode, currency}: ApiUploadFundingProps): Promise<AxiosResponse<{}>> => {
 	const formData = new FormData();
 	formData.append("csvFile", csvFile);
-	formData.append("json", JSON.stringify({countryCode: countryCode, currency: currency}))
+	formData.append("json", JSON.stringify({countryCode: countryCode, currency: currency, correction: {}}))
 	return axios.post("/secretary/funding/upload", formData);
 }

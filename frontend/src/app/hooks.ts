@@ -51,8 +51,8 @@ export const useMutationWithNotifications = (
 		onSuccess: (successResponse) => {
 			resolveSnackbar(toastId, successToastMsg);
 		},
-		onError: (error) => {
-			console.log(error);
+		onError: (error: any) => {
+			console.log(error.response.data);
 			resolveSnackbar(toastId, errorToastMsg, false);
 		},
 	});

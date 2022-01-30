@@ -19,7 +19,7 @@ class Funding(SwaggerView):
 
 		if not file:
 			return {"message": "Missing required parameter: `csvFile`.", "data": {}}, 400
-		if not correction:
+		if correction is None:
 			return {"message": "Missing required parameter: `correction`.", "data": {}}, 400
 		if not countryCode:
 			return {"message": "Missing required parameter: `countryCode`.", "data": {}}, 400
@@ -37,4 +37,4 @@ class Funding(SwaggerView):
 			p.saveResults()
 			return {"message": "ok"}
 		else:
-			return {"message": "fail", "suggestions": suggestions}
+			return {"message": "fail", "suggestions": suggestions}, 400
