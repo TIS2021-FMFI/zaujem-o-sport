@@ -1162,7 +1162,7 @@ class Database:
             # TODO: define standard for database error messages
             print(error)
 
-    def getSportsWithExisitingBranch(self):
+    def getSportsWithExistingBranch(self):
 
         sql = "select s.code, s.title from sport s " \
               " where exists(select * from branch where sport_id = s.id) "

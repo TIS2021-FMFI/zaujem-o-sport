@@ -65,12 +65,12 @@ export const AddUncombiBranch = () => {
 
 			<Row className={`mb-4`}>
 				<Col>
-					<Form.Label>Kód športu</Form.Label>
+					<Form.Label>Názov športu</Form.Label>
 					<Select
-						id="sportCodesSelect"
-						options={sportCodes}
-						placeholder="Napíšte alebo zvoľte kód športu"
-						value={ sportCodes.find( (code) => code.value === selectedSport?.value ) }
+						id="sportNamesSelect"
+						options={sportNames}
+						placeholder="Napíšte alebo zvoľte názov športu"
+						value={ sportNames.find( (sportName) => sportName.value === selectedSport?.value ) }
 						onChange={ (selectedOption) => {
 							if (selectedOption !== null)
 								setSelectedSport(selectedOption)
@@ -81,12 +81,12 @@ export const AddUncombiBranch = () => {
 
 			<Row className={`mb-4`}>
 				<Col>
-					<Form.Label>Názov športu</Form.Label>
+					<Form.Label>Kód športu</Form.Label>
 					<Select
-						id="sportNamesSelect"
-						options={sportNames}
-						placeholder="Napíšte alebo zvoľte názov športu"
-						value={ sportNames.find( (sportName) => sportName.value === selectedSport?.value ) }
+						id="sportCodesSelect"
+						options={sportCodes}
+						placeholder="Napíšte alebo zvoľte kód športu"
+						value={ sportCodes.find( (code) => code.value === selectedSport?.value ) }
 						onChange={ (selectedOption) => {
 							if (selectedOption !== null)
 								setSelectedSport(selectedOption)
@@ -111,7 +111,7 @@ export const AddUncombiBranch = () => {
 
 			<Form.Group as={Row} className="mb-4" controlId="formHorizontalBranchName">
 				<Col>
-					<FloatingLabel controlId="floatingPassword" label="Názov odvetvia">
+					<FloatingLabel controlId="floatingBranchTitle" label="Názov odvetvia">
 						<Form.Control type="text" placeholder="Názov odvetvia"
 						              value={branchTitle}
 						              onChange={(e) =>
