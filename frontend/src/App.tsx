@@ -86,12 +86,12 @@ const UserRouters = () => {
             <Switch>
                 <div className="site">
                     <Route path="/sports"><Sports /></Route>
-                <Route path="/home"><HomeUser /></Route>
-                <Route path="/chart"><Chart /></Route>
-                <Route path="/export"><Export /></Route>
-                <Route path="/funding"><Fundings /></Route>
-                <Route path="/success"><Success /></Route>
-                <Route path="/interconnectness"><Interconnectness /></Route>
+                    <Route path="/home"><HomeUser /></Route>
+                    <Route path="/chart"><Chart /></Route>
+                    <Route path="/export"><Export /></Route>
+                    <Route path="/funding"><Fundings /></Route>
+                    <Route path="/success"><Success /></Route>
+                    <Route path="/interconnectness"><Interconnectness /></Route>
                 </div>
             </Switch>
 

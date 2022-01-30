@@ -92,6 +92,13 @@ app.add_url_rule(
 	methods=["GET"]
 )
 
+app.add_url_rule(
+	"/api/user/interconnectness",
+	view_func=user.endpoints.interconnectness.ShowInterconnectnessView.as_view("list_interconnectness"),
+	methods=["GET", "POST"]
+)
+
+
 if __name__ == "__main__":
 	ip = None
 	if len(sys.argv) > 1:

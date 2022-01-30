@@ -1,7 +1,8 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import {useQuery} from "react-query";
 import {apiListChart, chartType} from "../../adapters";
 import {Spinner} from "react-bootstrap";
+import {Table} from "../../../components/table/Table";
 
 export const Chart = () => {
 
@@ -25,9 +26,17 @@ export const Chart = () => {
 
             { isLoading
                 ? <h1 >Nacitavanie </h1>
+
+
+
                 : charts?.map((chart, i) => { return (
                     <p key={`chart-${i}`}>Názov: {chart.name}, Kód: {chart.points}, Poradie {chart.order}</p>
-                )})
+
+
+                )} )
+
+
+
             }
 
         </>

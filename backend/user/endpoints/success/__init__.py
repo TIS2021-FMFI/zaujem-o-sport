@@ -6,9 +6,9 @@ from flask import request
 
 class ShowSuccessView(SwaggerView):
 
-    def get(self):
-        res = {"message": "ok", "data": DB.getSuccessByCountry("SVK")}
-        return res
+    #def get(self):
+    #    res = {"message": "ok", "data": DB.getSuccessByCountry("SVK")}
+    #    return res
 
     def post(self):
         code = request.json.get("code")

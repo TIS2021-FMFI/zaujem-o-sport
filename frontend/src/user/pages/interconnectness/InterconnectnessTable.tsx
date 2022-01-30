@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {useMutation, useQuery} from "react-query";
 import {apiListCountry, apiListSuccess, apiSuccess, countryType, successType} from "../../adapters";
+import {useMutation, useQuery} from "react-query";
 import {Form, Spinner} from "react-bootstrap";
 import Select from "react-select";
 
-export const Success = () => {
+
+export const InterconnectnessTable = () => {
+
     const [countries, setCountry] = useState<countryType[]>();
 
     useQuery("list_countries2", apiListCountry, {
@@ -109,4 +111,5 @@ export const Success = () => {
 
         </>
     )
+
 }

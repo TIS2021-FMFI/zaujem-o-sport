@@ -13,22 +13,22 @@ function Navbar() {
             activeKey="/home"
         >
             <Nav.Item>
-                <Nav.Link href="/home"><HouseDoor size={25} /> Domov</Nav.Link>
+                <Link to="/home"><HouseDoor size={25} /> Domov</Link>
             </Nav.Item>
             <Nav.Item>
-                <Nav.Link href="/chart"><BarChart size={25} /> Rebríček</Nav.Link>
+                <Link to="/chart"><BarChart size={25} /> Rebríček</Link>
             </Nav.Item>
             <Nav.Item>
-                <Nav.Link href="/export"><Download size={25} /> Export</Nav.Link>
+                <Link to="/export"><Download size={25} /> Export</Link>
             </Nav.Item>
             <Nav.Item>
-                <Nav.Link href="/funding"><Wallet size={25} /> Rozpočty</Nav.Link>
+                <Link to="/funding"><Wallet size={25} /> Rozpočty</Link>
             </Nav.Item>
             <Nav.Item>
-                <Nav.Link href="/success"><List size={25} /> Úspešnosť</Nav.Link>
+                <Link to="/success"><List size={25} /> Úspešnosť</Link>
             </Nav.Item>
             <Nav.Item>
-                <Nav.Link href="/interconnectness"><Easel size={25} /> Prepojenie</Nav.Link>
+                <Link to="/interconnectness"><Easel size={25} /> Prepojenie</Link>
             </Nav.Item>
         </Nav>
         </div>
