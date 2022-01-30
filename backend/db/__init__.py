@@ -1339,3 +1339,20 @@ class Database:
             # TODO: define standard for database error messages
         finally:
             return results
+
+    def getCountryIdByCode(self, countryCode: str):
+
+        sql = "select id from country where code = %(countryCode)s and is_active"
+        try:
+            with self._getConnection() as dbConn:
+                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                    cursor.execute(sql, {"countryCode":countryCode})
+                    tmp = cursor.fetchone()
+                    if tmp is None:
+                        raise DataError("country code does not exist")
+                    else:
+                        return tmp[0]
+        except psycopg2.DatabaseError as error:
+            print(error)
+            # TODO: logging
+            # TODO: define standard for database error messages

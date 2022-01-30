@@ -304,6 +304,12 @@ class Computations:
 
         return result
 
+    def getFinalOrderByCountryCode(self, countryCode: str) -> dict:
+
+        id = DB.getCountryIdByCode(countryCode)
+
+        return self.getFinalOrderById(id)
+
 
 # print(c.BGS_data)
 # print(c.order(77,10)) # returns 3, correct
@@ -350,7 +356,7 @@ c = Computations()
 # print(c.total_branch_fundng(46, 47, 103)) # correct china, archery only from combi funding
 
 # print(c.total_branch_fundng(160, 18, 31)) # correct new zeland, curling, sum of branch and combi funding
-# print(c.total_country_funding(160)) # fixed
+# print(c.total_country_%(countryCofunding(160)) # fixed
 # print(c.allBranchInSportIds(3))
 
 
@@ -359,3 +365,5 @@ c = Computations()
 # print(c.norm_funding(18,160))
 
 # print(c.sport_importance_in_country(3,160))
+
+#print(c.getFinalOrderByCountryCode('SVK'))
