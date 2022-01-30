@@ -4,14 +4,13 @@ from settings import app, jwt
 import endpoints.countries
 import admin_secretary.endpoints.sport_code
 import admin_secretary.endpoints.sports
-import admin_secretary.endpoints.branches_with_sports
 import admin_secretary.endpoints.combi_branches
 import admin_secretary.endpoints.combi_branches.new_code
+import admin_secretary.endpoints.branches.new_code
+import admin_secretary.endpoints.branches_with_sports
 import secretary.endpoints.login
-import secretary.endpoints.show_sports
 import secretary.endpoints.funding
 import secretary.endpoints.funding_currencies
-import secretary.endpoints.branches.new_code
 import admin.endpoints.login
 import admin.endpoints.upload
 import secretary.endpoints.show_countries
@@ -102,6 +101,12 @@ app.add_url_rule(
 	methods=["GET"]
 )
 
+app.add_url_rule(
+	"/api/adminsecretary/sport/<sportCode>/branches/new-code",
+	view_func=admin_secretary.endpoints.branches.new_code.BranchCode.as_view("adminsecretary_branch_code"),
+	methods=["GET"]
+)
+
 # ----- secretary rules -----
 
 app.add_url_rule(
@@ -109,14 +114,6 @@ app.add_url_rule(
 	view_func=secretary.endpoints.login.LoginView.as_view("secretary_login"),
 	methods=["POST"]
 )
-
-"""
-app.add_url_rule(
-	"/api/secretary/sports",
-	view_func=secretary.endpoints.show_sports.ShowSportsView.as_view("list_sports"),
-	methods=["GET"]
-)
-"""
 
 app.add_url_rule(
 	"/api/secretary/funding/upload",
@@ -127,12 +124,6 @@ app.add_url_rule(
 app.add_url_rule(
 	"/api/secretary/funding/currencies",
 	view_func=secretary.endpoints.funding_currencies.Funding.as_view("secretary_funding_currencies"),
-	methods=["GET"]
-)
-
-app.add_url_rule(
-	"/api/secretary/branches/:sportCode/new-code",
-	view_func=secretary.endpoints.branches.new_code.BranchCode.as_view("secretary_branch_code"),
 	methods=["GET"]
 )
 

@@ -26,6 +26,7 @@ export const AddUncombiBranch = () => {
 
 	const [selectedSport, setSelectedSport] = useState<SelectedOption>();
 
+	// TODO: abstract with notification in hooks
 	const { data, refetch } = useQuery(
 		["key", selectedSport?.value],
 		() => {
@@ -34,7 +35,13 @@ export const AddUncombiBranch = () => {
 		{ enabled: false }
 	);
 
-	console.log(data);
+	useEffect(() => {
+		refetch();
+	}, [selectedSport]);
+
+	useEffect(() => {
+		console.log(data);
+	}, [data]);
 
 	const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();

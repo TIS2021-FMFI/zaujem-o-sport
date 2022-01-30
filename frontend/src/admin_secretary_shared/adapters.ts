@@ -93,7 +93,7 @@ export interface ApiNewBranchCode {
 }
 
 export const apiGetNewBranchCode = (sportCode: string): Promise<AxiosResponse<ApiNewBranchCode>> => {
-	return axios.get(`/adminsecretary/branches/${sportCode}/new-code`);
+	return axios.get(`/adminsecretary/sport/${sportCode}/branches/new-code`);
 }
 
 export interface Sport {

@@ -203,8 +203,8 @@ const AdminRoutes = () => {
 						<AdminAuthRoute exact path={`${path}/sports/add`} >
 							<AddSport lang="en" />
 						</AdminAuthRoute>
-						<AdminAuthRoute exact path={`${path}/branches/add`} component={NotFound} />
-						<AdminAuthRoute exact path={`${path}/countries/add`} component={AddBranch} />
+						<AdminAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
+						<AdminAuthRoute exact path={`${path}/countries/add`} component={NotFound} />
 						<AdminAuthRoute exact path={`${path}/sports/update`} component={NotFound} />
 						<AdminAuthRoute exact path={`${path}/sports/list`} component={SportsWithBranches} />
 						<AdminAuthRoute exact path={`${path}/countries/list`} component={Countries} />
