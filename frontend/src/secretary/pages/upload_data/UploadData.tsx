@@ -5,10 +5,10 @@ import {Dropzone} from "components/drag_and_drop/Dropzone";
 import React, {useEffect, useState} from "react";
 import {dropzoneFileProp} from "components/drag_and_drop/Dropzone";
 import {IncorrectRows} from "./IncorrectRows";
-import {apiUploadFunding} from "../../adapters";
+import {apiUploadFunding} from "secretary/adapters";
 import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
 import {useCountries} from "app/hooks";
-import {currencies} from "../../../data/active_currency_codes";
+import {currencies} from "data/active_currency_codes";
 
 const acceptedFileExtensions = ".csv";
 
