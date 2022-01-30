@@ -12,15 +12,19 @@ class DataError(Exception):
 class Database:
 
     def __init__(self, dbPool: psycopg2.pool.ThreadedConnectionPool):
+        """ Initialize DB pool. """
+
         self.dbPool = dbPool
 
-    # simple getters to display data
-
     def _getConnection(self) -> psycopg2.extensions.connection:
+        """ Establish and return connection from DB pool. """
+
         dbConn = self.dbPool.getconn()
         return dbConn
 
     def _releaseConnection(self, dbConnection: psycopg2.extensions.connection):
+        """ Releases connection. """
+
         self.dbPool.putconn(dbConnection)
 
     def getSecretary(self, email: str) -> Union[None, dict]:
@@ -42,6 +46,7 @@ class Database:
 
     def getAdmin(self, email: str) -> Union[None, dict]:
         """ Use in admin login process. """
+
         sql = "select * from users where email=%s and type='admin'"
         result = None
         try:
@@ -58,6 +63,10 @@ class Database:
             return result
 
     def getAllCountries(self) -> List[Dict[str, Any]]:
+        """
+            Returns all active countries from table countries.
+            Output format : list of dicts , each dict contains keys name, code.
+        """
 
         sql = "select code, name from country where is_active = true"
         countries = []
@@ -79,6 +88,10 @@ class Database:
             return countries
 
     def getAllSports(self) -> List[Dict[str, Any]]:
+        """
+            Returns all sports from table sports.
+            Output format : list of dicts , each dict contains keys title, code.
+        """
 
         sql = "select code, title from sport"
         sports = []
@@ -98,7 +111,12 @@ class Database:
         finally:
             return sports
 
-    def getInactiveCountries(self) -> dict:
+    def getInactiveCountries(self) -> Dict[str, List[Dict[str, Any]]]:
+        """
+            Returns all inactive countries from table countries.
+            Output format : dict with one key = countries, its value is
+            list of dicts , each dict contains keys name, code.
+        """
 
         sql = "select code, name from country where is_active = false"
         result = {"countries": []}
@@ -119,8 +137,11 @@ class Database:
             # print(result)
             return result
 
-
     def getBranchesWithSports(self) -> List[Dict[str, Any]]:
+        """
+            Returns non combi branches from table branch with sport they belong to.
+            Output format : list of dicts , each dict contains keys sportCode, sportTitle, branchCode, branchTitle.
+        """
 
         sql = "select s.code, s.title, b.code, b.title from sport s join branch b on b.sport_id = s.id"
         results = []
@@ -141,7 +162,15 @@ class Database:
         finally:
             return results
 
-    def getFundingData(self, country_code: str) -> dict:
+    def getFundingData(self, country_code: str) -> Dict[str, List[Dict[str, Any]]]:
+        """
+            Returns funding data from table funding for selected country.
+
+            country_code -- selected country
+
+            Output format : list of dicts , each dict contains keys branch_id, absolute_funding, currency.
+        """
+
         sql = "select b.title, f.absolute_funding, f.currency from funding f cross join country c " \
               "join branch b on c.code = %(country_code)s and f.country_id = c.id and b.id = f.branch_id"
         result = {"funding": []}
@@ -163,7 +192,12 @@ class Database:
             return result
 
     def getFundingDistinctCurrencies(self) -> list:
-        sql = "select distinct currency from funding where currency != '';"
+        """
+            Returns list of currencies used in funding data in table funding.
+            Output format : list of strings = currency.
+        """
+
+        sql = " select distinct currency from funding where currency != '' "
         results = []
         try:
             with self._getConnection() as dbConn:
@@ -344,7 +378,6 @@ class Database:
         except KeyError:
             raise DataError("invalid subbranch data structure")
 
-
         sql_check_unique = "select * from branch where code = %(branch_code)s"
         sql_country_exists = "select id from country where code = %(country_code)s"
         sql_sub_exists = "select b.id from branch b join sport s on s.id = b.sport_id " \
@@ -355,20 +388,19 @@ class Database:
         sql_connect = "insert into combi_branch(combi_branch_id, subbranch_id, coefficient) " \
                       "values (%(combi_branch_id)s, %(subbranch_id)s, %(coefficient)s )"
 
-
         inserting_data = []
 
         try:
             with self._getConnection() as dbConn:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
 
-                    cursor.execute(sql_check_unique, {"branch_code":data['branchCode']})
+                    cursor.execute(sql_check_unique, {"branch_code": data['branchCode']})
                     tmp = cursor.fetchone()
-                    if tmp is not None: # branch code already exists
+                    if tmp is not None:  # branch code already exists
 
                         raise DataError("branch with entered code already exists")
 
-                    cursor.execute(sql_country_exists, {"country_code":data["countryCode"]})
+                    cursor.execute(sql_country_exists, {"country_code": data["countryCode"]})
                     tmp = cursor.fetchone()
                     if tmp is None:
                         raise DataError("country with entered code does not exist")
@@ -376,7 +408,8 @@ class Database:
 
                     for sub in data["subbranch"]:
                         try:
-                            cursor.execute(sql_sub_exists, {"sport_code":sub["sportCode"], "branch_code":sub["branchCode"] })
+                            cursor.execute(sql_sub_exists,
+                                           {"sport_code": sub["sportCode"], "branch_code": sub["branchCode"]})
                         except KeyError:
                             raise DataError("invalid subbranch data structure")
                         tmp = cursor.fetchone()
@@ -385,12 +418,15 @@ class Database:
                         else:
                             inserting_data.append((tmp[0], sub["coefficient"]))
 
-                    cursor.execute(sql_insert, {"code":data["branchCode"], "title":data["branchTitle"], "is_combined":True, "country_id":country_id} )
+                    cursor.execute(sql_insert,
+                                   {"code": data["branchCode"], "title": data["branchTitle"], "is_combined": True,
+                                    "country_id": country_id})
                     tmp = cursor.fetchone()
                     newBranchId = tmp[0]
 
                     for item in inserting_data:
-                        cursor.execute(sql_connect, {"combi_branch_id":newBranchId, "subbranch_id":item[0], "coefficient":item[1]})
+                        cursor.execute(sql_connect, {"combi_branch_id": newBranchId, "subbranch_id": item[0],
+                                                     "coefficient": item[1]})
 
                     dbConn.commit()
 
@@ -1047,7 +1083,8 @@ class Database:
 
     def checkCodeTitle(self, sport_code: int, branch_code: int, sport_title: str, branch_title: str) -> bool:
 
-        sql = "select * from sport s join branch b on s.id = b.sport_id and s.code = %(sport_code)s and b.code = %(branch_code)s and s.title = %(sport_title)s and b.title = %(branch_title)s "
+        sql = "select * from sport s join branch b on s.id = b.sport_id and s.code = %(sport_code)s " \
+              "and b.code = %(branch_code)s and s.title = %(sport_title)s and b.title = %(branch_title)s "
         try:
             with self._getConnection() as dbConn:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
@@ -1284,3 +1321,38 @@ class Database:
         # TODO: logging
         # TODO: define standard for database error messages
 
+    def getInterconnTypes(self):
+
+        sql = "select code, title from interconnectness_type"
+        results = []
+        try:
+            with self._getConnection() as dbConn:
+                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                    cursor.execute(sql)
+                    tmp = cursor.fetchone()
+                    while tmp:
+                        results.append({"code": tmp[0], "title": tmp[1]})
+                        tmp = cursor.fetchone()
+        except psycopg2.DatabaseError as error:
+            print(error)
+            # TODO: logging
+            # TODO: define standard for database error messages
+        finally:
+            return results
+
+    def getCountryIdByCode(self, countryCode: str):
+
+        sql = "select id from country where code = %(countryCode)s and is_active"
+        try:
+            with self._getConnection() as dbConn:
+                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                    cursor.execute(sql, {"countryCode":countryCode})
+                    tmp = cursor.fetchone()
+                    if tmp is None:
+                        raise DataError("country code does not exist")
+                    else:
+                        return tmp[0]
+        except psycopg2.DatabaseError as error:
+            print(error)
+            # TODO: logging
+            # TODO: define standard for database error messages
