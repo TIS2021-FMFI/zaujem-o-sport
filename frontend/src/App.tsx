@@ -27,6 +27,7 @@ import Footer from "./user/components/footer";
 import {HomeUser} from "./user/pages/home/HomeUser";
 import 'user/pages/styles/site.scss';
 import {ToastContainer} from "react-toastify";
+import {UpdateSport} from "./admin/pages/update_sport/updateSport";
 
 const history = createBrowserHistory();
 setupSecretaryInterceptors(history);
@@ -159,6 +160,11 @@ const AdminRoutes = () => {
 			icon: PlusLg
 		},
 		{
+			route: `${url}/sports/update`,
+			name: "Update sport",
+			icon: Pen
+		},
+		{
 			route: `${url}/branches/add`,
 			name: "Add branch",
 			icon: PlusLg
@@ -167,11 +173,6 @@ const AdminRoutes = () => {
 			route: `${url}/countries/add`,
 			name: "Add country",
 			icon: PlusLg
-		},
-		{
-			route: `${url}/sports/update`,
-			name: "Update sport",
-			icon: Pen
 		},
 		{
 			route: `${url}/sports/list`,
@@ -203,9 +204,9 @@ const AdminRoutes = () => {
 						<AdminAuthRoute exact path={`${path}/sports/add`} >
 							<AddSport lang="en" />
 						</AdminAuthRoute>
+						<AdminAuthRoute exact path={`${path}/sports/update`} component={UpdateSport} />
 						<AdminAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
 						<AdminAuthRoute exact path={`${path}/countries/add`} component={NotFound} />
-						<AdminAuthRoute exact path={`${path}/sports/update`} component={NotFound} />
 						<AdminAuthRoute exact path={`${path}/sports/list`} component={SportsWithBranches} />
 						<AdminAuthRoute exact path={`${path}/countries/list`} component={Countries} />
 						<Route exact path={`${path}/logout`}>

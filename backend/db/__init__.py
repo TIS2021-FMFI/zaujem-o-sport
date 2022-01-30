@@ -447,11 +447,11 @@ class Database:
 
     def updateSport(self, data: dict) -> bool:
 
-        if "old_code" not in data:
+        if "oldCode" not in data:
             raise DataError("sport data do not contain old code")
-        if "new_code" not in data:
+        if "newCode" not in data:
             raise DataError("sport data do not contain new code")
-        if "new_title" not in data:
+        if "newTitle" not in data:
             raise DataError("sport data do not contain new title")
 
         sql_check = "select id from sport where code = %(old_code)s"
@@ -459,11 +459,11 @@ class Database:
         try:
             with self._getConnection() as dbConn:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-                    cursor.execute(sql_check, {"old_code": data['old_code']})
+                    cursor.execute(sql_check, {"old_code": data['oldCode']})
                     tmp = cursor.fetchone()
                     if tmp is None:  # sport doesnt exist
                         raise DataError("unable to update sport, sport with entered code doesnt exist")
-                    cursor.execute(sql, {"new_code": data['new_code'], "new_title": data['new_title'], "id": tmp[0]})
+                    cursor.execute(sql, {"new_code": data['newCode'], "new_title": data['newTitle'], "id": tmp[0]})
                 dbConn.commit()
             self._releaseConnection(dbConn)
             return True

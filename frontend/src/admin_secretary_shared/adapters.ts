@@ -143,3 +143,13 @@ export interface ApiSports {
 export const apiGetSports = (): Promise<AxiosResponse<ApiSports>> => {
 	return axios.get("/adminsecretary/sports");
 }
+
+export interface apiUpdateSportProps {
+	oldCode: string,
+	newCode: string,
+	newTitle: string
+}
+
+export const apiUpdateSport = ({oldCode, newCode, newTitle}: apiUpdateSportProps): Promise<AxiosResponse<{}>> => {
+	return axios.put("/adminsecretary/sports/update", {oldCode: oldCode, newCode: newCode, newTitle: newTitle});
+}

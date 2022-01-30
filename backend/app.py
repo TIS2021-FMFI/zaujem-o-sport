@@ -73,15 +73,21 @@ app.add_url_rule(
 )
 
 app.add_url_rule(
+	"/api/adminsecretary/sports",
+	view_func=admin_secretary.endpoints.sports.Sports.as_view("adminsecretary_get_sports"),
+	methods=["GET"]
+)
+
+app.add_url_rule(
 	"/api/adminsecretary/sports/add",
-	view_func=admin_secretary.endpoints.sports.Sports.as_view("adminsecretary_sport_code_sports"),
+	view_func=admin_secretary.endpoints.sports.Sports.as_view("adminsecretary_add_sport"),
 	methods=["POST"]
 )
 
 app.add_url_rule(
-	"/api/adminsecretary/sports",
-	view_func=admin_secretary.endpoints.sports.Sports.as_view("adminsecretary_get_sports"),
-	methods=["GET"]
+	"/api/adminsecretary/sports/update",
+	view_func=admin_secretary.endpoints.sports.Sports.as_view("adminsecretary_update_sport"),
+	methods=["PUT"]
 )
 
 app.add_url_rule(
