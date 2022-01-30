@@ -43,15 +43,17 @@ export const useQueryWithNotifications = (
 export const useMutationWithNotifications = (
 	toastId: string,
 	apiFetchFunction: (...args: any[]) => Promise<AxiosResponse<any>>,
-	initToastMsg: string
+	initToastMsg: string,
+	successToastMsg: string = "Dáta boli úspešne uložené.",
+	errorToastMsg: string = "Dáta nebolo možné uložiť."
 ) => {
 	const mutation = useMutation(apiFetchFunction, {
 		onSuccess: (successResponse) => {
-			resolveSnackbar(toastId, "Dáta boli úspešne uložené.");
+			resolveSnackbar(toastId, successToastMsg);
 		},
 		onError: (error) => {
 			console.log(error);
-			resolveSnackbar(toastId, "Dáta nebolo možné uložiť.", false);
+			resolveSnackbar(toastId, errorToastMsg, false);
 		},
 	});
 

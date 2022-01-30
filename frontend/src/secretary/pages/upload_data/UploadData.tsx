@@ -7,8 +7,9 @@ import {dropzoneFileProp} from "components/drag_and_drop/Dropzone";
 import {IncorrectRows} from "./IncorrectRows";
 import {apiUploadFunding} from "secretary/adapters";
 import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
-import {useCountries} from "app/hooks";
+import {useCountries, useMutationWithNotifications} from "app/hooks";
 import {currencies} from "data/active_currency_codes";
+import {CenteredRow} from "../../../components/basic/CenteredRow";
 
 const acceptedFileExtensions = ".csv";
 
@@ -40,14 +41,9 @@ export const UploadData = () => {
 		}}));
 	}, [responseCountries]);
 
-	const uploadMutation = useMutation(apiUploadFunding, {
-		onSuccess: (response) => {
-			console.log(response);
-		},
-		onError: (error) => {
-			console.log(error);
-		}
-	});
+	const uploadMutation = useMutationWithNotifications(
+		"funding_upload", apiUploadFunding, "Dáta sa nahrávajú."
+	);
 
 	const handleSubmit = () => {
 		// TODO: Upload data to the backend and by response either
@@ -56,7 +52,7 @@ export const UploadData = () => {
 		// TODO: with incorrect data.
 		// TODO: Decide how to store/pass correct and incorrect rows.
 		if (selectedCountry === undefined || selectedCurrency === undefined)
-			createSnackbar("Zvoliť krajinu a menu.", SnackTypes.warn);
+			createSnackbar("Zvoľte krajinu a menu.", SnackTypes.warn);
 		else if (files.length === 1)
 			uploadMutation.mutate({csvFile: files[0].file, countryCode: selectedCountry, currency: selectedCurrency});
 		else
@@ -64,13 +60,13 @@ export const UploadData = () => {
 	}
 
 	return (<>
-		<header>
-			<h1>Nahranie dát</h1>
-			<h2>Váha financovania</h2>
-		</header>
-		<section>
+		<CenteredRow as="section" lg={7} md={8}>
+			<header>
+				<h1>Nahranie dát</h1>
+				<h2>Váha financovania</h2>
+			</header>
 			<Row>
-				<Col lg={5} md={6} sm={8} xs={12}>
+				<Col xl={7} lg={9} md={9}>
 					<Form.Label>Krajina</Form.Label>
 					<Select
 						id="country"
@@ -81,7 +77,7 @@ export const UploadData = () => {
 				</Col>
 			</Row>
 			<Row>
-				<Col lg={5} md={6} sm={8} xs={12}>
+				<Col xl={7} lg={9} md={9}>
 					<Form.Label>Meny</Form.Label>
 					<Select
 						id="currency"
@@ -111,7 +107,7 @@ export const UploadData = () => {
 					}
 				</Col>
 			</Row>
-			<Row className={`mt-5`}>
+			<Row className={`mt-4`}>
 				<Col>
 					<Button
 						onClick={ handleSubmit }
@@ -120,7 +116,7 @@ export const UploadData = () => {
 					</Button>
 				</Col>
 			</Row>
-		</section>
+		</CenteredRow>
 
 		{/* TODO: remove after backend functionality is ready */}
 		<section className={`mt-5`}>
