@@ -24,12 +24,9 @@ export const setupInterceptors = (history: any) => {
 		return response;
 	}, (error) => {
 		if (error.response.status === 401) {
-			let redirectPath = "/auth/admin/login";
-			if (localStorage.getItem("adminAccessToken") === null)
-				redirectPath = "/auth/secretary/login";
 			localStorage.removeItem("secretaryAccessToken");
 			localStorage.removeItem("adminAccessToken");
-			history.push(redirectPath);
+			history.push("/");
 			window.location.reload();
 		}
 		return Promise.reject(error);
