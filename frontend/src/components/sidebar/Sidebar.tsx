@@ -28,10 +28,10 @@ export const Sidebar = ({header, links, logoutRoute, lang = "sk"}: SidebarProps)
 			<hr />
 			<ul className="nav nav-pills flex-column mb-auto">
 				{links.map((link, i) =>
-					<li key={`sidebar-link-${i}`} className="nav-item">
+					<li key={`sidebar-link-${i}`} className={`${styles.sidebarItem} nav-item`}>
 						<Link
 							to={link.route}
-							className={`${ window.location.pathname === link.route && "active" } nav-link`}
+							className={`${ window.location.pathname === link.route ? "active": "" } nav-link ${styles.sidebarLink}`}
 							aria-current="page"
 						>
 							<IconWithText Icon={link.icon} text={link.name} />
@@ -42,7 +42,7 @@ export const Sidebar = ({header, links, logoutRoute, lang = "sk"}: SidebarProps)
 			<hr />
 			<ul className="">
 				<li className="nav-item">
-					<Link to={logoutRoute}>
+					<Link to={logoutRoute} className={`${styles.sidebarLink}`}>
 						<IconWithText Icon={BoxArrowDownLeft} text={text[lang].logout} />
 					</Link>
 				</li>

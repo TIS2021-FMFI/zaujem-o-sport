@@ -1,11 +1,13 @@
 @use "classes";
 
-.container-lg {
-  > div > header {
-    margin: 2rem 0 2rem 0;
-  }
+.container-lg header {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 header > h2 {
   font-size: 1.2em;
+}
+.nav-item {
+  margin: 0;
 }
