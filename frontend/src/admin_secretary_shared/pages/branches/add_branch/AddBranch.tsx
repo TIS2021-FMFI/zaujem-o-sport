@@ -42,11 +42,11 @@ export const AddBranch = () => {
 	}, [checkedCombined]);
 
 	return (<>
-		<CenteredRow as="header">
+		<CenteredRow as="header" lg={6} md={7} className="text-center">
 			<h1>Pridanie nového odvetvia</h1>
 		</CenteredRow>
-		<CenteredRow as="section">
-			<Tabs defaultActiveKey="uncombiBranch" id="uncontrolled-tab-example" className="mb-3">
+		<CenteredRow as="section" lg={6} md={7}>
+			<Tabs defaultActiveKey="uncombiBranch" id="uncontrolled-tab-example" className="mb-3 justify-content-center">
 				<Tab eventKey="uncombiBranch" title="Nekombinované odvetvie">
 					<section>
 						<div className="mb-3">

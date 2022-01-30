@@ -35,12 +35,12 @@ Database connection pool setup.
 Setting up max connections in the pool (great resource: https://www.enterprisedb.com/postgres-tutorials/why-you-should-use-connection-pooling-when-setting-maxconnections-postgres).
 """
 dbPool = psycopg2.pool.ThreadedConnectionPool(
-	minconn=1,
-	maxconn=100,
-	host=       env.get("DB_HOST"),
-	database=   env.get("DB_NAME"),
-	user=       env.get("DB_USER"),
-	password=   env.get("DB_PASS")
+    minconn=1,
+    maxconn=100,
+    host=env.get("DB_HOST"),
+    database=env.get("DB_NAME"),
+    user=env.get("DB_USER"),
+    password=env.get("DB_PASS")
 )
 DB = Database(dbPool)
 
@@ -74,3 +74,4 @@ DB = Database(dbPool)
 
 
 #DB.addCombiBranch(data={"branchCode":11001, "branchTitle":"ultra mega sport", "isCombined":True, "countryCode":"SVK", "subbranch":[{"sportCode":1,"branchCode":1, "coefficient":1}]})
+

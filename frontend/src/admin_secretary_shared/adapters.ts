@@ -43,6 +43,17 @@ export const apiAddNewSport = ({sportCode, sportTitle}: ApiAddNewSportProps): Pr
 	return axios.post("/adminsecretary/sports/add", {code: sportCode, title: sportTitle});
 }
 
+export interface ApiAddNewUncombiBranchProps {
+	sportCode: string,
+	branchCode: string,
+	branchTitle: string
+}
+
+// TODO: return type
+export const apiAddNewUncombiBranch = ({sportCode, branchCode, branchTitle}: ApiAddNewUncombiBranchProps): Promise<AxiosResponse<{}>> => {
+	return axios.post("/adminsecretary/branches/add", {sportCode: sportCode, branchCode: branchCode, branchTitle: branchTitle});
+}
+
 export interface BranchWithSport {
 	sportCode: string,
 	sportTitle: string,
@@ -93,7 +104,7 @@ export interface ApiNewBranchCode {
 }
 
 export const apiGetNewBranchCode = (sportCode: string): Promise<AxiosResponse<ApiNewBranchCode>> => {
-	return axios.get(`/adminsecretary/branches/${sportCode}/new-code`);
+	return axios.get(`/adminsecretary/sport/${sportCode}/branches/new-code`);
 }
 
 export interface Sport {
