@@ -261,8 +261,8 @@ class Database:
 
 	def addBranch(self, data : dict) -> bool:
 
-		if "is_combined" in data:
-			self.addCombiBranch(data)
+		#if "is_combined" in data:
+		#	self.addCombiBranch(data)
 
 		if "sport_code" not in data:
 			raise DataError("sport code missing in data")
@@ -300,8 +300,93 @@ class Database:
 			print(error)
 			return False
 
-	def addCombiBranch(self, data: dict):
-		...
+	def addCombiBranch(self, data: dict) -> bool:
+
+		if "branchCode" not in data:
+			raise DataError("branch code missing in data")
+
+		if "branchTitle" not in data:
+			raise DataError("branch title missing in data")
+
+		if "isCombined" not in data:
+			raise DataError("missing parameter is combined in data")
+
+		if "countryCode" not in data:
+			raise DataError("country code missing in data")
+
+		if "subbranch" not in data:
+			raise DataError("subbranch data missing")
+
+		if not isinstance(data["subbranch"], list):
+			raise DataError("invalid subbranch data structure")
+
+		suma = 0
+		try:
+			for i in data["subbranch"]:
+				suma += i["coefficient"]
+			if suma != 1:
+				raise DataError("coefficients sum is not 1")
+		except KeyError:
+			raise DataError("invalid subbranch data structure")
+
+
+		sql_check_unique = "select * from branch where code = %(branch_code)s"
+		sql_country_exists = "select id from country where code = %(country_code)s"
+		sql_sub_exists = "select b.id from branch b join sport s on s.id = b.sport_id " \
+						 "and s.code =  %(sport_code)s and b.code = %(branch_code)s"
+
+		sql_insert = "insert into branch(code, title, is_combined, country_id) " \
+					 "values (%(code)s, %(title)s, %(is_combined)s, %(country_id)s ) returning id"
+		sql_connect = "insert into combi_branch(combi_branch_id, subbranch_id, coefficient) " \
+					  "values (%(combi_branch_id)s, %(subbranch_id)s, %(coefficient)s )"
+
+
+		inserting_data = []
+
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+
+					cursor.execute(sql_check_unique, {"branch_code":data['branchCode']})
+					tmp = cursor.fetchone()
+					if tmp is not None: # branch code already exists
+
+						raise DataError("branch with entered code already exists")
+
+					cursor.execute(sql_country_exists, {"country_code":data["countryCode"]})
+					tmp = cursor.fetchone()
+					if tmp is None:
+						raise DataError("country with entered code does not exist")
+					country_id = tmp[0]
+
+					for sub in data["subbranch"]:
+						try:
+							cursor.execute(sql_sub_exists, {"sport_code":sub["sportCode"], "branch_code":sub["branchCode"] })
+						except KeyError:
+							raise DataError("invalid subbranch data structure")
+						tmp = cursor.fetchone()
+						if tmp is None:
+							raise DataError("subbranch does not exist")
+						else:
+							inserting_data.append((tmp[0], sub["coefficient"]))
+
+					cursor.execute(sql_insert, {"code":data["branchCode"], "title":data["branchTitle"], "is_combined":True, "country_id":country_id} )
+					tmp = cursor.fetchone()
+					newBranchId = tmp[0]
+
+					for item in inserting_data:
+						cursor.execute(sql_connect, {"combi_branch_id":newBranchId, "subbranch_id":item[0], "coefficient":item[1]})
+
+					dbConn.commit()
+
+			self._releaseConnection(dbConn)
+			return True
+		except psycopg2.DatabaseError as error:
+			# TODO: logging
+			# TODO: define standard for database error messages
+			print(error)
+			return False
+
 
 	def addCountry(self, data:dict) -> bool:
 
@@ -1182,7 +1267,8 @@ class Database:
 						return tmp[0]
 			self._releaseConnection(dbConn)
 		except psycopg2.DatabaseError as error:
+			print(error)
 			# TODO: logging
 			# TODO: define standard for database error messages
-      print(error)
-		
+
+

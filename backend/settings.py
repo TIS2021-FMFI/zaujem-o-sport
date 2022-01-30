@@ -71,3 +71,6 @@ DB = Database(dbPool)
 #print(DB.getNonCombiBranchIds())
 #print(DB.getNonCombiWithSportBranchIds())
 #print(DB.getAllSportInfo())
+
+
+#DB.addCombiBranch(data={"branchCode":11001, "branchTitle":"ultra mega sport", "isCombined":True, "countryCode":"SVK", "subbranch":[{"sportCode":1,"branchCode":1, "coefficient":1}]})
