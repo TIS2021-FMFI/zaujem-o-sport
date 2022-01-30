@@ -1055,8 +1055,6 @@ class Database:
             # print(error)
             self.logger.error(error)
         finally:
-            # print(result)
-
             final_result = {}
 
             for record in result["sports"]:
@@ -1065,6 +1063,8 @@ class Database:
             return final_result
 
     def checkCodeTitle(self, sport_code: int, branch_code: int, sport_title: str, branch_title: str) -> bool:
+        """ Check if branch and sport with sport code and branch codes and titles exist and belongs together."""
+
 
         sql = "select * from sport s join branch b on s.id = b.sport_id and s.code = %(sport_code)s " \
               "and b.code = %(branch_code)s and s.title = %(sport_title)s and b.title = %(branch_title)s "
@@ -1083,6 +1083,7 @@ class Database:
             return False
 
     def findSportByCode(self, sport_code: int) -> str:
+        """ Returns title of sport by entered code. """
 
         sql = "select title from sport where code = %(sport_code)s"
         try:
@@ -1098,6 +1099,8 @@ class Database:
             return ""
 
     def findBranchByCode(self, sport_code: int, branch_code: int) -> str:
+        """ Returns branch title of branch defined by entered sport and branch code."""
+
         sql = "select b.title from branch b join sport s on s.id = b.sport_id " \
               "and s.code = %(sport_code)s and b.code = %(branch_code)s"
         try:
@@ -1112,7 +1115,11 @@ class Database:
             self.logger.error(error)
             return ""
 
-    def getSportBranches(self, sport_code: int) -> list:
+    def getSportBranches(self, sport_code: int) -> List[Dict[str, Any]]:
+        """
+            Returns all branches which belongs to entered sport.
+            Output format : list of dicts , each dict contains keys code, title.
+        """
 
         sql = "select b.code, b.title from branch b join sport s " \
               "on b.sport_id = s.id and s.code = %(code)s"
@@ -1135,7 +1142,12 @@ class Database:
             # print(result)
             return result["branches"]
 
-    def showCombiBranches(self) -> list:
+    def showCombiBranches(self) -> List[Dict[str, Any]]:
+        """
+            Returns data about combi branches from table combi_branch.
+            Output format : list of dicts , each dict contains keys countryCode, countryName,
+            combiCode, combiTitle, subCode, subTitle, coefficient.
+        """
 
         sql = "select c.code, c.name, b.code, b.title, b2.code, b2.title, coefficient " \
               "from combi_branch cb join branch b on combi_branch_id = b.id " \
@@ -1160,7 +1172,8 @@ class Database:
             # print(result)
             return results
 
-    def checkCombi(self, branch_code, country_code):
+    def checkCombi(self, branch_code, country_code) -> tuple:
+        """ Check existance of combi branch. If exists, returns code, title else -1 and empty."""
 
         sql = "select b.code, b.title from branch b join country c " \
               "on c.id = b.country_id and c.code = %(country_code)s and is_combined and b.code = %(branch_code)s "
@@ -1179,6 +1192,7 @@ class Database:
             self.logger.error(error)
 
     def suggestNewSportCode(self):
+        """ Returns suggestion for sport code. """
 
         sql = "select max(code)+1 from sport"
         try:
@@ -1192,6 +1206,8 @@ class Database:
             self.logger.error(error)
 
     def countryCodeToID(self, country_code: str) -> id:
+        """ Convert country code to country id."""
+
 
         sql = "select id from country where code=%(country_code)s"
         try:
@@ -1208,7 +1224,8 @@ class Database:
             # print(error)
             self.logger.error(error)
 
-    def suggestNewBranchCode(self, sport_code: int):
+    def suggestNewBranchCode(self, sport_code: int) -> int:
+        """ Returns suggestion for branch code in entered sport. """
 
         sql = "select max(b.code)+1 from branch b " \
               "join sport s on s.id = b.sport_id and s.code = %(sport_code)s"
@@ -1223,6 +1240,10 @@ class Database:
             self.logger.error(error)
 
     def branchCodeToId(self, sport_code: int, branch_code: int) -> id:
+        """
+            Convert branch code to id.
+            Branch is defined by branch code and sport code it belongs to.
+        """
 
         sql = "select b.id from branch b join sport s on s.id = b.sport_id and " \
               " b.code = %(branch_code)s and s.code =  %(sport_code)s "
@@ -1240,7 +1261,8 @@ class Database:
             # print(error)
             self.logger.error(error)
 
-    def suggestNewCombiBranchCode(self):
+    def suggestNewCombiBranchCode(self) -> int:
+        """ Returns suggestion for combi branch code. """
 
         sql = "select max(b.code)+1 from branch b where is_combined"
         try:
@@ -1253,7 +1275,11 @@ class Database:
             # print(error)
             self.logger.error(error)
 
-    def getSportsWithExisitingBranch(self):
+    def getSportsWithExisitingBranch(self) -> List[Dict[str, Any]]:
+        """
+            Returns sports from table sport which have at least one branch.
+            Output format : list of dicts , each dict contains keys title, code.
+        """
 
         sql = "select s.code, s.title from sport s " \
               " where exists(select * from branch where sport_id = s.id) "
@@ -1275,6 +1301,7 @@ class Database:
             return sports
 
     def combiBranchCodeToId(self, branch_code: int) -> id:
+        """ Convert combi branch code to id."""
 
         sql = "select b.id from branch b where is_combined and code = %(code)s"
 
@@ -1291,7 +1318,11 @@ class Database:
             # print(error)
             self.logger.error(error)
 
-    def getInterconnTypes(self):
+    def getInterconnTypes(self) -> List[Dict[str, Any]]:
+        """
+            Returns interconnectness types from table interconnectness_type.
+            Output format : list of dicts , each dict contains keys title, code.
+        """
 
         sql = "select code, title from interconnectness_type"
         results = []
@@ -1309,7 +1340,8 @@ class Database:
         finally:
             return results
 
-    def getCountryIdByCode(self, countryCode: str):
+    def getCountryIdByCode(self, countryCode: str) -> id:
+        """ Convert country code to country id."""
 
         sql = "select id from country where code = %(countryCode)s and is_active"
         try:
@@ -1321,6 +1353,7 @@ class Database:
                         raise DataError("country code does not exist")
                     else:
                         return tmp[0]
-        except psycopg2.DatabaseError as error:
+        except Union[psycopg2.DatabaseError, DataError] as error:
             # print(error)
             self.logger.error(error)
+            return -1
