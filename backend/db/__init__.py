@@ -304,7 +304,7 @@ class Database:
                     dbConn.commit()
             self._releaseConnection(dbConn)
             return True
-        except (psycopg2.DatabaseError, DataError) as error:
+        except Union[psycopg2.DatabaseError, DataError] as error:
             # print(error)
             self.logger.error(error)
             return False
@@ -348,7 +348,7 @@ class Database:
                     dbConn.commit()
             self._releaseConnection(dbConn)
             return True
-        except psycopg2.DatabaseError as error:
+        except Union[psycopg2.DatabaseError, DataError] as error:
             # print(error)
             self.logger.error(error)
             return False
@@ -380,7 +380,12 @@ class Database:
             if suma != 1:
                 raise DataError("coefficients sum is not 1")
         except KeyError:
-            raise DataError("invalid subbranch data structure")
+            try:
+                raise DataError("invalid subbranch data structure")
+            except DataError as e:
+                self.logger.error(e)
+        except DataError as e:
+            self.logger.error(e)
 
         sql_check_unique = "select * from branch where code = %(branch_code)s"
         sql_country_exists = "select id from country where code = %(country_code)s"
@@ -436,7 +441,7 @@ class Database:
 
             self._releaseConnection(dbConn)
             return True
-        except psycopg2.DatabaseError as error:
+        except Union[psycopg2.DatabaseError, DataError] as error:
             # print(error)
             self.logger.error(error)
             return False
@@ -481,7 +486,7 @@ class Database:
 
             self._releaseConnection(dbConn)
             return True
-        except psycopg2.DatabaseError as error:
+        except Union[psycopg2.DatabaseError, DataError] as error:
             # print(error)
             self.logger.error(error)
             return False
@@ -508,7 +513,7 @@ class Database:
                 dbConn.commit()
             self._releaseConnection(dbConn)
             return True
-        except psycopg2.DatabaseError as error:
+        except Union[psycopg2.DatabaseError, DataError] as error:
             # print(error)
             self.logger.error(error)
             return False
