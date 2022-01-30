@@ -1,9 +1,11 @@
 import {useNewBranchCode, useSports} from "admin_secretary_shared/hooks";
 import React, {useEffect, useState} from "react";
 import {useQuery} from "react-query";
-import {apiGetNewBranchCode} from "admin_secretary_shared/adapters";
-import {Col, FloatingLabel, Form, Row} from "react-bootstrap";
+import {apiAddNewSport, apiAddNewUncombiBranch, apiGetNewBranchCode} from "admin_secretary_shared/adapters";
+import {Button, Col, FloatingLabel, Form, Row} from "react-bootstrap";
 import Select from "react-select";
+import {useMutationWithNotifications} from "../../../../../app/hooks";
+import createSnackbar, {SnackTypes} from "../../../../../components/snackbar/Snackbar";
 
 interface SelectedOption {
 	value: string,
@@ -12,12 +14,14 @@ interface SelectedOption {
 
 export const AddUncombiBranch = () => {
 
-	const newBranchCode = 666;
+	const [newBranchCode, setNewBranchCode] = useState<string>("");
 
 	const {sports} = useSports();
 
 	const [sportCodes, setSportCodes] = useState<SelectedOption[]>([]);
 	const [sportNames, setSportNames] = useState<SelectedOption[]>([]);
+
+	const [branchTitle, setBranchTitle] = useState<string>("");
 
 	useEffect(() => {
 		setSportCodes(sports.map((sport) => { return { value: sport.code, label: sport.code } }));
@@ -27,8 +31,8 @@ export const AddUncombiBranch = () => {
 	const [selectedSport, setSelectedSport] = useState<SelectedOption>();
 
 	// TODO: abstract with notification in hooks
-	const { data, refetch } = useQuery(
-		["key", selectedSport?.value],
+	const { data: newBranchCodeData, refetch } = useQuery(
+		["fetching_new_branch_code", selectedSport?.value],
 		() => {
 			if (selectedSport !== undefined) return apiGetNewBranchCode(selectedSport.value);
 		},
@@ -40,12 +44,20 @@ export const AddUncombiBranch = () => {
 	}, [selectedSport]);
 
 	useEffect(() => {
-		console.log(data);
-	}, [data]);
+		if (newBranchCodeData !== undefined)
+			setNewBranchCode(newBranchCodeData.data.newBranchCode);
+	}, [newBranchCodeData]);
+
+	const addNewBranchMutation = useMutationWithNotifications(
+		"adding_new_uncombi_branch", apiAddNewUncombiBranch, "TODO"
+	);
 
 	const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		// TODO: backend call
+		if (selectedSport === undefined || newBranchCode.length === 0 || branchTitle.length === 0)
+			createSnackbar("Všetky polia musia byť vyplnené.", SnackTypes.warn);
+		else
+			addNewBranchMutation.mutate({sportCode: selectedSport.value, branchCode: newBranchCode, branchTitle: branchTitle});
 	}
 
 	return (
@@ -100,10 +112,18 @@ export const AddUncombiBranch = () => {
 			<Form.Group as={Row} className="mb-4" controlId="formHorizontalBranchName">
 				<Col>
 					<FloatingLabel controlId="floatingPassword" label="Názov odvetvia">
-						<Form.Control type="text" placeholder="Názov odvetvia" />
+						<Form.Control type="text" placeholder="Názov odvetvia"
+						              value={branchTitle}
+						              onChange={(e) =>
+				                                setBranchTitle((e.currentTarget as HTMLInputElement).value)}
+						/>
 					</FloatingLabel>
 				</Col>
 			</Form.Group>
+
+			<Button className={`mt-2`} variant="primary" type="submit">
+				Pridať nové odvetvie
+			</Button>
 		</Form>
 	)
 }

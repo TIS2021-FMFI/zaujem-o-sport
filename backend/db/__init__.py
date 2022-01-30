@@ -118,6 +118,7 @@ class Database:
             # print(result)
             return result
 
+
     def getBranchesWithSports(self) -> List[Dict[str, Any]]:
 
         sql = "select s.code, s.title, b.code, b.title from sport s join branch b on b.sport_id = s.id"
@@ -270,16 +271,16 @@ class Database:
 
     def addBranch(self, data: dict) -> bool:
 
-        if "is_combined" in data:
+        if "isCombined" in data:
             self.addCombiBranch(data)
 
-        if "sport_code" not in data:
+        if "sportCode" not in data:
             raise DataError("sport code missing in data")
 
-        if "branch_code" not in data:
+        if "branchCode" not in data:
             raise DataError("branch code not in data")
 
-        if "branch_title" not in data:
+        if "branchTitle" not in data:
             raise DataError("branch title not in data")
 
         sql_sport = "select id from sport where code = %(sport_code)s"
@@ -290,14 +291,14 @@ class Database:
         try:
             with self._getConnection() as dbConn:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-                    cursor.execute(sql_sport, {"sport_code": data["sport_code"]})
+                    cursor.execute(sql_sport, {"sport_code": data["sportCode"]})
                     tmp = cursor.fetchone()
                     if tmp is None:
                         raise DataError(
                             f"unable to insert, sport with entered code doesnt exist, please select another code")
                     sport_id = tmp[0]
 
-                    cursor.execute(sql_check, {"sport_code": data['sport_code'], "branch_code": data['branch_code']})
+                    cursor.execute(sql_check, {"sport_code": data['sportCode'], "branch_code": data['branchCode']})
                     tmp = cursor.fetchone()
                     if tmp is not None:  # branch code already exists
                         raise DataError(
@@ -305,7 +306,7 @@ class Database:
                             f"please select another code")
 
                     cursor.execute(sql,
-                                   {"code": data['branch_code'], "title": data['branch_title'], "is_combined": 'false',
+                                   {"code": data['branchCode'], "title": data['branchTitle'], "is_combined": 'false',
                                     "sport_id": sport_id})
                     dbConn.commit()
             self._releaseConnection(dbConn)

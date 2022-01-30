@@ -6,6 +6,7 @@ import admin_secretary.endpoints.sport_code
 import admin_secretary.endpoints.sports
 import admin_secretary.endpoints.combi_branches
 import admin_secretary.endpoints.combi_branches.new_code
+import admin_secretary.endpoints.branches
 import admin_secretary.endpoints.branches.new_code
 import admin_secretary.endpoints.branches_with_sports
 import secretary.endpoints.login
@@ -93,6 +94,12 @@ app.add_url_rule(
 	"/api/adminsecretary/combi-branches",
 	view_func=admin_secretary.endpoints.combi_branches.CombiBranches.as_view("adminsecretary_combi_branches"),
 	methods=["GET"]
+)
+
+app.add_url_rule(
+	"/api/adminsecretary/branches/add",
+	view_func=admin_secretary.endpoints.branches.Branches.as_view("adminsecretary_add_branch"),
+	methods=["POST"]
 )
 
 app.add_url_rule(
