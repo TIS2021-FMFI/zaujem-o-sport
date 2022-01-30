@@ -153,3 +153,13 @@ export interface apiUpdateSportProps {
 export const apiUpdateSport = ({oldCode, newCode, newTitle}: apiUpdateSportProps): Promise<AxiosResponse<{}>> => {
 	return axios.put("/adminsecretary/sports/update", {oldCode: oldCode, newCode: newCode, newTitle: newTitle});
 }
+
+export interface ApiAddNewCountryProps {
+	name: string,
+	translation: string,
+	code: string
+}
+
+export const apiAddNewCountry = ({name, translation, code}: ApiAddNewCountryProps): Promise<AxiosResponse<{}>> => {
+	return axios.post("/adminsecretary/countries/add", {name: name, translation: translation, code: code});
+}

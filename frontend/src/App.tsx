@@ -27,7 +27,8 @@ import Footer from "./user/components/footer";
 import {HomeUser} from "./user/pages/home/HomeUser";
 import 'user/pages/styles/site.scss';
 import {ToastContainer} from "react-toastify";
-import {UpdateSport} from "./admin/pages/update_sport/updateSport";
+import {UpdateSport} from "./admin/pages/update_sport/UpdateSport";
+import {AddCountry} from "./admin_secretary_shared/pages/add_country/AddCountry";
 
 const history = createBrowserHistory();
 setupSecretaryInterceptors(history);
@@ -206,9 +207,9 @@ const AdminRoutes = () => {
 						</AdminAuthRoute>
 						<AdminAuthRoute exact path={`${path}/sports/update`} component={UpdateSport} />
 						<AdminAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
-						<AdminAuthRoute exact path={`${path}/countries/add`} component={NotFound} />
 						<AdminAuthRoute exact path={`${path}/sports/list`} component={SportsWithBranches} />
 						<AdminAuthRoute exact path={`${path}/countries/list`} component={Countries} />
+						<AdminAuthRoute exact path={`${path}/countries/add`} component={AddCountry} />
 						<Route exact path={`${path}/logout`}>
 							<Logout userType="admin" />
 						</Route>
