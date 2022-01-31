@@ -2,7 +2,7 @@ export type Language = "sk" | "en";
 
 const text = {
 	sk: {
-		loginHeader: "Prihlásenie",
+		loginHeader: "Prihlásiť sa ako",
 		login: "Prihlásiť sa",
 		logout: "Odhlásiť",
 		invalidEmail: "Neplatný email.",
@@ -17,7 +17,7 @@ const text = {
 	}
 	,
 	en: {
-		loginHeader: "Log in",
+		loginHeader: "Log in as",
 		login: "Log in",
 		logout: "Logout",
 		invalidEmail: "Invalid email",

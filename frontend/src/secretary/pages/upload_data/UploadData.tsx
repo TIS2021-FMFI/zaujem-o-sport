@@ -10,25 +10,9 @@ import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
 import {useCountries, useMutationWithNotifications} from "app/hooks";
 import {currencies} from "data/active_currency_codes";
 import {CenteredRow} from "components/basic/CenteredRow";
+import {RowToSuggestion, RowWithSuggestion, Suggestions} from "./components/Suggestions";
 
 const acceptedFileExtensions = ".csv";
-
-interface Suggestion {
-	sportCode: string,
-	oldBranchCode: string,
-	oldSportTitle: string,
-	oldBranchTitle: string,
-	newBranchCode: string,
-	newSportTitle: string,
-	newBranchTitle: string,
-	type: number
-}
-
-type RowWithSuggestion = {row: string} & Suggestion;
-
-interface RowToSuggestion {
-	[row: string]: Suggestion
-}
 
 interface UploadFundingError {
 	message: string,
@@ -72,7 +56,7 @@ export const UploadData = () => {
 
 	useEffect(() => {
 		if (uploadMutation.error === null) return;
-		console.log(uploadMutation.error.response);
+		console.log(uploadMutation.error.response);  // TODO: remove after its finished
 		const apiSuggestions: RowToSuggestion = (uploadMutation.error.response.data as UploadFundingError).suggestions;
 		const _rowErrors: RowWithSuggestion[] = [], _suggestions: RowWithSuggestion[] = [];
 		for (const [row, suggestion] of Object.entries(apiSuggestions)) {
@@ -152,6 +136,8 @@ export const UploadData = () => {
 				</Col>
 			</Row>
 		</CenteredRow>
+
+		<Suggestions suggestions={suggestions} rowErrors={rowErrors} />
 
 		<section className={`mt-4`}>
 			<header>
