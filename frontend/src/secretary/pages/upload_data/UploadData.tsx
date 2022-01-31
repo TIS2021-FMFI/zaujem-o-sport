@@ -9,9 +9,31 @@ import {apiUploadFunding} from "secretary/adapters";
 import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
 import {useCountries, useMutationWithNotifications} from "app/hooks";
 import {currencies} from "data/active_currency_codes";
-import {CenteredRow} from "../../../components/basic/CenteredRow";
+import {CenteredRow} from "components/basic/CenteredRow";
 
 const acceptedFileExtensions = ".csv";
+
+interface Suggestion {
+	sportCode: string,
+	oldBranchCode: string,
+	oldSportTitle: string,
+	oldBranchTitle: string,
+	newBranchCode: string,
+	newSportTitle: string,
+	newBranchTitle: string,
+	type: number
+}
+
+type RowWithSuggestion = {row: string} & Suggestion;
+
+interface RowToSuggestion {
+	[row: string]: Suggestion
+}
+
+interface UploadFundingError {
+	message: string,
+	suggestions: RowToSuggestion
+}
 
 export const UploadData = () => {
 
@@ -23,6 +45,9 @@ export const UploadData = () => {
 
 	const currencyOptions = currencies.map((currency) => { return {label: currency, value: currency} });
 	const [selectedCurrency, setSelectedCurrency] = useState<string | undefined>();
+
+	const [rowErrors, setRowErrors] = useState<RowWithSuggestion[]>([]);
+	const [suggestions, setSuggestions] = useState<RowWithSuggestion[]>([]);  // suggestion type = 1 or type 4
 
 	/*
 	const {currencies: responseCurrencies} = useFundingCurrencies();
@@ -45,12 +70,22 @@ export const UploadData = () => {
 		"funding_upload", apiUploadFunding, "Dáta sa nahrávajú."
 	);
 
-	const handleSubmit = () => {
-		// TODO: Upload data to the backend and by response either
-		// TODO: show success snackbar and redirect or in case of
-		// TODO: errors in some rows in uploaded data load <IncorrectRows />
-		// TODO: with incorrect data.
-		// TODO: Decide how to store/pass correct and incorrect rows.
+	useEffect(() => {
+		if (uploadMutation.error === null) return;
+		console.log(uploadMutation.error.response);
+		const apiSuggestions: RowToSuggestion = (uploadMutation.error.response.data as UploadFundingError).suggestions;
+		const _rowErrors: RowWithSuggestion[] = [], _suggestions: RowWithSuggestion[] = [];
+		for (const [row, suggestion] of Object.entries(apiSuggestions)) {
+			if (suggestion.type !== 1 && suggestion.type !== 4)
+				_rowErrors.push({...suggestion, row: row});
+			else
+				_suggestions.push({...suggestion, row: row});
+		}
+		setRowErrors(_rowErrors);
+		setSuggestions(_suggestions);
+	}, [uploadMutation.error]);
+
+	const handleSubmit = () => {  // TODO: pass corrections
 		if (selectedCountry === undefined || selectedCurrency === undefined)
 			createSnackbar("Zvoľte krajinu a menu.", SnackTypes.warn);
 		else if (files.length === 1)
@@ -117,6 +152,21 @@ export const UploadData = () => {
 				</Col>
 			</Row>
 		</CenteredRow>
+
+		<section className={`mt-4`}>
+			<header>
+				<h2>Nájdené <span className={`text-danger`}>3 chyby</span> v nahratom súbore:</h2>
+			</header>
+			<div className={`mt-3`}>
+				<IncorrectRows
+					tableRowValues={ [
+						[1, "tst1", "test1"],
+						[8, "tst2", "test2"],
+						[32, "tst3", "test3"]
+					]
+					} />
+			</div>
+		</section>
 
 		{/* TODO: remove after backend functionality is ready */}
 		<section className={`mt-5`}>

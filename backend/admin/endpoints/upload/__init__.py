@@ -1,10 +1,10 @@
 from flask import request
 from flasgger import SwaggerView
-from verification.jwt import is_secretary
+from verification.jwt import is_admin
 
 class UploadView(SwaggerView):
 
-	@is_secretary
+	@is_admin
 	def post(self):
 		if len(request.files) == 0:
 			return {"message": "Missing uploaded file."}, 400

@@ -52,7 +52,6 @@ export const useMutationWithNotifications = (
 			resolveSnackbar(toastId, successToastMsg);
 		},
 		onError: (error: any) => {
-			console.log(error.response.data);
 			resolveSnackbar(toastId, errorToastMsg, false);
 		},
 	});
