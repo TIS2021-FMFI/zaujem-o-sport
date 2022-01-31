@@ -47,6 +47,7 @@ export const UploadData = () => {
 	useEffect(() => {
 		if (uploadMutation.error === null) return;
 		const apiSuggestions: RowToSuggestion = (uploadMutation.error.response.data as UploadFundingError).suggestions;
+		console.log(apiSuggestions);
 		const _rowErrors: RowWithSuggestion[] = [], _suggestions: RowWithSuggestion[] = [];
 		for (const [row, suggestion] of Object.entries(apiSuggestions)) {
 			if (suggestion.type !== 1 && suggestion.type !== 4)
