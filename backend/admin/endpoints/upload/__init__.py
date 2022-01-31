@@ -39,11 +39,9 @@ class UploadView(SwaggerView):
 			for s in parsed[0]:
 				s.save()
 
-			print(parsed[1])
-
 			for table in parsed[2:]:
 				table.save()
 
-			print("hotovo")
+			# TODO: list of unknown sports in parsed[1]
 
 		return {}
