@@ -1,10 +1,8 @@
-import {useMutation} from "react-query";
 import Select from "react-select";
 import {Col, Row, Form, Button} from "react-bootstrap";
 import {Dropzone} from "components/drag_and_drop/Dropzone";
 import React, {useEffect, useState} from "react";
 import {dropzoneFileProp} from "components/drag_and_drop/Dropzone";
-import {IncorrectRows} from "./IncorrectRows";
 import {apiUploadFunding} from "secretary/adapters";
 import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
 import {useCountries, useMutationWithNotifications} from "app/hooks";
@@ -32,17 +30,6 @@ export const UploadData = () => {
 
 	const [rowErrors, setRowErrors] = useState<RowWithSuggestion[]>([]);
 	const [suggestions, setSuggestions] = useState<RowWithSuggestion[]>([]);  // suggestion type = 1 or type 4
-
-	/*
-	const {currencies: responseCurrencies} = useFundingCurrencies();
-	const [currencies, setCurrencies] = useState<{value: string, label: string}[]>([]);
-	const [selectedCurrency, setSelectedCurrency] = useState<string | undefined>();
-	useEffect(() => {
-		setCurrencies(responseCurrencies.map((c) => { return {
-			value: c.currency, label: c.currency
-		}}));
-	}, [responseCurrencies]);
-	*/
 
 	useEffect(() => {
 		setCountries(responseCountries.map((country) => { return {
@@ -139,36 +126,5 @@ export const UploadData = () => {
 
 		<Suggestions suggestions={suggestions} rowErrors={rowErrors} />
 
-		<section className={`mt-4`}>
-			<header>
-				<h2>Nájdené <span className={`text-danger`}>3 chyby</span> v nahratom súbore:</h2>
-			</header>
-			<div className={`mt-3`}>
-				<IncorrectRows
-					tableRowValues={ [
-						[1, "tst1", "test1"],
-						[8, "tst2", "test2"],
-						[32, "tst3", "test3"]
-					]
-					} />
-			</div>
-		</section>
-
-		{/* TODO: remove after backend functionality is ready */}
-		<section className={`mt-5`}>
-			{/* TODO: adjust count of mistakes from the backend response */}
-			<header>
-				<h2>Nájdené <span className={`text-danger`}>3 chyby</span> v nahratom súbore:</h2>
-			</header>
-			<div className={`mt-3`}>
-				<IncorrectRows
-					tableRowValues={ [
-							[1, "tst1", "test1"],
-							[8, "tst2", "test2"],
-							[32, "tst3", "test3"]
-	          ]
-	        } />
-			</div>
-		</section>
 	</>)
 }

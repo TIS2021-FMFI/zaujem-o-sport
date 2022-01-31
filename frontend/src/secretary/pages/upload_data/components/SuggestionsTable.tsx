@@ -2,9 +2,9 @@ import {Table, TableCellComponent, TableCellValueOnly, TableColumnNameType} from
 import {useEffect, useState} from "react";
 import {CheckLg, XLg} from "react-bootstrap-icons";
 import {Form} from "react-bootstrap";
-import {useAppDispatch, useAppSelector} from "../../../app/hooks";
-import {RootState} from "../../../app/store";
-import {clearState, IncorrectRowStates, IncorrectRowType, updateRow} from "./incorrectRowsSlice";
+import {useAppDispatch, useAppSelector} from "app/hooks";
+import {RootState} from "app/store";
+import {clearState, IncorrectRowStates, IncorrectRowType, updateRow} from "./suggestionsTableSlice";
 
 // TODO: props: number of row in files, suggestion, ...
 // TODO: table prop for not ordering and adding onClick functionality for cell (component instead of string)
@@ -15,17 +15,19 @@ interface IncorrectRowsProps {
 
 type UpdateRowStatusFunction = (rowIndex: number, approve: IncorrectRowStates) => void
 
-export const IncorrectRows = ({tableRowValues}: IncorrectRowsProps) => {
+export const SuggestionsTable = ({tableRowValues}: IncorrectRowsProps) => {
 
 	const dispatch = useAppDispatch();
 
-	// TODO: Adjust with real incorrect rows probably from props.
-
 	const columnNames: TableColumnNameType[] = [
-		{name: "číslo riadka", sortable: false},
-		{name: "nesprávna hodnota", sortable: false},
-		{name: "návrh", sortable: false},
-		{name: "schváliť/zamietnuť", sortable: false}  // 'schváliť všetky' stopped making sense
+		{name: "číslo riadka z CSV", sortable: false},
+		{name: "Kód športu", sortable: false},
+		{name: "Starý kód odvetvia", sortable: false},
+		{name: "Nový kód odvetvia", sortable: false},
+		{name: "Starý názov športu", sortable: false},
+		{name: "Nový názov športu", sortable: false},
+		{name: "Starý názov odvetvia", sortable: false},
+		{name: "Nový názov odvetvia", sortable: false}
 	];
 
 	const [rows, setRows] = useState<TableCellComponent[][]>([]);

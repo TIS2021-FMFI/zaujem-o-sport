@@ -1,5 +1,7 @@
 import {Alert} from "react-bootstrap";
 import {CenteredRow} from "../../../../components/basic/CenteredRow";
+import {SuggestionsTable} from "./SuggestionsTable";
+import React from "react";
 
 
 export interface Suggestion {
@@ -39,6 +41,9 @@ export const Suggestions = ({suggestions, rowErrors}: SuggestionsProps) => {
 		return (
 			<CenteredRow as="section" lg={7} md={8} className="mt-4">
 				<Alert variant="danger">
+					Nájdené chyby v nahranom súbore. Chyby je potrebné v súbore opraviť a nahranie zopakovať.
+				</Alert>
+				<Alert variant="danger">
 					{rowErrors.map((rowError, i) => { return (
 						<p key={`csvRowError${i}`}>
 							<b>Chybný {rowError.row}. riadok.</b> {rowErrorMessagesByErrorType[rowError.type]}
@@ -49,7 +54,27 @@ export const Suggestions = ({suggestions, rowErrors}: SuggestionsProps) => {
 		)
 	}
 
-	return (<>
-		Suggestsions
-	</>)
+	if (suggestions.length !== 0) {
+		return (
+			<section className={`mt-5`}>
+				<header>
+					<h2>
+						Nájden{suggestions.length === 1 ? 'á' : 'é'}
+						<span
+							className={`text-warning`}> {suggestions.length} nekonzistenci{suggestions.length === 1 ? 'a' : 'e'} </span>
+						v nahranom súbore:
+					</h2>
+				</header>
+				<div className={`mt-3`}>
+					<SuggestionsTable
+						tableRowValues={[
+							[1, "tst1", "test1", "sadf", "ew", "wer", "ewr", "wer"]
+						]
+						}/>
+				</div>
+			</section>
+		)
+	}
+
+	return <></>
 }

@@ -19,7 +19,7 @@ const initialState: IncorrectRowsState = {
 	rows: []
 };
 
-export const incorrectRowsSlice = createSlice({
+export const suggestionsTableSlice = createSlice({
 	name: "incorrectRows",
 	initialState,
 	reducers: {
@@ -37,5 +37,5 @@ export const incorrectRowsSlice = createSlice({
 	}
 });
 
-export const { updateRow, clearState } = incorrectRowsSlice.actions;
-export default incorrectRowsSlice.reducer;
+export const { updateRow, clearState } = suggestionsTableSlice.actions;
+export default suggestionsTableSlice.reducer;

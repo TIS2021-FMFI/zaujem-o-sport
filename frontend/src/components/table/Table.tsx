@@ -87,7 +87,7 @@ const TableHead = ({columnNames, sort}: TableHeadProps) => {
     <thead>
     <tr>
       { columnNames.map((column, i) =>
-        <th key={`column-name-${i}`}>
+        <th key={`column-name-${i}`} className={`align-middle`}>
           <div
             className={`d-flex align-items-center`}
             onClick={() => {

@@ -1,5 +1,5 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import incorrectRowsReducer from "secretary/pages/upload_data/incorrectRowsSlice";
+import incorrectRowsReducer from "secretary/pages/upload_data/components/suggestionsTableSlice";
 
 export const store = configureStore({
   reducer: {
