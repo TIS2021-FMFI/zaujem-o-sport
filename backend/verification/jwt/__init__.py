@@ -17,12 +17,13 @@ def is_secretary(f):
 		return Response.get(status=Status.ERROR, message="Invalid token")
 	return decorated_function
 
-@jwt_required()
+
 def is_admin(f):
 	"""
 	Request validation with JWT token.
 	Use this decorator on any route that needs authetication of an admin.
 	"""
+	@jwt_required()
 	@wraps(f)
 	def decorated_function(*args, **kwargs):
 		jwtData = get_jwt()
