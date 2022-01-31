@@ -31,10 +31,11 @@ const rowErrorMessagesByErrorType: {[row: number]: string} = {
 
 interface SuggestionsProps {
 	suggestions: RowWithSuggestion[],
-	rowErrors: RowWithSuggestion[]
+	rowErrors: RowWithSuggestion[],
+	numOfRealSuggestions: number
 }
 
-export const Suggestions = ({suggestions, rowErrors}: SuggestionsProps) => {
+export const Suggestions = ({suggestions, rowErrors, numOfRealSuggestions}: SuggestionsProps) => {
 
 	if (rowErrors.length !== 0) {
 		return (
@@ -53,14 +54,14 @@ export const Suggestions = ({suggestions, rowErrors}: SuggestionsProps) => {
 		)
 	}
 
-	if (suggestions.length !== 0) {
+	if (numOfRealSuggestions !== 0) {
 		return (
 			<section className={`mt-5`}>
 				<header>
 					<h2>
-						Nájden{suggestions.length === 1 ? 'á' : 'é'}
+						Nájden{numOfRealSuggestions === 1 ? 'á' : 'é'}
 						<span
-							className={`text-warning`}> {suggestions.length} nekonzistenci{suggestions.length === 1 ? 'a' : 'e'} </span>
+							className={`text-warning`}> {numOfRealSuggestions} nekonzistenci{numOfRealSuggestions === 1 ? 'a' : 'e'} </span>
 						v nahranom súbore:
 					</h2>
 				</header>

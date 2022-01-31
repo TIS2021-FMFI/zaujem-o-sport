@@ -13,7 +13,6 @@ class Funding(SwaggerView):
 
 		requestJSON = json.loads(request.form["json"])
 		correction = requestJSON.get("correction")
-		print(correction)
 		countryCode = requestJSON.get("countryCode")
 		currency = requestJSON.get("currency")
 		file = request.files["csvFile"]

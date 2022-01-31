@@ -5,11 +5,12 @@ import React, {useEffect, useState} from "react";
 import {dropzoneFileProp} from "components/drag_and_drop/Dropzone";
 import {apiUploadFunding} from "secretary/adapters";
 import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
-import {useAppSelector, useCountries, useMutationWithNotifications} from "app/hooks";
+import {useAppDispatch, useAppSelector, useCountries, useMutationWithNotifications} from "app/hooks";
 import {currencies} from "data/active_currency_codes";
 import {CenteredRow} from "components/basic/CenteredRow";
 import {RowToSuggestion, RowWithSuggestion, Suggestions} from "./components/Suggestions";
 import {RootState} from "../../../app/store";
+import {setCorrections} from "./components/correctionsSlice";
 
 const acceptedFileExtensions = ".csv";
 
@@ -19,6 +20,8 @@ interface UploadFundingError {
 }
 
 export const UploadData = () => {
+
+	const dispatch = useAppDispatch();
 
 	const [files, setFiles] = useState<dropzoneFileProp[]>([]);
 
@@ -31,6 +34,7 @@ export const UploadData = () => {
 
 	const [rowErrors, setRowErrors] = useState<RowWithSuggestion[]>([]);
 	const [suggestions, setSuggestions] = useState<RowWithSuggestion[]>([]);  // suggestion type = 1 or type 4
+	const [numOfRealSuggestions, setNumOfRealSuggestions] = useState<number>(0);
 
 	const corrections = useAppSelector((state: RootState) => state.secretaryUploadCorrections.corrections);
 
@@ -45,9 +49,16 @@ export const UploadData = () => {
 	);
 
 	useEffect(() => {
+		dispatch(setCorrections([]));
+		setRowErrors([]);
+		setSuggestions([]);
+		setNumOfRealSuggestions(0);
+	}, [files]);
+
+
+	useEffect(() => {
 		if (uploadMutation.error === null) return;
 		const apiSuggestions: RowToSuggestion = (uploadMutation.error.response.data as UploadFundingError).suggestions;
-		console.log(apiSuggestions);
 		const _rowErrors: RowWithSuggestion[] = [], _suggestions: RowWithSuggestion[] = [];
 		for (const [row, suggestion] of Object.entries(apiSuggestions)) {
 			if (suggestion.type !== 1 && suggestion.type !== 4)
@@ -56,8 +67,36 @@ export const UploadData = () => {
 				_suggestions.push({...suggestion, row: row});
 		}
 		setRowErrors(_rowErrors);
+
+		// update potential previous suggestions
+		const _numOfRealSuggestions: number = _suggestions.length;
+		const previousSuggestions: RowWithSuggestion[] = [...suggestions];
+		for (const correction of corrections) {
+			const s = previousSuggestions.find(s => s.row === correction.row)!;
+			s.newSportTitle = correction.sportTitle;
+			s.oldSportTitle = correction.sportTitle;
+			s.newBranchTitle = correction.branchTitle;
+			s.oldBranchTitle = correction.branchTitle;
+			s.newBranchCode = correction.branchCode;
+			s.oldBranchCode = correction.branchCode;
+		}
+		for (const previousSuggestion of previousSuggestions) {
+			const s = _suggestions.find(s => s.row === previousSuggestion.row);
+			if (s === undefined)
+				_suggestions.push(previousSuggestion);
+		}
 		setSuggestions(_suggestions);
+		setNumOfRealSuggestions(_numOfRealSuggestions);
 	}, [uploadMutation.error]);
+
+	useEffect(() => {
+		if (uploadMutation.isSuccess) {
+			setFiles([]);
+			setRowErrors([]);
+			setSuggestions([]);
+			setNumOfRealSuggestions(0);
+		}
+	}, [uploadMutation.isSuccess]);
 
 	const handleSubmit = () => {
 		if (selectedCountry === undefined || selectedCurrency === undefined)
@@ -105,7 +144,7 @@ export const UploadData = () => {
 						<div className={`w-100 mt-2`}>
 							<span>Nahrané súbory: </span>
 							<span>
-								{ files.map((file, i) => file.file.name).join(", ") }
+								{ files.map((file) => file.file.name).join(", ") }
 							</span>
               <a href="#"
 	              className={`float-end`}
@@ -128,7 +167,7 @@ export const UploadData = () => {
 			</Row>
 		</CenteredRow>
 
-		<Suggestions suggestions={suggestions} rowErrors={rowErrors} />
+		<Suggestions suggestions={suggestions} rowErrors={rowErrors} numOfRealSuggestions={numOfRealSuggestions} />
 
 	</>)
 }
