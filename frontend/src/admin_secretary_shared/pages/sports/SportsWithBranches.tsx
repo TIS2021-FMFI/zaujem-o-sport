@@ -1,11 +1,16 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {Tab, Tabs} from "react-bootstrap";
 import {Table} from "components/table/Table";
 import {CenteredRow} from "components/basic/CenteredRow";
 import {CSVLink} from "react-csv";
 import {useBranchesWithSports, useCombiBranches} from "admin_secretary_shared/hooks";
+import textLang, {Language} from "app/string";
+import {LanguageContext} from "App";
 
 export const SportsWithBranches = () => {
+
+	const language = useContext<Language>(LanguageContext);
+	const text = textLang[language];
 
 	const {isLoading: isLoadingBranchesWithSports, branchesWithSports: responseBranchesWithSports} = useBranchesWithSports();
 	const [branchesWithSports, setBranchesWithSports] = useState<string[][]>([]);
@@ -27,18 +32,19 @@ export const SportsWithBranches = () => {
 
 	return (<>
 		<CenteredRow as="header">
-			<h1>Športy a odvetvia</h1>
+			<h1>{text.sportAndBranches}</h1>
 		</CenteredRow>
 		<CenteredRow as="section">
 			<Tabs defaultActiveKey="branchesWithSports" id="uncontrolled-tab-example" className="mb-3">
-				<Tab eventKey="branchesWithSports" title="Športy a ich odvetvia">
+				<Tab eventKey="branchesWithSports" title={text.sportWithBranches}>
 					<section>
 						<div>
-							<p>Zoznam špotrov s ich odvetviami.</p>
+							<p>{text.sportAndBranchesList}</p>
 						</div>
 						<div className="mb-3">
 							{branchesWithSports.length !== 0 &&
-					      <CSVLink role="button" className="btn btn-outline-primary" data={branchesWithSports} filename="export_sporty_s_odvetviami">
+					      <CSVLink role="button" className="btn btn-outline-primary" data={branchesWithSports}
+					               filename={`export_${text.sportWithBranchesFileName}`}>
 					        Export
 					      </CSVLink>
 							}
@@ -46,24 +52,22 @@ export const SportsWithBranches = () => {
 						<div>
 							{ !isLoadingBranchesWithSports && branchesWithSports.length !== 0 &&
 	              <Table
-	                columnNames={[{name: "Kód športu", sortable: true}, {name: "Názov športu", sortable: true},
-																{name: "Kód odvetvia", sortable: true}, {name: "Názov odvetvia", sortable: true}]}
+	                columnNames={[{name: text.sportCode, sortable: true}, {name: text.sportName, sortable: true},
+																{name: text.branchCode, sortable: true}, {name: text.branchName, sortable: true}]}
 	                rows={branchesWithSports} />
 							}
 						</div>
 					</section>
 				</Tab>
-				<Tab eventKey="combiBranches" title="Kombinované odvetvia">
+				<Tab eventKey="combiBranches" title={text.combiBranches}>
 					<section>
 						<div>
-							<p>
-								Priradenie odvetví do kombinovaných odvetví s krajinou ku ktorej
-								kombinované odvetvie patrí.
-							</p>
+							<p>{text.combiBranchesHint}</p>
 						</div>
 						<div className="mb-3">
 							{combiBranches.length !== 0 &&
-              <CSVLink role="button" className="btn btn-outline-primary" data={combiBranches} filename="export_kombinovane_odvetvia">
+              <CSVLink role="button" className="btn btn-outline-primary" data={combiBranches}
+                       filename={`export_${text.combiBranchesFileName}`}>
                 Export
               </CSVLink>
 							}
@@ -71,10 +75,10 @@ export const SportsWithBranches = () => {
 						<div>
 							{ !isLoadingCombiBranches && combiBranches.length !== 0 &&
               <Table
-                columnNames={[{name: "Kód krajiny", sortable: true}, {name: "Názov krajiny", sortable: true},
-															{name: "Kód kombinovaného odvetvia", sortable: true}, {name: "Názov kombinovaného odvetvia", sortable: true},
-															{name: "Kód pod-odvetvia", sortable: true}, {name: "Názov pod-odvetvia", sortable: true},
-	                            {name: "Koeficient", sortable: true}
+                columnNames={[{name: text.countryCode, sortable: true}, {name: text.countryName, sortable: true},
+															{name: text.combiBranchCode, sortable: true}, {name: text.combiBranchName, sortable: true},
+															{name: text.subBranchCode, sortable: true}, {name: text.subBranchName, sortable: true},
+	                            {name: text.coefficient, sortable: true}
                 ]}
                 rows={combiBranches} />
 							}
