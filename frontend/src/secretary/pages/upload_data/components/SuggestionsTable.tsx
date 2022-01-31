@@ -27,6 +27,7 @@ export const SuggestionsTable = ({suggestions}: SuggestionsTableProps) => {
 
 	const [rows, setRows] = useState<TableCellComponent[][]>([]);
 
+
 	/** Create table rows with suggestions. */
 	useEffect(() => {
 		const _corrections: Correction[] = [];
@@ -54,7 +55,9 @@ export const SuggestionsTable = ({suggestions}: SuggestionsTableProps) => {
 	}, [suggestions]);
 
 	useEffect(() => {
-		dispatch(clearState());
+		return () => {
+			dispatch(clearState());
+		}
 	}, []);
 
 	return (
@@ -99,11 +102,18 @@ const SuggestionNewBranchCodeCell = ({row}: SuggestionCellProps) => {
 const SuggestionNewBranchTitleCell = ({row}: SuggestionCellProps) => {
 	const dispatch = useAppDispatch();
 	const corrections = useAppSelector((state: RootState) => state.secretaryUploadCorrections.corrections);
+	const [branchTitle, setBranchTitle] = useState<string>("");
+
+	useEffect(() => {
+		const _branchTitle = corrections.find(c => c.row === row)?.branchTitle;
+		setBranchTitle(_branchTitle === undefined ? "" : _branchTitle);
+	}, [corrections]);
+
 	return (
 		<Form.Control
 			type="text"
 			placeholder="Nová hodnota"
-			value={corrections.find(c => c.row === row)!.branchTitle}
+			value={branchTitle}
 			onChange={(e) =>
 				dispatch(updateBranchTitle({row: row, branchTitle: (e.currentTarget as HTMLInputElement).value}))}
 		/>

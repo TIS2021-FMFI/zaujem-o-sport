@@ -46,7 +46,6 @@ export const UploadData = () => {
 
 	useEffect(() => {
 		if (uploadMutation.error === null) return;
-		console.log(uploadMutation.error.response);  // TODO: remove after its finished
 		const apiSuggestions: RowToSuggestion = (uploadMutation.error.response.data as UploadFundingError).suggestions;
 		const _rowErrors: RowWithSuggestion[] = [], _suggestions: RowWithSuggestion[] = [];
 		for (const [row, suggestion] of Object.entries(apiSuggestions)) {
@@ -59,11 +58,12 @@ export const UploadData = () => {
 		setSuggestions(_suggestions);
 	}, [uploadMutation.error]);
 
-	const handleSubmit = () => {  // TODO: pass corrections
+	const handleSubmit = () => {
 		if (selectedCountry === undefined || selectedCurrency === undefined)
 			createSnackbar("Zvoľte krajinu a menu.", SnackTypes.warn);
 		else if (files.length === 1)
-			uploadMutation.mutate({csvFile: files[0].file, countryCode: selectedCountry, currency: selectedCurrency});
+			uploadMutation.mutate({csvFile: files[0].file, countryCode: selectedCountry, currency: selectedCurrency,
+																		 corrections: corrections});
 		else
 			createSnackbar("Najskôr je potrebné nahrať dáta vo formáte csv.", SnackTypes.warn);
 	}

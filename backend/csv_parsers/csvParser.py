@@ -223,7 +223,7 @@ class csvParser:
                                       amount, currency))
 
         self.result = records
-        print(suggestions, self.result, sep="\n\n\n")
+        # print(suggestions, self.result, sep="\n\n\n")
         return suggestions
 
     def saveResults(self):
