@@ -257,21 +257,17 @@ class excelParser:
 
 
 
-p = excelParser()
-wb = openpyxl.load_workbook(filename='ALL SPORTS RANKING 2019.xlsx')
-parsed = p.parseSuccess(wb)
+# p = excelParser()
+# wb = openpyxl.load_workbook(filename='ALL SPORTS RANKING 2019.xlsx')
+# parsed = p.parseSuccess(wb)
 
+# s= 0
+# nieco = []
 
+# for r in parsed[0]:
+#     s += len(r.records)
+#     nieco.append( [r.sport_id , len(r.records)] )
 
-nieco = []
-s = 0
-for r in parsed[0]:
-    s += len(r.records)
-    nieco.append( [r.sport_id , len(r.records)] )
-
-print(s)
-
-nieco.sort(key= lambda x : x[0])
 
 # for n in nieco:
 #     print ( n )

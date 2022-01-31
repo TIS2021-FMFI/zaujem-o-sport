@@ -533,23 +533,20 @@ class Database:
 
     def deleteSuccesTables(self):
 
-        sql_del = "delete from "
+        sql = "TRUNCATE  COUNTRY_BEST_ORDER, TOTAL_COUNTRY_POINTS, MAX_POINTS_IN_SPORT, NUM_IN_SPORT, success RESTART IDENTITY "
 
-        for table_name in  "COUNTRY_BEST_ORDER", "TOTAL_COUNTRY_POINTS", "MAX_POINTS_IN_SPORT", "NUM_IN_SPORT", "success":
-            sql = sql_del + table_name
-
-            try:
-                with self._getConnection() as dbConn:
-                    with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-                        cursor.execute(sql)
-                    dbConn.commit()
-                self._releaseConnection(dbConn)
-                return True
-            except psycopg2.DatabaseError as error:
-                # TODO: logging
-                # TODO: define standard for database error messages
-                print(error)
-                return False
+        try:
+            with self._getConnection() as dbConn:
+                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                    cursor.execute(sql)
+                dbConn.commit()
+            self._releaseConnection(dbConn)
+            return True
+        except psycopg2.DatabaseError as error:
+            # TODO: logging
+            # TODO: define standard for database error messages
+            print(error)
+            return False
 
 
     def importSuccessdata(self, sport_id: id, country_id: id, points: float, orders: int ):
@@ -610,7 +607,7 @@ class Database:
         try:
             with self._getConnection() as dbConn:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-                    cursor.execute(sql, {"country_id": country_id, "num_countries": points})
+                    cursor.execute(sql, {"country_id": country_id, "points": points})
                 dbConn.commit()
             self._releaseConnection(dbConn)
             return True
@@ -622,7 +619,7 @@ class Database:
 
 
     def importCountryBestOrder(self, country_id : id , best : int):
-        sql = "insert into TOTAL_COUNTRY_POINTS(country_id, best) " \
+        sql = "insert into COUNTRY_BEST_ORDER(country_id, best) " \
               "values (%(country_id)s, %(best)s)"
         try:
             with self._getConnection() as dbConn:
