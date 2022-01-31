@@ -29,7 +29,7 @@ class csvParser:
     def __init__(self):
         self.result = []
 
-    def findFailures(self, csvFile: List[str], changes: list, country_code: str, currency: str):
+    def findFailures(self, csvFile: List[str], changes: Dict[str, Dict[str, Any]], country_code: str, currency: str):
 
         reader = csv.reader(csvFile, delimiter=',', quotechar='"')
         parsed_csv = list(reader)
@@ -44,11 +44,11 @@ class csvParser:
 
             counter += 1
 
-            if counter in changes:  # changes from user
-                row[0] = changes[counter]["sportCode"]
-                row[1] = changes[counter]["branchCode"]
-                row[2] = changes[counter]["sportTitle"]
-                row[3] = changes[counter]["branchTitle"]
+            if str(counter) in changes:  # changes from user
+                row[0] = changes[str(counter) ]["sportCode"]
+                row[1] = changes[str(counter) ]["branchCode"]
+                row[2] = changes[str(counter) ]["sportTitle"]
+                row[3] = changes[str(counter) ]["branchTitle"]
 
             if len(row) < EXPECTED_LEN:
                 # type 2 -> row too short
