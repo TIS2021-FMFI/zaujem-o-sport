@@ -543,9 +543,8 @@ class Database:
             self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            #print(error)
+            self.logger.error(error)
             return False
 
 
@@ -562,9 +561,8 @@ class Database:
             self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            #print(error)
+            self.logger.error(error)
             return False
 
 
@@ -579,9 +577,8 @@ class Database:
             self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            #print(error)
+            self.logger.error(error)
             return False
 
 
@@ -596,9 +593,8 @@ class Database:
             self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            #print(error)
+            self.logger.error(error)
             return False
 
     def importTotalCountryPoints(self, country_id : id , points : float):
@@ -612,9 +608,8 @@ class Database:
             self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            #print(error)
+            self.logger.error(error)
             return False
 
 
@@ -629,9 +624,8 @@ class Database:
             self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            #print(error)
+            self.logger.error(error)
             return False
 
     def importInterconnectnessData(self):
