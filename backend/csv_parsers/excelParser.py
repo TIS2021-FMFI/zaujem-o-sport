@@ -1,46 +1,116 @@
 import openpyxl
 from typing import *
 
+from settings import DB
+
+
+class NumberInSports:
+    def __init__(self):
+        self.values = {}
+
+    def __getitem__(self, item):
+        return self.values[item]
+
+    def __setitem__(self, item, value):
+        self.values[item] = value
+
+    def __contains__(self, value):
+            return value in self.values
+
+    def save(self):
+        for key in self.values.keys():
+            DB.importNumberInSports( key, self.values[key])
+
+
+class MaxPointsInSport:
+    def __init__(self):
+        self.values = {}
+
+    def __getitem__(self, item):
+        return self.values[item]
+
+    def __setitem__(self, item, value):
+        self.values[item] = value
+
+    def __contains__(self, value):
+        return value in self.values
+
+    def save(self):
+        for key in self.values.keys():
+            DB.importMaxPointsInSport( key, self.values[key])
+
+
+
+class TotalCountryPoints:
+    def __init__(self):
+        self.values = {}
+
+    def __getitem__(self, item):
+        return self.values[item]
+
+    def __setitem__(self, item, value):
+        self.values[item] = value
+
+    def __contains__(self, value):
+        return value in self.values
+
+    def save(self):
+        for key in self.values.keys():
+            DB.importTotalCountryPoints( key, self.values[key])
+
+
+class CountryBestOrder:
+    def __init__(self):
+        self.values = {}
+
+    def __getitem__(self, item):
+        return self.values[item]
+
+    def __setitem__(self, item, value):
+        self.values[item] = value
+
+    def __contains__(self, value):
+        return value in self.values
+
+    def save(self):
+        for key in self.values.keys():
+            DB.importCountryBestOrder( key, self.values[key])
+
+
 class SuccessRecord:
-    def __init__(self, rank : int, country : str, points:float):
+    def __init__(self, rank : int, country_id : int, points:float):
         self.rank = rank
-        self.country = country
+        self.country_id = country_id
         self.points = points
 
-    def countryExistsCheck(self) -> bool:
-        # todo -> pristup do db a overenie
-        return True
-
     def __str__(self) -> str:
-        return "SuccessRecord: {}, {}, {}".format(self.rank, self.country, self.points)
+        return f"{self.country_id}, {self.points}, {self.rank}"
 
 
 class SportSuccess:
 
-    def __init__(self, sport_name : str, sport_code : int, cell: openpyxl.cell):
-
-        self.sport_name = sport_name
-        self.sport_code = sport_code
-        self.cell = cell
+    def __init__(self, sport_id : str):
+        self.sport_id = sport_id
         self.records = []
 
-    def sportNameCodeCheck(self) -> bool:
-        # todo -> pristup do DB a overenie
-        return True
+    def set_max_points(self, points : int):
+        self.max_points = points
+
+    def set_num_of_states(self, value : int):
+        self.max_points = value
 
     def __str__(self) -> str:
-        return "SportSuccess: {}, {}, {}".format(self.sport_name, self.sport_code, self.cell)
+        s = ""
+        for r in self.records:
+            s += f"{self.sport_id}, {r} \n"
 
-    def parse_record(self, sheet : str, num_rows : int):
+        return s
 
-        for r in range(self.cell[0] + 2, num_rows + 1):
+    def save(self):
+        for record in self.records:
 
-            rank = sheet.cell(row=r, column=self.cell[1] - 1).value
-            country = sheet.cell(row=r, column=self.cell[1]).value
-            points = sheet.cell(row=r, column=self.cell[1] + 1).value
-
-            if rank != None:
-                self.records.append(SuccessRecord(rank, country, points))
+            #sport_id: id, country_id: id, points: float, orders: int
+            DB.importSuccessdata( self.sport_id, record.country_id, record.points, record.rank )
 
 
 class InterconnectnessRecord:
@@ -60,37 +130,90 @@ class ParseError(Exception):
 
 class excelParser:
 
-    def parseSuccess(file: str) -> List[SportSuccess]:
-        SPORT_NAMES_ROW = 2  # mohol by zadat user v GUI ?
+    def __init__(self):
+        ...
 
-        wb_obj = openpyxl.load_workbook(file)
-        sheet = wb_obj.active
+    def parseSuccess(self , wb ) -> List:
 
-        LAST_ROW = sheet.max_row  # aby sme vedeli pokial sa pozerat
-        LAST_COL = sheet.max_column  # kolko max stlpcov je rozdiel medzi 2 menami sportov -> aby sme neprehladavali donekonecna
+        sports = DB.getAllSports()
+        countries = DB.getActiveCountryIds()
 
-        records = []
-        key = None
-        for col in range(1, LAST_COL + 1):
-            cell = sheet.cell(row=SPORT_NAMES_ROW, column=col)
-            if cell.value != None:
-                if key == None:
-                    if isinstance(cell.value, int):
-                        key = cell.value
-                    else:
-                        print(cell.value)
-                        raise TypeError("expected sport code but get non number value")
-                else:
+        def getCountryID( name ):
+            for item in countries:
+                if item['name'] == name:
+                    return item["id"]
+            return -1
+
+        def getSportID( title ):
+            for item in sports:
+                if item['title'] == title:
+                    return item["code"]
+            return -1
+
+
+        pocet_statov = NumberInSports()
+        max_bodov = MaxPointsInSport()
+        pocet_bodov = TotalCountryPoints()
+        najvyssie_um = CountryBestOrder()
+
+        success = []
+        unknown_sports = []
+
+        sport_row_index = 2
+
+        for sheet in wb.worksheets:
+
+            last_row = sheet.max_row  # ako najhlbsie ide
+            last_col = sheet.max_column  # ako najdalej
+
+            for sport_col_index in range( 2, last_col+1, 4 ):
+
+                cell = sheet.cell(row=sport_row_index, column=sport_col_index)
+                if cell.value != None:
                     if isinstance(cell.value, str):
-                        records.append(SportSuccess(cell.value, key, (SPORT_NAMES_ROW, col)))
-                        key = None
-                    else:
-                        raise TypeError("expected sport name but get non string value")
+                        sport_title = cell.value
+                        sport_id = getSportID(sport_title)
+                        sport_record = SportSuccess(sport_id)
 
-        for record in records:
-            record.parse_record(sheet, LAST_ROW)
+                        pocet_statov[sport_id] = 0
+                        max_bodov[sport_id] = 0
+                        for r in range(sport_row_index + 2, last_row + 1):
 
-        return records
+                            points = sheet.cell(row=r, column=sport_col_index + 1).value
+
+                            if points is not None:
+
+                                points = round(float(points),3)
+                                rank = int(sheet.cell(row=r, column=sport_col_index - 1).value)
+                                country = sheet.cell(row=r, column=sport_col_index).value
+                                country_id = getCountryID(country)
+
+                                if points > max_bodov[sport_id]:
+                                    max_bodov[sport_id] = points
+
+                                pocet_statov[sport_id] = pocet_statov[sport_id] + 1
+
+                                if country_id > 0 :
+
+                                    if country_id not in pocet_bodov:
+                                        pocet_bodov[country_id] = points
+                                    else:
+                                        pocet_bodov[country_id] = pocet_bodov[country_id] + points
+
+
+                                    if country_id not in najvyssie_um:
+                                        najvyssie_um[country_id] = rank
+                                    else:
+                                        if rank < najvyssie_um[country_id]:
+                                            najvyssie_um[country_id] = rank
+
+                                    if sport_id > 0:
+                                        sport_record.records.append(SuccessRecord(rank, country_id, points))
+                                    else:
+                                        unknown_sports.append(sport_title)
+                success.append(sport_record)
+
+        return [ success, unknown_sports, pocet_statov, max_bodov, pocet_bodov, najvyssie_um ]
 
     def parseInterconnectness(file: str, type: str) -> List[InterconnectnessRecord]:
 
@@ -126,16 +249,24 @@ class excelParser:
 
 # example of usage - Success
 
-parsed = excelParser.parseSuccess("data1.xlsx")
-for i in parsed: print(i)
-print("---------------")
-for i in parsed[0].records:
-    print(i)
+
+print("kuk")
+
+
+p = excelParser()
+wb = openpyxl.load_workbook(filename='ALL SPORTS RANKING 2019.xlsx')
+parsed = p.parseSuccess(wb)
+
+print(len(parsed))
+
+for item in parsed[0]:
+    print(item)
+
 
 # example of usage - Interconnectness
-print("-----------------")
-parsed = excelParser.parseInterconnectness("export.xlsx", "export")
-for i in parsed:
-    if i.countryA == "Izrael":
-        print(i)
-print(len(parsed))
+# print("-----------------")
+# parsed = p.parseInterconnectness("export.xlsx", "export")
+# for i in parsed:
+#     if i.countryA == "Izrael":
+#         print(i)
+# print(len(parsed))
