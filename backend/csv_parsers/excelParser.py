@@ -140,13 +140,14 @@ class excelParser:
 
         def getCountryID( name ):
             for item in countries:
-                if item['name'] == name:
+                if item['name'] == name.strip():
                     return item["id"]
+
             return -1
 
         def getSportID( title ):
             for item in sports:
-                if item['title'] == title:
+                if item['title'] == title.strip().replace("/", " AND "):
                     return item["code"]
             return -1
 
@@ -188,12 +189,14 @@ class excelParser:
                                 country = sheet.cell(row=r, column=sport_col_index).value
                                 country_id = getCountryID(country)
 
+
                                 if points > max_bodov[sport_id]:
                                     max_bodov[sport_id] = points
 
                                 pocet_statov[sport_id] = pocet_statov[sport_id] + 1
 
-                                if country_id > 0 :
+
+                                if country_id > 0:
 
                                     if country_id not in pocet_bodov:
                                         pocet_bodov[country_id] = points
@@ -207,11 +210,14 @@ class excelParser:
                                         if rank < najvyssie_um[country_id]:
                                             najvyssie_um[country_id] = rank
 
-                                    if sport_id > 0:
-                                        sport_record.records.append(SuccessRecord(rank, country_id, points))
-                                    else:
-                                        unknown_sports.append(sport_title)
-                success.append(sport_record)
+                                    sport_record.records.append(SuccessRecord(rank, country_id, points))
+
+                if sport_id > 0:
+                    success.append(sport_record)
+                else:
+                    unknown_sports.append(sport_title)
+
+
 
         return [ success, unknown_sports, pocet_statov, max_bodov, pocet_bodov, najvyssie_um ]
 
@@ -250,17 +256,27 @@ class excelParser:
 # example of usage - Success
 
 
-print("kuk")
-
 
 p = excelParser()
 wb = openpyxl.load_workbook(filename='ALL SPORTS RANKING 2019.xlsx')
 parsed = p.parseSuccess(wb)
 
-print(len(parsed))
 
-for item in parsed[0]:
-    print(item)
+
+nieco = []
+s = 0
+for r in parsed[0]:
+    s += len(r.records)
+    nieco.append( [r.sport_id , len(r.records)] )
+
+print(s)
+
+nieco.sort(key= lambda x : x[0])
+
+# for n in nieco:
+#     print ( n )
+
+
 
 
 # example of usage - Interconnectness
