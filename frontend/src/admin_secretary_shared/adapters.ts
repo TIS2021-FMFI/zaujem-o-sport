@@ -54,6 +54,29 @@ export const apiAddNewUncombiBranch = ({sportCode, branchCode, branchTitle}: Api
 	return axios.post("/adminsecretary/branches/add", {sportCode: sportCode, branchCode: branchCode, branchTitle: branchTitle});
 }
 
+export interface SubBranch {
+	sportCode: string,
+	branchCode: string,
+	coefficient: number
+}
+
+export interface ApiAddNewCombiBranchProps {
+	branchCode: string,
+	branchTitle: string
+	countryCode: string,
+	subBranches: SubBranch[]
+}
+
+// TODO: return type
+export const apiAddNewCombiBranch = ({branchCode, branchTitle, countryCode, subBranches}: ApiAddNewCombiBranchProps): Promise<AxiosResponse<{}>> => {
+	return axios.post("/adminsecretary/combi-branches/add", {
+		branchCode: branchCode,
+		branchTitle: branchTitle,
+		countryCode: countryCode,
+		subBranches: subBranches
+	});
+}
+
 export interface BranchWithSport {
 	sportCode: string,
 	sportTitle: string,
@@ -119,4 +142,24 @@ export interface ApiSports {
 
 export const apiGetSports = (): Promise<AxiosResponse<ApiSports>> => {
 	return axios.get("/adminsecretary/sports");
+}
+
+export interface apiUpdateSportProps {
+	oldCode: string,
+	newCode: string,
+	newTitle: string
+}
+
+export const apiUpdateSport = ({oldCode, newCode, newTitle}: apiUpdateSportProps): Promise<AxiosResponse<{}>> => {
+	return axios.put("/adminsecretary/sports/update", {oldCode: oldCode, newCode: newCode, newTitle: newTitle});
+}
+
+export interface ApiAddNewCountryProps {
+	name: string,
+	translation: string,
+	code: string
+}
+
+export const apiAddNewCountry = ({name, translation, code}: ApiAddNewCountryProps): Promise<AxiosResponse<{}>> => {
+	return axios.post("/adminsecretary/countries/add", {name: name, translation: translation, code: code});
 }

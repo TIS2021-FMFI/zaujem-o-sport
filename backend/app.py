@@ -9,6 +9,7 @@ import admin_secretary.endpoints.combi_branches.new_code
 import admin_secretary.endpoints.branches
 import admin_secretary.endpoints.branches.new_code
 import admin_secretary.endpoints.branches_with_sports
+import admin_secretary.endpoints.countries
 import secretary.endpoints.login
 import secretary.endpoints.funding
 import secretary.endpoints.funding_currencies
@@ -73,15 +74,21 @@ app.add_url_rule(
 )
 
 app.add_url_rule(
+	"/api/adminsecretary/sports",
+	view_func=admin_secretary.endpoints.sports.Sports.as_view("adminsecretary_get_sports"),
+	methods=["GET"]
+)
+
+app.add_url_rule(
 	"/api/adminsecretary/sports/add",
-	view_func=admin_secretary.endpoints.sports.Sports.as_view("adminsecretary_sport_code_sports"),
+	view_func=admin_secretary.endpoints.sports.Sports.as_view("adminsecretary_add_sport"),
 	methods=["POST"]
 )
 
 app.add_url_rule(
-	"/api/adminsecretary/sports",
-	view_func=admin_secretary.endpoints.sports.Sports.as_view("adminsecretary_get_sports"),
-	methods=["GET"]
+	"/api/adminsecretary/sports/update",
+	view_func=admin_secretary.endpoints.sports.Sports.as_view("adminsecretary_update_sport"),
+	methods=["PUT"]
 )
 
 app.add_url_rule(
@@ -103,6 +110,12 @@ app.add_url_rule(
 )
 
 app.add_url_rule(
+	"/api/adminsecretary/combi-branches/add",
+	view_func=admin_secretary.endpoints.combi_branches.CombiBranches.as_view("adminsecretary_add_combi_branch"),
+	methods=["POST"]
+)
+
+app.add_url_rule(
 	"/api/adminsecretary/combi-branches/new-code",
 	view_func=admin_secretary.endpoints.combi_branches.new_code.BranchCode.as_view("adminsecretary_combi_branch_code"),
 	methods=["GET"]
@@ -113,6 +126,13 @@ app.add_url_rule(
 	view_func=admin_secretary.endpoints.branches.new_code.BranchCode.as_view("adminsecretary_branch_code"),
 	methods=["GET"]
 )
+
+app.add_url_rule(
+	"/api/adminsecretary/countries/add",
+	view_func=admin_secretary.endpoints.countries.Countries.as_view("adminsecretary_add_country"),
+	methods=["POST"]
+)
+
 
 # ----- secretary rules -----
 

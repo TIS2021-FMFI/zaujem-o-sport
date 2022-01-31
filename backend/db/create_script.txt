@@ -97,7 +97,6 @@ CREATE TABLE funding
      id                SERIAL PRIMARY KEY,
      country_id        INTEGER REFERENCES country(id),
      branch_id         INTEGER REFERENCES branch(id),
-     relative_funding  FLOAT,
      absolute_funding  FLOAT,
      currency          VARCHAR
   );

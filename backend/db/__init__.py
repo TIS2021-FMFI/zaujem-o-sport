@@ -361,21 +361,18 @@ class Database:
         if "branchTitle" not in data:
             raise DataError("branch title missing in data")
 
-        if "isCombined" not in data:
-            raise DataError("missing parameter is combined in data")
-
         if "countryCode" not in data:
             raise DataError("country code missing in data")
 
-        if "subbranch" not in data:
-            raise DataError("subbranch data missing")
+        if "subBranches" not in data:
+            raise DataError("subBranches data missing")
 
-        if not isinstance(data["subbranch"], list):
-            raise DataError("invalid subbranch data structure")
+        if not isinstance(data["subBranches"], list):
+            raise DataError("invalid subBranches data structure")
 
         suma = 0
         try:
-            for i in data["subbranch"]:
+            for i in data["subBranches"]:
                 suma += i["coefficient"]
             if suma != 1:
                 raise DataError("coefficients sum is not 1")
@@ -386,6 +383,7 @@ class Database:
                 self.logger.error(e)
         except DataError as e:
             self.logger.error(e)
+
 
         sql_check_unique = "select * from branch where code = %(branch_code)s"
         sql_country_exists = "select id from country where code = %(country_code)s"
@@ -415,15 +413,15 @@ class Database:
                         raise DataError("country with entered code does not exist")
                     country_id = tmp[0]
 
-                    for sub in data["subbranch"]:
+                    for sub in data["subBranches"]:
                         try:
                             cursor.execute(sql_sub_exists,
                                            {"sport_code": sub["sportCode"], "branch_code": sub["branchCode"]})
                         except KeyError:
-                            raise DataError("invalid subbranch data structure")
+                            raise DataError("invalid subBranches data structure")
                         tmp = cursor.fetchone()
                         if tmp is None:
-                            raise DataError("subbranch does not exist")
+                            raise DataError("subBranches does not exist")
                         else:
                             inserting_data.append((tmp[0], sub["coefficient"]))
 
@@ -493,11 +491,11 @@ class Database:
 
     def updateSport(self, data: dict) -> bool:
 
-        if "old_code" not in data:
+        if "oldCode" not in data:
             raise DataError("sport data do not contain old code")
-        if "new_code" not in data:
+        if "newCode" not in data:
             raise DataError("sport data do not contain new code")
-        if "new_title" not in data:
+        if "newTitle" not in data:
             raise DataError("sport data do not contain new title")
 
         sql_check = "select id from sport where code = %(old_code)s"
@@ -505,11 +503,11 @@ class Database:
         try:
             with self._getConnection() as dbConn:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-                    cursor.execute(sql_check, {"old_code": data['old_code']})
+                    cursor.execute(sql_check, {"old_code": data['oldCode']})
                     tmp = cursor.fetchone()
                     if tmp is None:  # sport doesnt exist
                         raise DataError("unable to update sport, sport with entered code doesnt exist")
-                    cursor.execute(sql, {"new_code": data['new_code'], "new_title": data['new_title'], "id": tmp[0]})
+                    cursor.execute(sql, {"new_code": data['newCode'], "new_title": data['newTitle'], "id": tmp[0]})
                 dbConn.commit()
             self._releaseConnection(dbConn)
             return True
@@ -1285,6 +1283,7 @@ class Database:
             Returns sports from table sport which have at least one branch.
             Output format : list of dicts , each dict contains keys title, code.
         """
+
 
         sql = "select s.code, s.title from sport s " \
               " where exists(select * from branch where sport_id = s.id) "
