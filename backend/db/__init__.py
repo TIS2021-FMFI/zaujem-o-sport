@@ -544,7 +544,7 @@ class Database:
             return True
         except psycopg2.DatabaseError as error:
             #print(error)
-            self.logger.error(error)
+            #self.logger.error(error)
             return False
 
 
@@ -562,7 +562,7 @@ class Database:
             return True
         except psycopg2.DatabaseError as error:
             #print(error)
-            self.logger.error(error)
+            #self.logger.error(error)
             return False
 
 
@@ -578,7 +578,7 @@ class Database:
             return True
         except psycopg2.DatabaseError as error:
             #print(error)
-            self.logger.error(error)
+            #self.logger.error(error)
             return False
 
 
@@ -594,7 +594,7 @@ class Database:
             return True
         except psycopg2.DatabaseError as error:
             #print(error)
-            self.logger.error(error)
+            #self.logger.error(error)
             return False
 
     def importTotalCountryPoints(self, country_id : id , points : float):
@@ -609,7 +609,7 @@ class Database:
             return True
         except psycopg2.DatabaseError as error:
             #print(error)
-            self.logger.error(error)
+            #self.logger.error(error)
             return False
 
 
@@ -625,7 +625,7 @@ class Database:
             return True
         except psycopg2.DatabaseError as error:
             #print(error)
-            self.logger.error(error)
+            #self.logger.error(error)
             return False
 
     def importInterconnectnessData(self):
