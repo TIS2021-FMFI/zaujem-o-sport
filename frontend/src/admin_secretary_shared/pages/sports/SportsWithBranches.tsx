@@ -12,9 +12,9 @@ export const SportsWithBranches = () => {
 	const language = useContext<Language>(LanguageContext);
 	const text = textLang[language];
 
-	const {isLoading: isLoadingBranchesWithSports, branchesWithSports: responseBranchesWithSports} = useBranchesWithSports();
+	const {isLoading: isLoadingBranchesWithSports, branchesWithSports: responseBranchesWithSports} = useBranchesWithSports(language);
 	const [branchesWithSports, setBranchesWithSports] = useState<string[][]>([]);
-	const {isLoading: isLoadingCombiBranches, combiBranches: responseCombiBranches} = useCombiBranches();
+	const {isLoading: isLoadingCombiBranches, combiBranches: responseCombiBranches} = useCombiBranches(language);
 	const [combiBranches, setCombiBranches] = useState<(string|number)[][]>([]);
 
 	useEffect(() => {

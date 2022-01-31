@@ -11,7 +11,7 @@ export const Countries = () => {
 	const language = useContext<Language>(LanguageContext);
 	const text = textLang[language];
 
-	const {isLoading, countries: responseCountries} = useCountries();
+	const {isLoading, countries: responseCountries} = useCountries(language);
 
 	const [countries, setCountries] = useState<string[][]>([]);
 

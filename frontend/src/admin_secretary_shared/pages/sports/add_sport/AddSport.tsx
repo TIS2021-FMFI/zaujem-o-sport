@@ -12,10 +12,10 @@ export const AddSport = () => {
   const language = useContext<Language>(LanguageContext);
   const text = textLang[language];
 
-  const {newSportCode} = useNewSportCode();
+  const {newSportCode} = useNewSportCode(language);
   const [sportTitle, setSportTitle] = useState<string>("");
   const addNewSportMutation = useMutationWithNotifications(
-    "adding_new_sport", apiAddNewSport, text.addNewSportInitToastMsg
+    "adding_new_sport", apiAddNewSport, text.addNewSportInitToastMsg, language
   );
 
   const handleAddNewSportSubmit = (e: React.FormEvent<HTMLFormElement>) => {

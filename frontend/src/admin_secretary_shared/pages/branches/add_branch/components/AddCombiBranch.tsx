@@ -13,12 +13,12 @@ export const AddCombiBranch = () => {
 	const language = useContext<Language>(LanguageContext);
 	const text = textLang[language];
 
-	const {newCombiBranchCode} = useNewCombiBranchCode();
+	const {newCombiBranchCode} = useNewCombiBranchCode(language);
 	const [branchTitle, setBranchTitle] = useState<string>("");
-	const {countries: responseCountries} = useCountries();
+	const {countries: responseCountries} = useCountries(language);
 	const [countries, setCountries] = useState<{value: string, label: string}[]>([]);
 	const [selectedCountry, setSelectedCountry] = useState<string | undefined>();
-	const {branchesWithSports: responseBranchesWithSports} = useBranchesWithSports();
+	const {branchesWithSports: responseBranchesWithSports} = useBranchesWithSports(language);
 	const [branchesWithSports, setBranchesWithSports] = useState<{value: BranchWithSport, label: string}[]>([]);
 	const [selectedBranchesWithSports, setSelectedBranchesWithSports] = useState<BranchWithSport[]>([]);
 	const [coefficients, setCoefficients] = useState<string[]>([]);
@@ -41,7 +41,7 @@ export const AddCombiBranch = () => {
 	}, [responseBranchesWithSports]);
 
 	const addNewCombiBranchMutation = useMutationWithNotifications(
-		"adding_new_combi_branch", apiAddNewCombiBranch, text.addNewBranchInitToastMsg
+		"adding_new_combi_branch", apiAddNewCombiBranch, text.addNewBranchInitToastMsg, language
 	);
 	const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();

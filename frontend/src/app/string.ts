@@ -53,7 +53,17 @@ export const text = {
 		subBranchCode: "Kód pod-odvetvia",
 		subBranchName: "Názov pod-odvetvia",
 		name: "Názov",
-		code: "Kód"
+		code: "Kód",
+		dataSuccessfullySaved: "Dáta boli úspešne uložené.",
+		unableToSaveData: "Dáta nebolo možné uložiť.",
+		dataSuccessfullyLoaded: "Dáta úspešne načítané.",
+		unableToLoadData: "Dáta nebolo možné načítať.",
+		loadingCountries: "Načítavanie krajín...",
+		loadingSports: "Načítavanie športov...",
+		gettingNewSportCode: "Zisťuje sa nový kód športu...",
+		loadingSportsWithBranches: "Načítavanie odvetví so športami...",
+		loadingCombiBranches: "Načítavanie kombinovaných odvetví...",
+		gettingNewBranchCode: "Zisťuje sa nový kód odvetvia...",
 	}
 	,
 	en: {
@@ -108,7 +118,17 @@ export const text = {
 		subBranchCode: "Sub-branch code",
 		subBranchName: "Sub-branch name",
 		name: "Name",
-		code: "Code"
+		code: "Code",
+		dataSuccessfullySaved: "Data has been successfully saved.",
+		unableToSaveData: "Unable to save data.",
+		dataSuccessfullyLoaded: "Data has been successfully loaded..",
+		unableToLoadData: "Unable to load data.",
+		loadingCountries: "Loading countries...",
+		loadingSports: "Loading sports...",
+		gettingNewSportCode: "Getting new sport code...",
+		loadingSportsWithBranches: "Loading sports with branches...",
+		loadingCombiBranches: "Loading combined branches...",
+		gettingNewBranchCode: "Getting new branch code...",
 	}
 }
 

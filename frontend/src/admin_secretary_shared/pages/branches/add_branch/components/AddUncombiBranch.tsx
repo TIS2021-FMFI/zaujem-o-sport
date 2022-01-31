@@ -21,7 +21,7 @@ export const AddUncombiBranch = () => {
 
 	const [newBranchCode, setNewBranchCode] = useState<string>("");
 
-	const {sports} = useSports();
+	const {sports} = useSports(language);
 
 	const [sportCodes, setSportCodes] = useState<SelectedOption[]>([]);
 	const [sportNames, setSportNames] = useState<SelectedOption[]>([]);
@@ -54,7 +54,7 @@ export const AddUncombiBranch = () => {
 	}, [newBranchCodeData]);
 
 	const addNewBranchMutation = useMutationWithNotifications(
-		"adding_new_uncombi_branch", apiAddNewUncombiBranch, text.addNewBranchInitToastMsg
+		"adding_new_uncombi_branch", apiAddNewUncombiBranch, text.addNewBranchInitToastMsg, language
 	);
 
 	const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
