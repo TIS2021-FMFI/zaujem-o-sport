@@ -4,13 +4,13 @@ from settings import DB
 from flask import request
 
 
-class ShowSuccessView(SwaggerView):
+class ShowFundingView(SwaggerView):
 
     def get(self):
-        res = {"message": "ok", "data": DB.getSuccessByCountry("SVK")}
+        res = {"message": "ok", "data": DB.getFundingData("SVK")}
         return res
 
     def post(self):
         code = request.json.get("code")
-        res = {"message": "ok", "data": DB.getSuccessByCountry(code)}
+        res = {"message": "ok", "data": DB.getFundingData(code)}
         return res

@@ -1,26 +1,48 @@
-import {useState} from "react";
-import {useQuery} from "react-query";
-import {Spinner} from "react-bootstrap";
+import React from "react";
+import {BarChart, Easel, HouseDoor, List, Wallet} from "react-bootstrap-icons";
 
 export const HomeUser = () => {
 
+
     return (<>
         <header>
-            <h1>Toto je domovská stránka</h1>
-            <br></br>
+            <h1>This is the home page</h1>
+
         </header>
         <section>
-            <h2> Projekt Medzinárodný záujem o šport</h2>
-            <br></br>
+            <h2>International interest in sport</h2>
+
             <ul>
-                <li>Systém, ktorý bude zoskupovať, spracovávať a zobrazovať údaje o športe a jeho dôležitosti pre rôzne krajiny sveta. </li>
-                <li>Schopný prijímať nové - aktuálne údaje a zahŕňať ich do výsledných poradí dôležitosti.</li>
-                <li>Spracované údaje budú voľne dostupné na tomto webe.</li>
+                <li>A system that will group, process and display data about sport and its importance for different countries of the world. </li>
+                <li>Able to receive new - up-to-date data and include them in the resulting order of importance.</li>
+                <li>The processed data will be freely available on this website.</li>
 
             </ul>
-            <img src="https://cdn.pixabay.com/photo/2016/09/18/14/21/swimmer-1678307_960_720.jpg" alt="FotkaSportu" />
+
+            <h3>This site contains:</h3>
+
+            <ul>
+                <li><HouseDoor size={25} /> Home</li>
+                <li><BarChart size={25} /> Chart</li>
+                <li><Wallet size={25} /> Fundings</li>
+                <li><List size={25} /> Success</li>
+                <li><Easel size={25} /> Interconnectedness</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </ul>
 
         </section>
-        <br></br><br></br><br></br><br></br>
+
     </>)
 }

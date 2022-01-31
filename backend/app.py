@@ -8,6 +8,11 @@ import secretary.endpoints.show_countries
 import user.endpoints.success
 import user.endpoints.chart
 import user.endpoints.show_countries
+import user.endpoints.interconnectness
+import user.endpoints.interconnectnesstype
+import user.endpoints.funding
+
+
 
 @app.errorhandler(400)
 def bad_request(e):
@@ -83,7 +88,7 @@ app.add_url_rule(
 app.add_url_rule(
 	"/api/user/chart",
 	view_func=user.endpoints.chart.ShowChartView.as_view("list_chart"),
-	methods=["GET"]
+	methods=["GET", "POST"]
 )
 
 app.add_url_rule(
@@ -93,10 +98,24 @@ app.add_url_rule(
 )
 
 app.add_url_rule(
+	"/api/user/interconnectnesstype",
+	view_func=user.endpoints.interconnectnesstype.ShowInterconnectnessTypeView.as_view("list_interconnectnesstype"),
+	methods=["GET"]
+)
+
+
+app.add_url_rule(
 	"/api/user/interconnectness",
 	view_func=user.endpoints.interconnectness.ShowInterconnectnessView.as_view("list_interconnectness"),
+	methods=["GET","POST"]
+)
+
+app.add_url_rule(
+	"/api/user/funding",
+	view_func=user.endpoints.funding.ShowFundingView.as_view("list_funding"),
 	methods=["GET", "POST"]
 )
+
 
 
 if __name__ == "__main__":

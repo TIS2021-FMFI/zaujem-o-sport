@@ -74,7 +74,7 @@ class Database:
 			# TODO: define standard for database error messages
 			print(error)
 		finally:
-			# print(result)
+			#print(result)
 			return result
 
 	def getAllSports(self) -> dict:
@@ -203,8 +203,7 @@ class Database:
 			return result
 
 	def getInterconnectnessData(self, type_id:int, country_code:str) -> dict:
-
-		sql = "select c2.name, i.value, it.title  from interconnectness i join country c1 on country_one_id = c1.id join country c2 on country_two_id = c2.id join interconnectness_type it on i.type_id = it.id where i.type_id = %(type_id)s and c1.code = %(country_code)s "
+		sql = "select c2.code, c2.name, i.value, it.title  from interconnectness i join country c1 on country_one_id = c1.id join country c2 on country_two_id = c2.id join interconnectness_type it on i.type_id = it.id where i.type_id = %(type_id)s and c1.code = %(country_code)s "
 		result = {"interconnectness": []}
 		try:
 			with self._getConnection() as dbConn:
@@ -212,7 +211,7 @@ class Database:
 					cursor.execute(sql, {"type_id":type_id, "country_code":country_code})
 					tmp = cursor.fetchone()
 					while tmp:
-						result["interconnectness"].append({"country": tmp[0], "value": tmp[1], "type": tmp[2]})
+						result["interconnectness"].append({"code": tmp[0], "country": tmp[1], "value": tmp[2], "type": tmp[3]})
 						tmp = cursor.fetchone()
 			self._releaseConnection(dbConn)
 		except psycopg2.DatabaseError as error:
@@ -220,10 +219,29 @@ class Database:
 			# TODO: define standard for database error messages
 			print(error)
 		finally:
-			# print(result)
 			return result
 
 	# inputs to DB
+
+	def getInterconnTypes(self):
+
+		sql = "select code, title from interconnectness_type"
+		results = {"interconnectnesstype": []}
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql)
+					tmp = cursor.fetchone()
+					while tmp:
+						results["interconnectnesstype"].append({"code": tmp[0], "title": tmp[1]})
+						tmp = cursor.fetchone()
+		except psycopg2.DatabaseError as error:
+			print(error)
+		# TODO: logging
+		# TODO: define standard for database error messages
+		finally:
+			return results
+
 
 	def addSport(self, data : dict) -> bool:
 		if "code" not in data:
@@ -914,3 +932,19 @@ class Database:
 				final_result[id] = (code, title)
 			return final_result
 
+	def getCountryIdByCode(self, countryCode: str):
+
+		sql = "select id from country where code = %(countryCode)s and is_active"
+		try:
+			with self._getConnection() as dbConn:
+				with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+					cursor.execute(sql, {"countryCode":countryCode})
+					tmp = cursor.fetchone()
+					if tmp is None:
+						raise DataError("country code does not exist")
+					else:
+						return tmp[0]
+		except psycopg2.DatabaseError as error:
+			print(error)
+			# TODO: logging
+			# TODO: define standard for database error messages

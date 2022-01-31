@@ -1,8 +1,19 @@
 import React, {useEffect, useState} from "react";
-import {apiListCountry, apiListSuccess, apiSuccess, countryType, successType} from "../../adapters";
+import {
+    apiInterconnectness,
+    apiListCountry, apiListInterconnectness, apiListInterconnectnessType,
+
+    countryType,
+    interconnectnessType, interconnectnessTypeType,
+
+
+} from "../../adapters";
 import {useMutation, useQuery} from "react-query";
-import {Form, Spinner} from "react-bootstrap";
+import {Button, Form, Spinner} from "react-bootstrap";
 import Select from "react-select";
+import {Table} from "../../../components/table/Table";
+import {CSVLink} from "react-csv";
+import {Download} from "react-bootstrap-icons";
 
 
 export const InterconnectnessTable = () => {
@@ -16,22 +27,40 @@ export const InterconnectnessTable = () => {
 
         },
         onError: (error) => {
+            alert(error);
+        }
+    })
+
+    const [interconnectnesstype, setInterconnectesstype] = useState<interconnectnessTypeType[]>();
+
+    useQuery("list_interconnectnesstype", apiListInterconnectnessType, {
+        onSuccess: (response) => {
+            const serverData = response.data.data;
+            setInterconnectesstype(serverData.interconnectnesstype);
+
+        },
+        onError: (error) => {
+            alert(error);
         }
     })
 
 
 
 
-    const [successes, setSuccess] = useState<successType[]>();
 
-    const {isLoading} = useQuery("list_success", apiListSuccess, {
+
+
+
+    const [interconnectnesses, setInterconnectness] = useState<interconnectnessType[]>();
+
+    const {isLoading} = useQuery("list_interconnectness", apiListInterconnectness, {
         onSuccess: (response) => {
             const serverData = response.data.data;
-            setSuccess(serverData.success);
+            setInterconnectness(serverData.interconnectness);
 
         },
         onError: (error) => {
-
+            alert(error);
         }
     })
 
@@ -40,17 +69,27 @@ export const InterconnectnessTable = () => {
         "label" : d.name
     }))
 
+    let options2 = interconnectnesstype?.map(d => ({
+        "value": d.code,
+        "label" : d.title
+    }))
+
+
+
+
 
 
     const [option, setOption] = useState<string>("SVK");
+    const [option2, setOption2] = useState<number>(1);
+    const [rowInterconnectness, setRowInterconnectness] = useState<(number | string)[][]>([]);
 
-
-    const { mutateAsync: asyncSuccess } = useMutation(["setCountry", option],
-        () => apiSuccess(option),
+    const { mutateAsync: asyncInterconnectness } = useMutation(["setCountry", option, option2],
+        () => apiInterconnectness(option2,option),
         {
             onSuccess: (response) => {
                 const serverData = response.data.data;
-                setSuccess(serverData.success);
+                setInterconnectness(serverData.interconnectness);
+                setRowInterconnectness(serverData.interconnectness.map((i) => [i.code, i.country, i.value, i.type]))
             },
             onError: (error) => {
                 console.log(error);
@@ -60,52 +99,53 @@ export const InterconnectnessTable = () => {
 
 
     useEffect(() => {
-        asyncSuccess();
+        asyncInterconnectness();
 
-    }, [option]);
+    }, [option,option2]);
 
 
     return (
         <>
-            <h1>Úspešnosť</h1>
+            <h5><b>Table</b> is chosen</h5>
             <div>
 
-                <Form.Label>Krajina</Form.Label>
+                <Form.Label>Country</Form.Label>
                 <Select
-                    id="country"
+                    id="setcountry"
                     options={options}
-                    placeholder="Zvoľte krajinu"
+                    placeholder="Choose country"
                     onChange={ (selectedOption) => {
                         if (selectedOption !== null)
                             setOption(selectedOption.value) }}
                 />
 
+                <Form.Label>Interconnectedness type</Form.Label>
+                <Select
+                    id="setinterconnectness"
+                    options={options2}
+                    placeholder="Choose interconnectedness type"
+                    onChange={ (selectedOption) => {
+                        if (selectedOption !== null)
+                            setOption2(selectedOption.value) }}
+                />
 
+                <Button variant="primary"><CSVLink className='button' filename={"interconnectedness"+option} data={rowInterconnectness}><Download size={25} />Export data</CSVLink></Button>{' '}
 
-                <table className = 'tabulka'>
-                    <tr>
-                        <th>Názov</th>
-                        <th>Body</th>
-                        <th>Poradie</th>
-                    </tr>
-                </table>
             </div>
-            { isLoading
+            {isLoading
                 ? <Spinner animation="border" role="status">
                     <span className="visually-hidden">Loading...</span>
                 </Spinner>
 
-                : successes?.map((success, i) => { return (
+                :
+                <div>
+                    <Table columnNames={[{name: "Code", sortable: true}, {name: "Country", sortable: true}, {
+                        name: "Value", sortable: true}, {name: "Type", sortable: true }]}
+                           rows={rowInterconnectness}/>
 
+                </div>
 
-                    <table key={`success-${i}`} className = 'tabulka'>
-                        <tr>
-                            <td>{success.sport_name}</td>
-                            <td>{success.points}</td>
-                            <td>{success.order}</td>
-                        </tr>
-                    </table>
-                )})}
+            }
 
 
 

@@ -9,16 +9,14 @@ function Footer() {
         <div className="row">
           {/* Column1 */}
           <div className="col">
-            <h4>Medzinárodný záujem o šport</h4>
+            <h4>International interest in sports</h4>
 			<ul className="list-unstyled">
-              <li>Projekt ktorý je vytváraný 
-			  v rámci predmetu Tvorba 
-			  informačných systémov</li>
+              <li>A project which is created within the subject Information Systems Development</li>
 			</ul>
           </div>
           {/* Column2 */}
           <div className="col">
-            <h4>Autori</h4>
+            <h4>Authors</h4>
             <ul className="list-unstyled">
               <li>Sabína Samporová</li>
               <li>Martin Gergel</li>
@@ -28,16 +26,16 @@ function Footer() {
           </div>
           {/* Column3 */}
           <div className="col">
-            <h4>Odkazy</h4>
+            <h4>Links</h4>
             <ul className="list-unstyled">
-              <li><a href = "https://www.google.com/">odkaz</a></li>
+              <li><a href = "https://www.google.com/">link</a></li>
             </ul>
           </div>
         </div>
         <hr />
         <div className="row">
           <p className="col-sm">
-            &copy;{new Date().getFullYear()} MATFYZ | Aplikovaná informatika |
+            &copy;{new Date().getFullYear()} MATFYZ | Applied informatics |
             TIS
           </p>
         </div>

@@ -15,7 +15,6 @@ img{
 .button{
   color: white;
   text-decoration: none;
-  background-color: #0092ff;
 }
 
 .button:hover{
@@ -27,27 +26,9 @@ img{
   display: block;
 }
 
-.tabulka {
-  font-family: Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 60%;
-}
-
-.tabulka td, .tabulka th {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-  width: 33%;
-}
-
-.tabulka tr:hover {background-color: #ddd;}
-
-.tabulka th {
 
 
-  background-color: #0092ff;
-  color: white;
-}
+
 
 ol{
  list-style-type: none;
