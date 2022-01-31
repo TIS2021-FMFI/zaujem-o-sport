@@ -3,7 +3,7 @@ import {Button, Col, FloatingLabel, Form, Row} from "react-bootstrap";
 import {useCountries, useMutationWithNotifications} from "app/hooks";
 import {CenteredRow} from "components/basic/CenteredRow";
 import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
-import {apiAddNewCountry} from "../../adapters";
+import {apiAddNewCountry} from "admin/adapters";
 
 export const AddCountry = () => {
 
@@ -29,7 +29,7 @@ export const AddCountry = () => {
 
 	return(<>
 		<CenteredRow as="header" lg={6} md={7}>
-			<h1>Update sport</h1>
+			<h1>Add country</h1>
 		</CenteredRow>
 		<CenteredRow as="section" className="mb-3" lg={6} md={7}>
 			<Form onSubmit={handleSubmit}>

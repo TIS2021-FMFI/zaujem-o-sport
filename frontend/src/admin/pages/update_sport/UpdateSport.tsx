@@ -4,8 +4,8 @@ import {useMutationWithNotifications} from "app/hooks";
 import {useSports} from "admin_secretary_shared/hooks";
 import {CenteredRow} from "components/basic/CenteredRow";
 import Select from "react-select";
-import createSnackbar, {SnackTypes} from "../../../components/snackbar/Snackbar";
-import {apiUpdateSport} from "../../../admin_secretary_shared/adapters";
+import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
+import {apiUpdateSport} from "admin/adapters";
 
 interface SelectedOption {
 	value: string,

@@ -9,12 +9,13 @@ import admin_secretary.endpoints.combi_branches.new_code
 import admin_secretary.endpoints.branches
 import admin_secretary.endpoints.branches.new_code
 import admin_secretary.endpoints.branches_with_sports
-import admin_secretary.endpoints.countries
 import secretary.endpoints.login
 import secretary.endpoints.funding
 import secretary.endpoints.funding_currencies
 import admin.endpoints.login
 import admin.endpoints.upload
+import admin.endpoints.countries
+import admin.endpoints.sports
 import secretary.endpoints.show_countries
 import user.endpoints.success
 import user.endpoints.chart
@@ -86,12 +87,6 @@ app.add_url_rule(
 )
 
 app.add_url_rule(
-	"/api/adminsecretary/sports/update",
-	view_func=admin_secretary.endpoints.sports.Sports.as_view("adminsecretary_update_sport"),
-	methods=["PUT"]
-)
-
-app.add_url_rule(
 	"/api/adminsecretary/branches-with-sports",
 	view_func=admin_secretary.endpoints.branches_with_sports.BranchesWithSports.as_view("adminsecretary_branches_with_sports"),
 	methods=["GET"]
@@ -125,12 +120,6 @@ app.add_url_rule(
 	"/api/adminsecretary/sport/<sportCode>/branches/new-code",
 	view_func=admin_secretary.endpoints.branches.new_code.BranchCode.as_view("adminsecretary_branch_code"),
 	methods=["GET"]
-)
-
-app.add_url_rule(
-	"/api/adminsecretary/countries/add",
-	view_func=admin_secretary.endpoints.countries.Countries.as_view("adminsecretary_add_country"),
-	methods=["POST"]
 )
 
 
@@ -168,6 +157,18 @@ app.add_url_rule(
 	methods=["POST"]
 )
 
+app.add_url_rule(
+	"/api/admin/countries/add",
+	view_func=admin.endpoints.countries.Countries.as_view("admin_add_country"),
+	methods=["POST"]
+)
+
+app.add_url_rule(
+	"/api/admin/sports/update",
+	view_func=admin.endpoints.sports.Sports.as_view("admin_update_sport"),
+	methods=["PUT"]
+)
+
 # ----- user rules -----
 app.add_url_rule(
 	"/api/user/success",
@@ -186,6 +187,7 @@ app.add_url_rule(
 	view_func=user.endpoints.show_countries.ShowCountriesView.as_view("list_countries2"),
 	methods=["GET"]
 )
+
 
 if __name__ == "__main__":
 	ip = None

@@ -18,10 +18,3 @@ class Sports(SwaggerView):
 			return {"message": "ok"}
 		return {"message": "Database error"}, 500
 
-	@is_admin_or_secretary
-	def put(self):
-		print(request.json)
-		ok = DB.updateSport(request.json)
-		if ok:
-			return {"message": "ok"}
-		return {"message": "Database error"}, 500

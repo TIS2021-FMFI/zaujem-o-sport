@@ -28,7 +28,7 @@ import {HomeUser} from "./user/pages/home/HomeUser";
 import 'user/pages/styles/site.scss';
 import {ToastContainer} from "react-toastify";
 import {UpdateSport} from "./admin/pages/update_sport/UpdateSport";
-import {AddCountry} from "./admin_secretary_shared/pages/add_country/AddCountry";
+import {AddCountry} from "admin/pages/add_country/AddCountry";
 
 const history = createBrowserHistory();
 setupSecretaryInterceptors(history);
