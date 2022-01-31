@@ -12,8 +12,6 @@ class UploadView(SwaggerView):
 	@is_secretary
 	def post(self):
 
-		print("kuk")
-
 		if len(request.files) == 0:
 			return {"message": "Missing uploaded file."}, 400
 
