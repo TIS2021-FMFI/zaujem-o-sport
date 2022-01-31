@@ -1,5 +1,5 @@
 import {AxiosResponse} from "axios";
-import {secretaryAxiosProvider as axios} from "../secretary/axios_provider";
+import {adminAxiosProvider as axios} from "admin/axios_provider";
 
 export interface ApiUploadFiles {
 	fundingFile?: File,
