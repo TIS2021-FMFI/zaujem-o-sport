@@ -5,10 +5,11 @@ import React, {useEffect, useState} from "react";
 import {dropzoneFileProp} from "components/drag_and_drop/Dropzone";
 import {apiUploadFunding} from "secretary/adapters";
 import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
-import {useCountries, useMutationWithNotifications} from "app/hooks";
+import {useAppSelector, useCountries, useMutationWithNotifications} from "app/hooks";
 import {currencies} from "data/active_currency_codes";
 import {CenteredRow} from "components/basic/CenteredRow";
 import {RowToSuggestion, RowWithSuggestion, Suggestions} from "./components/Suggestions";
+import {RootState} from "../../../app/store";
 
 const acceptedFileExtensions = ".csv";
 
@@ -30,6 +31,10 @@ export const UploadData = () => {
 
 	const [rowErrors, setRowErrors] = useState<RowWithSuggestion[]>([]);
 	const [suggestions, setSuggestions] = useState<RowWithSuggestion[]>([]);  // suggestion type = 1 or type 4
+
+	const corrections = useAppSelector((state: RootState) => state.secretaryUploadCorrections.corrections);
+
+	console.log(corrections);
 
 	useEffect(() => {
 		setCountries(responseCountries.map((country) => { return {

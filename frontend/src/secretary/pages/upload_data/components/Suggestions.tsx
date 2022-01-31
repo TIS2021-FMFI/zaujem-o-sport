@@ -1,8 +1,7 @@
 import {Alert} from "react-bootstrap";
-import {CenteredRow} from "../../../../components/basic/CenteredRow";
+import {CenteredRow} from "components/basic/CenteredRow";
 import {SuggestionsTable} from "./SuggestionsTable";
 import React from "react";
-
 
 export interface Suggestion {
 	sportCode: string,
@@ -66,11 +65,7 @@ export const Suggestions = ({suggestions, rowErrors}: SuggestionsProps) => {
 					</h2>
 				</header>
 				<div className={`mt-3`}>
-					<SuggestionsTable
-						tableRowValues={[
-							[1, "tst1", "test1", "sadf", "ew", "wer", "ewr", "wer"]
-						]
-						}/>
+					<SuggestionsTable suggestions={suggestions}/>
 				</div>
 			</section>
 		)

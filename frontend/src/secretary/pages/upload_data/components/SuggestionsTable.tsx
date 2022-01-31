@@ -1,130 +1,108 @@
-import {Table, TableCellComponent, TableCellValueOnly, TableColumnNameType} from "components/table/Table";
-import {useEffect, useState} from "react";
-import {CheckLg, XLg} from "react-bootstrap-icons";
+import {Table, TableCellComponent, TableColumnNameType} from "components/table/Table";
+import React, {useEffect, useState} from "react";
 import {Form} from "react-bootstrap";
+import {RowWithSuggestion} from "./Suggestions";
+import {Correction} from "./correctionsSlice";
 import {useAppDispatch, useAppSelector} from "app/hooks";
 import {RootState} from "app/store";
-import {clearState, IncorrectRowStates, IncorrectRowType, updateRow} from "./suggestionsTableSlice";
+import {setCorrections, updateBranchTitle, updateBranchCode, updateSportTitle} from "./correctionsSlice";
 
-// TODO: props: number of row in files, suggestion, ...
-// TODO: table prop for not ordering and adding onClick functionality for cell (component instead of string)
-
-interface IncorrectRowsProps {
-	tableRowValues: TableCellValueOnly[][]
+interface SuggestionsTableProps {
+	suggestions: RowWithSuggestion[]
 }
 
-type UpdateRowStatusFunction = (rowIndex: number, approve: IncorrectRowStates) => void
-
-export const SuggestionsTable = ({tableRowValues}: IncorrectRowsProps) => {
+export const SuggestionsTable = ({suggestions}: SuggestionsTableProps) => {
 
 	const dispatch = useAppDispatch();
 
 	const columnNames: TableColumnNameType[] = [
 		{name: "číslo riadka z CSV", sortable: false},
 		{name: "Kód športu", sortable: false},
-		{name: "Starý kód odvetvia", sortable: false},
-		{name: "Nový kód odvetvia", sortable: false},
 		{name: "Starý názov športu", sortable: false},
 		{name: "Nový názov športu", sortable: false},
+		{name: "Starý kód odvetvia", sortable: false},
+		{name: "Nový kód odvetvia", sortable: false},
 		{name: "Starý názov odvetvia", sortable: false},
 		{name: "Nový názov odvetvia", sortable: false}
 	];
 
 	const [rows, setRows] = useState<TableCellComponent[][]>([]);
 
-	// TODO: Access after the backend functionality is there.
-	// useAppSelector((state: RootState) => state.secretaryUploadIncorrectRows.rows);
-
-	const updateRowStatus: UpdateRowStatusFunction = (rowIndex, approve) => {
-		dispatch(updateRow({rowIndex: rowIndex, approved: approve}));
-	}
-
+	/** Create table rows with suggestions. */
 	useEffect(() => {
-		dispatch(clearState());
-	}, []);
-
-	useEffect(() => {
-		setRows(
-			tableRowValues.map( (r, i) => {
-					const row: TableCellComponent[] = r.map((cell, j) => {
-						return (j == 2) ? {element: <SuggestionCell defaultValue={cell} />, value: ""} : {value: cell}
-					});
-					row.push({element: <RowOptionsCell rowIndex={i} updateRowStatus={updateRowStatus} />, value: ""});
-					return row;
-				}
-			)
-		)
-	}, [tableRowValues]);
+		const _corrections: Correction[] = [];
+		setRows(suggestions.map((s) => {
+			_corrections.push({row: s.row, sportCode: s.sportCode, sportTitle: s.newSportTitle, branchCode: s.newBranchCode,
+												 branchTitle: s.newBranchTitle});
+			return [
+				{value: s.row},
+				{value: s.sportCode},
+				{value: s.oldSportTitle},
+				(s.newSportTitle.length === 0 || s.newSportTitle === s.oldSportTitle)
+					? {value: s.newSportTitle}
+					: {element: <SuggestionNewSportTitleCell row={s.row} />, value: ""},
+				{value: s.oldBranchCode},
+				(s.newBranchCode.length === 0 || s.newBranchCode === s.oldBranchCode)
+					? {value: s.newBranchCode}
+					: {element: <SuggestionNewBranchCodeCell row={s.row} />, value: ""},
+				{value: s.oldBranchTitle},
+				(s.newBranchTitle.length === 0 || s.newBranchTitle === s.oldBranchTitle)
+					? {value: s.newBranchTitle}
+					: {element: <SuggestionNewBranchTitleCell row={s.row} />, value: ""},
+			];
+		}));
+		dispatch(setCorrections(_corrections));
+	}, [suggestions]);
 
 	return (
 		<div>
-	    <Table
-			  columnNames={columnNames}
-		    rows={rows}
-		  />
+	    <Table columnNames={columnNames} rows={rows} />
 		</div>
   )
 }
 
 interface SuggestionCellProps {
-	defaultValue: string | number
+	row: string
 }
 
-const SuggestionCell = ({defaultValue}: SuggestionCellProps) => {
+const SuggestionNewSportTitleCell = ({row}: SuggestionCellProps) => {
+	const dispatch = useAppDispatch();
+	const corrections = useAppSelector((state: RootState) => state.secretaryUploadCorrections.corrections);
 	return (
-		<Form.Control type="text" placeholder="Nová hodnota" defaultValue={defaultValue} />
+		<Form.Control
+			type="text"
+			placeholder="Nová hodnota"
+			value={corrections.find(c => c.row === row)!.sportTitle}
+			onChange={(e) =>
+				dispatch(updateSportTitle({row: row, sportTitle: (e.currentTarget as HTMLInputElement).value}))}
+		/>
 	)
 }
 
-interface RowOptionsCellProps {
-	rowIndex: number,
-	updateRowStatus: UpdateRowStatusFunction
+const SuggestionNewBranchCodeCell = ({row}: SuggestionCellProps) => {
+	const dispatch = useAppDispatch();
+	const corrections = useAppSelector((state: RootState) => state.secretaryUploadCorrections.corrections);
+	return (
+		<Form.Control
+			type="text"
+			placeholder="Nová hodnota"
+			value={corrections.find(c => c.row === row)!.branchCode}
+			onChange={(e) =>
+				dispatch(updateBranchCode({row: row, branchCode: (e.currentTarget as HTMLInputElement).value}))}
+		/>
+	)
 }
 
-const RowOptionsCell = ({rowIndex, updateRowStatus}: RowOptionsCellProps) => {
-
-	const rows: IncorrectRowType[] = useAppSelector((state: RootState) => state.secretaryUploadIncorrectRows.rows);
-
-	const [rowState, setRowState] = useState<IncorrectRowStates>(IncorrectRowStates.NONE);
-
-	useEffect(() => {
-		if (rowIndex < rows.length)
-			setRowState(rows[rowIndex].approved);
-	}, [rows]);
-
-	return (<div className={`d-flex align-items-center justify-content-between`}>
-		{rowState === IncorrectRowStates.NONE
-			? <div>
-					<button type="button" className={`btn`} onClick={() => {
-						updateRowStatus(rowIndex, IncorrectRowStates.APPROVED);
-					}}>
-						<CheckLg color="green" size="1.4em" />
-					</button>
-					<button type="button" className={`btn`} onClick={() => {
-						updateRowStatus(rowIndex, IncorrectRowStates.DISAPPROVED);
-					}}>
-						<XLg color="red" size="1.2em" />
-					</button>
-				</div>
-			: <>
-					<div>
-						{rowState === IncorrectRowStates.APPROVED
-							? <span className={`text-success`}>
-									schválené <CheckLg color="green" size="1.4em" />
-								</span>
-							: <span className={`text-danger`}>
-									zamietnuté <XLg color="red" size="1.2em" />
-								</span>
-						}
-					</div>
-					<div>
-						<button type="button" className={`btn btn-link`} onClick={() => {
-							updateRowStatus(rowIndex, IncorrectRowStates.NONE);
-						}}>
-							obnoviť
-						</button>
-					</div>
-				</>
-		}
-	</div>)
+const SuggestionNewBranchTitleCell = ({row}: SuggestionCellProps) => {
+	const dispatch = useAppDispatch();
+	const corrections = useAppSelector((state: RootState) => state.secretaryUploadCorrections.corrections);
+	return (
+		<Form.Control
+			type="text"
+			placeholder="Nová hodnota"
+			value={corrections.find(c => c.row === row)!.branchTitle}
+			onChange={(e) =>
+				dispatch(updateBranchTitle({row: row, branchTitle: (e.currentTarget as HTMLInputElement).value}))}
+		/>
+	)
 }

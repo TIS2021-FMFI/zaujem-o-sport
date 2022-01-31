@@ -36,7 +36,7 @@ Setting up max connections in the pool (great resource: https://www.enterprisedb
 """
 dbPool = psycopg2.pool.ThreadedConnectionPool(
     minconn=1,
-    maxconn=100,
+    maxconn=1000,
     host=env.get("DB_HOST"),
     database=env.get("DB_NAME"),
     user=env.get("DB_USER"),
