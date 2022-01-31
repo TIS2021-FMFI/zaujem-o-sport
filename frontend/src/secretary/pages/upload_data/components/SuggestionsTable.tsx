@@ -2,10 +2,9 @@ import {Table, TableCellComponent, TableColumnNameType} from "components/table/T
 import React, {useEffect, useState} from "react";
 import {Form} from "react-bootstrap";
 import {RowWithSuggestion} from "./Suggestions";
-import {Correction} from "./correctionsSlice";
 import {useAppDispatch, useAppSelector} from "app/hooks";
 import {RootState} from "app/store";
-import {setCorrections, updateBranchTitle, updateBranchCode, updateSportTitle} from "./correctionsSlice";
+import {setCorrections, updateBranchTitle, updateBranchCode, updateSportTitle, clearState, Correction} from "./correctionsSlice";
 
 interface SuggestionsTableProps {
 	suggestions: RowWithSuggestion[]
@@ -53,6 +52,10 @@ export const SuggestionsTable = ({suggestions}: SuggestionsTableProps) => {
 		}));
 		dispatch(setCorrections(_corrections));
 	}, [suggestions]);
+
+	useEffect(() => {
+		dispatch(clearState());
+	}, []);
 
 	return (
 		<div>

@@ -34,8 +34,6 @@ export const UploadData = () => {
 
 	const corrections = useAppSelector((state: RootState) => state.secretaryUploadCorrections.corrections);
 
-	console.log(corrections);
-
 	useEffect(() => {
 		setCountries(responseCountries.map((country) => { return {
 			value: country.code, label: `${country.name} (${country.code})`
