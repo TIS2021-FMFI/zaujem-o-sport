@@ -29,7 +29,7 @@ class csvParser:
     def __init__(self):
         self.result = []
 
-    def findFailures(self, csvFile: List[str], changes: list, country_code: str, currency: str):
+    def findFailures(self, csvFile: List[str], changes: Dict[str, Dict[str, Any]], country_code: str, currency: str):
 
         reader = csv.reader(csvFile, delimiter=',', quotechar='"')
         parsed_csv = list(reader)
@@ -44,21 +44,21 @@ class csvParser:
 
             counter += 1
 
-            if counter in changes:  # changes from user
-                row[0] = changes[counter]["sport_code"]
-                row[1] = changes[counter]["branch_code"]
-                row[2] = changes[counter]["sport_title"]
-                row[3] = changes[counter]["branch_title"]
+            if str(counter) in changes:  # changes from user
+                row[0] = changes[str(counter) ]["sportCode"]
+                row[1] = changes[str(counter) ]["branchCode"]
+                row[2] = changes[str(counter) ]["sportTitle"]
+                row[3] = changes[str(counter) ]["branchTitle"]
 
             if len(row) < EXPECTED_LEN:
                 # type 2 -> row too short
-                suggestions[counter] = {"sport_code": (row[0] if len(row) > 0 else -1),
-                                        "old_branch_code": (row[1] if len(row) > 1 else -1),
-                                        "old_sport_title": (row[2] if len(row) > 2 else ""),
-                                        "old_branch_title": (row[3] if len(row) > 3 else ""),
-                                        "new_branch_code": -1,
-                                        "new_sport_title": "",
-                                        "new_branch_title": "",
+                suggestions[counter] = {"sportCode": (row[0] if len(row) > 0 else -1),
+                                        "oldBranchCode": (row[1] if len(row) > 1 else -1),
+                                        "oldSportTitle": (row[2] if len(row) > 2 else ""),
+                                        "oldBranchTitle": (row[3] if len(row) > 3 else ""),
+                                        "newBranchCode": -1,
+                                        "newSportTitle": "",
+                                        "newBranchTitle": "",
                                         "type": 2
                                         }
                 continue
@@ -70,13 +70,13 @@ class csvParser:
                     branch_code = int(branch_code)
                 except ValueError:
                     # branch code is not a number
-                    suggestions[counter] = {"sport_code": sport_code,
-                                            "old_branch_code": branch_code,
-                                            "old_sport_title": sport_title,
-                                            "old_branch_title": branch_title,
-                                            "new_branch_code": branch_code,
-                                            "new_sport_title": "",
-                                            "new_branch_title": "",
+                    suggestions[counter] = {"sportCode": sport_code,
+                                            "oldBranchCode": branch_code,
+                                            "oldSportTitle": sport_title,
+                                            "oldBranchTitle": branch_title,
+                                            "newBranchCode": branch_code,
+                                            "newSportTitle": "",
+                                            "newBranchTitle": "",
                                             "type": 6
                                             }
                     continue
@@ -85,13 +85,13 @@ class csvParser:
                     amount = float(amount.replace(",", "."))
                 except ValueError:
                     # amount is not a number
-                    suggestions[counter] = {"sport_code": sport_code,
-                                            "old_branch_code": branch_code,
-                                            "old_sport_title": sport_title,
-                                            "old_branch_title": branch_title,
-                                            "new_branch_code": branch_code,
-                                            "new_sport_title": "",
-                                            "new_branch_title": "",
+                    suggestions[counter] = {"sportCode": sport_code,
+                                            "oldBranchCode": branch_code,
+                                            "oldSportTitle": sport_title,
+                                            "oldBranchTitle": branch_title,
+                                            "newBranchCode": branch_code,
+                                            "newSportTitle": "",
+                                            "newBranchTitle": "",
                                             "type": 7
                                             }
                     continue
@@ -99,24 +99,24 @@ class csvParser:
                 code, title = DB.checkCombi(branch_code, country_code)
                 if code != branch_code:
                     # neplatny branch code alebo country
-                    suggestions[counter] = {"sport_code": sport_code,
-                                            "old_branch_code": branch_code,
-                                            "old_sport_title": sport_title,
-                                            "old_branch_title": branch_title,
-                                            "new_branch_code": branch_code,
-                                            "new_sport_title": sport_title,
-                                            "new_branch_title": title,
+                    suggestions[counter] = {"sportCode": sport_code,
+                                            "oldBranchCode": branch_code,
+                                            "oldSportTitle": sport_title,
+                                            "oldBranchTitle": branch_title,
+                                            "newBranchCode": branch_code,
+                                            "newSportTitle": sport_title,
+                                            "newBranchTitle": title,
                                             "type": 8
                                             }
                     continue
                 if title != branch_title:
-                    suggestions[counter] = {"sport_code": sport_code,
-                                            "old_branch_code": branch_code,
-                                            "old_sport_title": sport_title,
-                                            "old_branch_title": branch_title,
-                                            "new_branch_code": branch_code,
-                                            "new_sport_title": sport_title,
-                                            "new_branch_title": title,
+                    suggestions[counter] = {"sportCode": sport_code,
+                                            "oldBranchCode": branch_code,
+                                            "oldSportTitle": sport_title,
+                                            "oldBranchTitle": branch_title,
+                                            "newBranchCode": branch_code,
+                                            "newSportTitle": sport_title,
+                                            "newBranchTitle": title,
                                             "type": 1
                                             }
                     continue
@@ -133,13 +133,13 @@ class csvParser:
                     sport_code = int(sport_code)
                 except ValueError:
                     # sport code is not a number
-                    suggestions[counter] = {"sport_code": sport_code,
-                                            "old_branch_code": branch_code,
-                                            "old_sport_title": sport_title,
-                                            "old_branch_title": branch_title,
-                                            "new_branch_code": -1,
-                                            "new_sport_title": "",
-                                            "new_branch_title": "",
+                    suggestions[counter] = {"sportCode": sport_code,
+                                            "oldBranchCode": branch_code,
+                                            "oldSportTitle": sport_title,
+                                            "oldBranchTitle": branch_title,
+                                            "newBranchCode": -1,
+                                            "newSportTitle": "",
+                                            "newBranchTitle": "",
                                             "type": 5
                                             }
                     continue
@@ -148,13 +148,13 @@ class csvParser:
                     branch_code = int(branch_code)
                 except ValueError:
                     # branch code is not a number
-                    suggestions[counter] = {"sport_code": sport_code,
-                                            "old_branch_code": branch_code,
-                                            "old_sport_title": sport_title,
-                                            "old_branch_title": branch_title,
-                                            "new_sport_title": "",
-                                            "new_branch_title": "",
-                                            "new_branch_code": -1,
+                    suggestions[counter] = {"sportCode": sport_code,
+                                            "oldBranchCode": branch_code,
+                                            "oldSportTitle": sport_title,
+                                            "oldBranchTitle": branch_title,
+                                            "newSportTitle": "",
+                                            "newBranchTitle": "",
+                                            "newBranchCode": -1,
                                             "type": 6
                                             }
                     continue
@@ -163,12 +163,12 @@ class csvParser:
                     amount = float(amount.replace(",", "."))
                 except ValueError:
                     # amount is not a number
-                    suggestions[counter] = {"sport_code": sport_code,
-                                            "old_branch_code": branch_code,
-                                            "old_sport_title": sport_title,
-                                            "old_branch_title": branch_title,
-                                            "new_sport_title": "",
-                                            "new_branch_title": "",
+                    suggestions[counter] = {"sportCode": sport_code,
+                                            "oldBranchCode": branch_code,
+                                            "oldSportTitle": sport_title,
+                                            "oldBranchTitle": branch_title,
+                                            "newSportTitle": "",
+                                            "newBranchTitle": "",
                                             "type": 7
                                             }
                     continue
@@ -178,13 +178,13 @@ class csvParser:
 
                     new_sport_title = DB.findSportByCode(sport_code)
                     if new_sport_title is None:
-                        suggestions[counter] = {"sport_code": sport_code,
-                                                "old_branch_code": branch_code,
-                                                "old_sport_title": sport_title,
-                                                "old_branch_title": branch_title,
-                                                "new_branch_code": -1,
-                                                "new_sport_title": "",
-                                                "new_branch_title": "",
+                        suggestions[counter] = {"sportCode": sport_code,
+                                                "oldBranchCode": branch_code,
+                                                "oldSportTitle": sport_title,
+                                                "oldBranchTitle": branch_title,
+                                                "newBranchCode": -1,
+                                                "newSportTitle": "",
+                                                "newBranchTitle": "",
                                                 "type": 3
                                                 }
                         continue
@@ -194,25 +194,25 @@ class csvParser:
                         # type 4 -> branch with this code does not exist in sport with sport_code
                         # find all branches and choose one with min levenstein distance
                         new_branch_title, new_branch_code = self.find_closest_branch(branch_title, sport_code)
-                        suggestions[counter] = {"sport_code": sport_code,
-                                                "old_branch_code": branch_code,
-                                                "old_sport_title": sport_title,
-                                                "old_branch_title": branch_title,
-                                                "new_branch_code": new_branch_code,
-                                                "new_sport_title": new_sport_title,
-                                                "new_branch_title": new_branch_title,
+                        suggestions[counter] = {"sportCode": sport_code,
+                                                "oldBranchCode": branch_code,
+                                                "oldSportTitle": sport_title,
+                                                "oldBranchTitle": branch_title,
+                                                "newBranchCode": new_branch_code,
+                                                "newSportTitle": new_sport_title,
+                                                "newBranchTitle": new_branch_title,
                                                 "type": 4
                                                 }
                         continue
 
                     # type 1 -> sugestions for new titles
-                    suggestions[counter] = {"sport_code": sport_code,
-                                            "old_branch_code": branch_code,
-                                            "old_sport_title": sport_title,
-                                            "old_branch_title": branch_title,
-                                            "new_branch_code": branch_code,
-                                            "new_sport_title": new_sport_title,
-                                            "new_branch_title": new_branch_title,
+                    suggestions[counter] = {"sportCode": sport_code,
+                                            "oldBranchCode": branch_code,
+                                            "oldSportTitle": sport_title,
+                                            "oldBranchTitle": branch_title,
+                                            "newBranchCode": branch_code,
+                                            "newSportTitle": new_sport_title,
+                                            "newBranchTitle": new_branch_title,
                                             "type": 1
                                             }
                     continue
@@ -223,7 +223,7 @@ class csvParser:
                                       amount, currency))
 
         self.result = records
-        print(suggestions, self.result, sep="\n\n\n")
+        # print(suggestions, self.result, sep="\n\n\n")
         return suggestions
 
     def saveResults(self):

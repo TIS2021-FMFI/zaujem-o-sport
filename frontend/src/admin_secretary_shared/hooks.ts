@@ -4,17 +4,18 @@ import {
 	apiGetCombiBranches,
 	BranchWithSport,
 	CombiBranch,
-	apiGetNewSportCode, apiGetNewCombiBranchCode, apiGetNewBranchCode, Sport, apiGetSports
+	apiGetNewSportCode, apiGetNewCombiBranchCode, Sport, apiGetSports
 } from "admin_secretary_shared/adapters";
 import {useEffect, useState} from "react";
+import textLang, {Language} from "../app/string";
 
-export const useNewSportCode = (): { isLoading: boolean, newSportCode: string } => {
+export const useNewSportCode = (language: Language = "sk"): { isLoading: boolean, newSportCode: string } => {
 	const toastId = "getting_new_sport_code";
-	const toastMsg = "Zisťuje sa nový kód športu...";
+	const toastMsg = textLang[language].gettingNewSportCode;
 	const queryKey = "get_new_sport_code";
 
 	const {isLoading, response} = useQueryWithNotifications(
-		toastId, queryKey, apiGetNewSportCode, toastMsg, false
+		toastId, queryKey, apiGetNewSportCode, toastMsg, false, language
 	);
 
 	const [newSportCode, setNewSportCode] = useState<string>("");
@@ -27,12 +28,14 @@ export const useNewSportCode = (): { isLoading: boolean, newSportCode: string } 
 	return { isLoading, newSportCode };
 }
 
-export const useBranchesWithSports = (): { isLoading: boolean, branchesWithSports: BranchWithSport[] } => {
+export const useBranchesWithSports = (language: Language = "sk"): { isLoading: boolean, branchesWithSports: BranchWithSport[] } => {
 	const toastId = "fetching_branches_with_sports";
-	const toastMsg = "Načítavanie odvetví so športami...";
+	const toastMsg = textLang[language].loadingSportsWithBranches;
 	const queryKey = "get_branches_with_sports";
 
-	const {isLoading, response} = useQueryWithNotifications(toastId, queryKey, apiGetBranchesWithSports, toastMsg);
+	const {isLoading, response} = useQueryWithNotifications(
+		toastId, queryKey, apiGetBranchesWithSports, toastMsg, true, language
+	);
 
 	const [branchesWithSports, setBranchesWithSports] = useState<BranchWithSport[]>([]);
 
@@ -44,12 +47,14 @@ export const useBranchesWithSports = (): { isLoading: boolean, branchesWithSport
 	return { isLoading, branchesWithSports };
 }
 
-export const useCombiBranches = (): { isLoading: boolean, combiBranches: CombiBranch[] } => {
+export const useCombiBranches = (language: Language = "sk"): { isLoading: boolean, combiBranches: CombiBranch[] } => {
 	const toastId = "fetching_combi_branches";
-	const toastMsg = "Načítavanie kombinovaných odvetví...";
+	const toastMsg = textLang[language].loadingCombiBranches;
 	const queryKey = "get_combi_branches";
 
-	const {isLoading, response} = useQueryWithNotifications(toastId, queryKey, apiGetCombiBranches, toastMsg);
+	const {isLoading, response} = useQueryWithNotifications(
+		toastId, queryKey, apiGetCombiBranches, toastMsg, true, language
+	);
 
 	const [combiBranches, setCombiBranches] = useState<CombiBranch[]>([]);
 
@@ -61,13 +66,13 @@ export const useCombiBranches = (): { isLoading: boolean, combiBranches: CombiBr
 	return { isLoading, combiBranches };
 }
 
-export const useNewCombiBranchCode = (): { isLoading: boolean, newCombiBranchCode: string } => {
+export const useNewCombiBranchCode = (language: Language = "sk"): { isLoading: boolean, newCombiBranchCode: string } => {
 	const toastId = "getting_new_combi_branch_code";
-	const toastMsg = "Zisťuje sa nový kód odvetvia...";
+	const toastMsg = textLang[language].gettingNewBranchCode;
 	const queryKey = "get_new_combi_branch_code";
 
 	const {isLoading, response} = useQueryWithNotifications(
-		toastId, queryKey, apiGetNewCombiBranchCode, toastMsg, false
+		toastId, queryKey, apiGetNewCombiBranchCode, toastMsg, false, language
 	);
 
 	const [newCombiBranchCode, setNewCombiBranchCode] = useState<string>("");
@@ -80,31 +85,14 @@ export const useNewCombiBranchCode = (): { isLoading: boolean, newCombiBranchCod
 	return { isLoading, newCombiBranchCode };
 }
 
-export const useNewBranchCode = (sportCode: string): { isLoading: boolean, newBranchCode: string } => {
-	const toastId = "getting_new_branch_code";
-	const toastMsg = "Zisťuje sa nový kód odvetvia...";
-	const queryKey = "get_new_branch_code";
-
-	const {isLoading, response} = useQueryWithNotifications(
-		toastId, queryKey, apiGetNewBranchCode, toastMsg, false
-	);
-
-	const [newBranchCode, setNewBranchCode] = useState<string>("");
-
-	useEffect(() => {
-		if (response !== undefined)
-			setNewBranchCode(response.data.newBranchCode);
-	}, [response]);
-
-	return { isLoading, newBranchCode };
-}
-
-export const useSports = (): { isLoading: boolean, sports: Sport[] } => {
+export const useSports = (language: Language = "sk"): { isLoading: boolean, sports: Sport[] } => {
 	const toastId = "fetching_sports";
-	const toastMsg = "Načítavanie športov...";
+	const toastMsg = textLang[language].loadingSports;
 	const queryKey = "get_sports";
 
-	const {isLoading, response} = useQueryWithNotifications(toastId, queryKey, apiGetSports, toastMsg);
+	const {isLoading, response} = useQueryWithNotifications(
+		toastId, queryKey, apiGetSports, toastMsg, true, language
+	);
 
 	const [sports, setSports] = useState<Sport[]>([]);
 

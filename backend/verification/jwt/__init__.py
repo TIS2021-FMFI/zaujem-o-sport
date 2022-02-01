@@ -17,7 +17,6 @@ def is_secretary(f):
 		return Response.get(status=Status.ERROR, message="Invalid token")
 	return decorated_function
 
-
 def is_admin(f):
 	"""
 	Request validation with JWT token.

@@ -1,9 +1,9 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import incorrectRowsReducer from "secretary/pages/upload_data/incorrectRowsSlice";
+import uploadCorrectionsReducer from "secretary/pages/upload_data/components/correctionsSlice";
 
 export const store = configureStore({
   reducer: {
-    secretaryUploadIncorrectRows: incorrectRowsReducer
+    secretaryUploadCorrections: uploadCorrectionsReducer
   },
 });
 

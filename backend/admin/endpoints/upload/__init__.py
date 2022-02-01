@@ -1,15 +1,14 @@
 from flask import request
 from flasgger import SwaggerView
+from verification.jwt import is_admin
 from openpyxl import load_workbook
 from io import BytesIO
 from csv_parsers.excelParser import excelParser
 from settings import DB
-from verification.jwt import is_secretary, is_admin
-
 
 class UploadView(SwaggerView):
 
-	@is_secretary
+	@is_admin
 	def post(self):
 
 		if len(request.files) == 0:

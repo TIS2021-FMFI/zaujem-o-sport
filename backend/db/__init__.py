@@ -1300,7 +1300,7 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql)
                     tmp = cursor.fetchone()
-                    return tmp[0]
+                    return tmp[0] if tmp[0] is not None else 1
         except psycopg2.DatabaseError as error:
             # TODO: logging
             # TODO: define standard for database error messages
@@ -1333,7 +1333,7 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql, {"sport_code": sport_code})
                     tmp = cursor.fetchone()
-                    return tmp[0]
+                    return tmp[0] if tmp[0] is not None else 1
         except psycopg2.DatabaseError as error:
             # TODO: logging
             # TODO: define standard for database error messages
@@ -1366,7 +1366,7 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql)
                     tmp = cursor.fetchone()
-                    return tmp[0]
+                    return tmp[0] if tmp[0] is not None else 10000
         except psycopg2.DatabaseError as error:
             # TODO: logging
             # TODO: define standard for database error messages

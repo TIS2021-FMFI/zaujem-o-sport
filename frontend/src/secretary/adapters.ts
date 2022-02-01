@@ -5,6 +5,7 @@
 
 import {secretaryAxiosProvider as axios} from "secretary/axios_provider";
 import {AxiosResponse} from "axios";
+import {Correction} from "./pages/upload_data/components/correctionsSlice";
 
 export interface ApiListSportsType {
 	message: string,
@@ -23,13 +24,18 @@ export const apiListSports = ()  // TODO: find usage => remove
 export interface ApiUploadFundingProps {
 	csvFile: File,
 	countryCode: string,
-	currency: string
+	currency: string,
+	corrections: Correction[]
 }
 
 // TODO: return type
-export const apiUploadFunding = ({csvFile, countryCode, currency}: ApiUploadFundingProps): Promise<AxiosResponse<{}>> => {
+export const apiUploadFunding = ({csvFile, countryCode, currency, corrections}: ApiUploadFundingProps): Promise<AxiosResponse<{}>> => {
+	const _corrections: any = {};
+	for (const correction of corrections) {
+		_corrections[correction.row] = correction;
+	}
 	const formData = new FormData();
 	formData.append("csvFile", csvFile);
-	formData.append("json", JSON.stringify({countryCode: countryCode, currency: currency}))
+	formData.append("json", JSON.stringify({countryCode: countryCode, currency: currency, correction: _corrections}))
 	return axios.post("/secretary/funding/upload", formData);
 }

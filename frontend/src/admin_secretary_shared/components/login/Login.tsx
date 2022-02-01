@@ -67,7 +67,7 @@ export const Login = ({userType, lang = "sk"}: LoginFormProps) => {
 					<section className={`w-100 h-100vh d-flex justify-content-center align-items-center`}>
 						<Form className={`${styles.loginForm}`} onSubmit={submitForm}>
 							<header className={`text-center`}>
-								<h1>{text.loginHeader}</h1>
+								<h1>{text.loginHeader} {userType === "secretary" ? "sekretárka" : "admin"}</h1>
 							</header>
 							{ serverErrorMessage.length !== 0 &&
               <>

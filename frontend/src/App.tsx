@@ -28,12 +28,15 @@ import {HomeUser} from "./user/pages/home/HomeUser";
 import 'user/pages/styles/site.scss';
 import {ToastContainer} from "react-toastify";
 import {UpdateSport} from "./admin/pages/update_sport/UpdateSport";
-import {AddCountry} from "./admin_secretary_shared/pages/add_country/AddCountry";
+import {AddCountry} from "admin/pages/add_country/AddCountry";
+import {Language} from "./app/string";
 
 const history = createBrowserHistory();
 setupSecretaryInterceptors(history);
 setupAdminInterceptors(history);
 setupAdminSecretaryInterceptors(history);
+
+export const LanguageContext = React.createContext<Language>("sk");
 
 const App = () => {
 	return (<>
@@ -121,20 +124,22 @@ const SecretaryRoutes = () => {
 			/>
 			<div style={{marginLeft: globalStyles.sidebarWidth}}>
 				<Container fluid="lg">
-					<Switch>
-						<SecretaryAuthRoute exact path={path}>
-							<Redirect to={`${path}/data/upload`} />
-						</SecretaryAuthRoute>
-						<SecretaryAuthRoute exact path={`${path}/data/upload`} component={UploadData} />
-						<SecretaryAuthRoute exact path={`${path}/sports/list`} component={SportsWithBranches} />
-						<SecretaryAuthRoute exact path={`${path}/sports/add`} component={AddSport} />
-						<SecretaryAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
-						<SecretaryAuthRoute exact path={`${path}/countries/list`} component={Countries} />
-						<Route exact path={`${path}/logout`}>
-							<Logout userType="secretary" />
-						</Route>
-						<SecretaryAuthRoute path="*" component={NotFound} />
-					</Switch>
+					<LanguageContext.Provider value="sk">
+						<Switch>
+							<SecretaryAuthRoute exact path={path}>
+								<Redirect to={`${path}/data/upload`} />
+							</SecretaryAuthRoute>
+							<SecretaryAuthRoute exact path={`${path}/data/upload`} component={UploadData} />
+							<SecretaryAuthRoute exact path={`${path}/sports/list`} component={SportsWithBranches} />
+							<SecretaryAuthRoute exact path={`${path}/sports/add`} component={AddSport} />
+							<SecretaryAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
+							<SecretaryAuthRoute exact path={`${path}/countries/list`} component={Countries} />
+							<Route exact path={`${path}/logout`}>
+								<Logout userType="secretary" />
+							</Route>
+							<SecretaryAuthRoute path="*" component={NotFound} />
+						</Switch>
+					</LanguageContext.Provider>
 				</Container>
 			</div>
 		</>
@@ -197,24 +202,24 @@ const AdminRoutes = () => {
 			/>
 			<div style={{marginLeft: globalStyles.sidebarWidth}}>
 				<Container fluid="lg">
-					<Switch>
-						<AdminAuthRoute exact path={path}>
-							<Redirect to={`${path}/data/upload`} />
-						</AdminAuthRoute>
-						<AdminAuthRoute exact path={`${path}/data/upload`} component={AdminUploadData} />
-						<AdminAuthRoute exact path={`${path}/sports/add`} >
-							<AddSport lang="en" />
-						</AdminAuthRoute>
-						<AdminAuthRoute exact path={`${path}/sports/update`} component={UpdateSport} />
-						<AdminAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
-						<AdminAuthRoute exact path={`${path}/sports/list`} component={SportsWithBranches} />
-						<AdminAuthRoute exact path={`${path}/countries/list`} component={Countries} />
-						<AdminAuthRoute exact path={`${path}/countries/add`} component={AddCountry} />
-						<Route exact path={`${path}/logout`}>
-							<Logout userType="admin" />
-						</Route>
-						<AdminAuthRoute path="*" component={NotFound} />
-					</Switch>
+					<LanguageContext.Provider value="en">
+						<Switch>
+							<AdminAuthRoute exact path={path}>
+								<Redirect to={`${path}/data/upload`} />
+							</AdminAuthRoute>
+							<AdminAuthRoute exact path={`${path}/data/upload`} component={AdminUploadData} />
+							<AdminAuthRoute exact path={`${path}/sports/add`} component={AddSport} />
+							<AdminAuthRoute exact path={`${path}/sports/update`} component={UpdateSport} />
+							<AdminAuthRoute exact path={`${path}/branches/add`} component={AddBranch} />
+							<AdminAuthRoute exact path={`${path}/sports/list`} component={SportsWithBranches} />
+							<AdminAuthRoute exact path={`${path}/countries/list`} component={Countries} />
+							<AdminAuthRoute exact path={`${path}/countries/add`} component={AddCountry} />
+							<Route exact path={`${path}/logout`}>
+								<Logout userType="admin" />
+							</Route>
+							<AdminAuthRoute path="*" component={NotFound} />
+						</Switch>
+					</LanguageContext.Provider>
 				</Container>
 			</div>
 		</>
