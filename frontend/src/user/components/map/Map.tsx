@@ -268,10 +268,7 @@ export const MapShow = ({input}: MapProps) => {
 
 
     return (<>
-        <header>
-            <h1>Prepojenie</h1>
-            {locations.get("ZWE")}
-        </header>
+
         <div>
             <MapContainer style = {{height:"600px"}} center={[51.505, -0.09]} zoom={2} scrollWheelZoom={false}>
                 <TileLayer

@@ -12,15 +12,15 @@ export const Interconnectness = () => {
         </header>
         <div>
             <h4> Choose how data will be displayed</h4>
-            <h5 >
-                    <Link  to="/interconnectness/table"> <Button variant="outline-primary">Table</Button></Link>
-                <Link  to="/interconnectness/map">  <Button variant="outline-primary">Map</Button></Link>
+            <h5>
+                <Link  to="/interconnectness/table"><Button variant="outline-primary">Table</Button></Link>
+                <Link  to="/interconnectness/map"><Button variant="outline-primary">Map</Button></Link>
             </h5>
 
             <Switch>
                 <div className="inter">
-                    <Route path="/interconnectness/table"><InterconnectnessTable /></Route>
-                    <Route path="/interconnectness/map"><InterconnectnessMap /></Route>
+                    <Route path="/interconnectness/table"><InterconnectnessTable/></Route>
+                    <Route path="/interconnectness/map"><InterconnectnessMap/></Route>
                 </div>
             </Switch>
         </div>

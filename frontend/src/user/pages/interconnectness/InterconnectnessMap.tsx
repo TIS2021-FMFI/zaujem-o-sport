@@ -31,7 +31,9 @@ export const InterconnectnessMap = () => {
     const [interconnectnesstype, setInterconnectesstype] = useState<interconnectnessTypeType[]>();
 
     useQuery("list_interconnectnesstype", apiListInterconnectnessType, {
-        onSuccess: (response) => {
+        onSuccess: (response) =>
+        {
+            console.log("res : " + response.data.data);
             const serverData = response.data.data;
             setInterconnectesstype(serverData.interconnectnesstype);
 
@@ -94,7 +96,6 @@ export const InterconnectnessMap = () => {
         }
     );
 
-    console.log(interconnectnesses);
 
 
     useEffect(() => {

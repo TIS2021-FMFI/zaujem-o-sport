@@ -1528,14 +1528,14 @@ class Database:
         """
 
         sql = "select code, title from interconnectness_type"
-        results = []
+        results = {"interconnectnesstype":[]}
         try:
             with self._getConnection() as dbConn:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql)
                     tmp = cursor.fetchone()
                     while tmp:
-                        results.append({"code": tmp[0], "title": tmp[1]})
+                        results["interconnectnesstype"].append({"code": tmp[0], "title": tmp[1]})
                         tmp = cursor.fetchone()
         except psycopg2.DatabaseError as error:
             # print(error)
