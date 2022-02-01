@@ -198,4 +198,8 @@ if __name__ == "__main__":
 		print("Invalid mode.")
 		quit(1)
 
-	app.run(debug=True if mode == "dev" else False, host=ip, port=settings.PORT)
+	app.run(
+		debug=True if mode == "dev" else False,
+		host=ip,
+		port=settings.DEVELOPMENT_PORT if mode == "dev" else settings.PRODUCTION_PORT
+	)

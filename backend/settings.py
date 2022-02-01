@@ -14,9 +14,10 @@ import psycopg2
 from psycopg2 import pool
 from db import Database
 
-PRODUCTION_IP = ""  # TODO (production): this will become https domain
 DEVELOPMENT_IP = "localhost"
-PORT = 3001
+DEVELOPMENT_PORT = 3001
+PRODUCTION_IP = "localhost"
+PRODUCTION_PORT = 8765
 
 """ Flask webserver setup. """
 app = Flask(__name__)
@@ -26,8 +27,8 @@ app.secret_key = os.urandom(12)
 CORS(app)  # TODO (production): allow only specific domains
 
 """ JWT tokens setup. """
-app.config["JWT_SECRET_KEY"] = "development secret key"  # TODO (production): exchange for something else
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=24)
+app.config["JWT_SECRET_KEY"] = "production secret key DSJF09830E9F8DS08F903280EJW030FM30F03VJ900F9023NV092F092UVJ02FJ2"
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=72)
 jwt = JWTManager(app)
 
 """ 
