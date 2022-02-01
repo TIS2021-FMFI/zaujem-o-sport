@@ -17,7 +17,7 @@ from db import Database
 DEVELOPMENT_IP = "localhost"
 DEVELOPMENT_PORT = 3001
 PRODUCTION_IP = "localhost"
-PRODUCTION_PORT = 8765
+PRODUCTION_PORT = 8766
 
 """ Flask webserver setup. """
 app = Flask(__name__)
