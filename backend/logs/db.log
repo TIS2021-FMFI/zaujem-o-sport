@@ -1,0 +1,11 @@
+2022-01-30 14:56:18,377 ERROR    fest zle daco sa stalo
+2022-01-30 14:56:18,473 ERROR    fest zle daco sa stalo
+2022-01-30 14:56:29,857 ERROR    fest zle daco sa stalo
+2022-01-30 15:15:14,557 ERROR    syntax error at or near "selecxt"
+LINE 1: selecxt id from country where code = 'SVK' and is_active
+        ^
+
+2022-01-30 15:15:14,873 ERROR    syntax error at or near "selecxt"
+LINE 1: selecxt id from country where code = 'SVK' and is_active
+        ^
+

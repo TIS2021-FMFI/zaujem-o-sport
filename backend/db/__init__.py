@@ -3,6 +3,8 @@ from psycopg2 import pool
 import psycopg2.extras
 import psycopg2.extensions
 from typing import Union, List, Dict, Any
+import logging
+from os.path import join
 
 
 class DataError(Exception):
@@ -12,9 +14,24 @@ class DataError(Exception):
 class Database:
 
     def __init__(self, dbPool: psycopg2.pool.ThreadedConnectionPool):
-        """ Initialize DB pool. """
+        """ Initialize DB pool and db logger. """
 
         self.dbPool = dbPool
+
+        LOG_PATH = "logs"
+        LOG_FILE = "db"
+        name = join(LOG_PATH, LOG_FILE)
+
+        formatter = logging.Formatter('%(asctime)s %(levelname)-8s %(message)s')
+
+        handler = logging.FileHandler(name + ".log", mode='a')
+        handler.setFormatter(formatter)
+
+        logger = logging.getLogger(name)
+        logger.setLevel(logging.DEBUG)
+        logger.addHandler(handler)
+
+        self.logger = logger
 
     def _getConnection(self) -> psycopg2.extensions.connection:
         """ Establish and return connection from DB pool. """
@@ -38,9 +55,8 @@ class Database:
                     result = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             return result
 
@@ -56,9 +72,8 @@ class Database:
                     result = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             return result
 
@@ -80,9 +95,8 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             return countries
@@ -105,9 +119,8 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             return sports
 
@@ -130,9 +143,8 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             return result
@@ -156,9 +168,8 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             return results
 
@@ -184,9 +195,8 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             return result
@@ -206,9 +216,8 @@ class Database:
                     results = cursor.fetchall()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             return results
 
@@ -228,9 +237,8 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             return result
@@ -251,9 +259,8 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             return result
@@ -274,9 +281,8 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             return result
@@ -298,10 +304,9 @@ class Database:
                     dbConn.commit()
             self._releaseConnection(dbConn)
             return True
-        except (psycopg2.DatabaseError, DataError) as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+        except Union[psycopg2.DatabaseError, DataError] as error:
+            # print(error)
+            self.logger.error(error)
             return False
 
     def addBranch(self, data: dict) -> bool:
@@ -343,10 +348,9 @@ class Database:
                     dbConn.commit()
             self._releaseConnection(dbConn)
             return True
-        except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+        except Union[psycopg2.DatabaseError, DataError] as error:
+            # print(error)
+            self.logger.error(error)
             return False
 
     def addCombiBranch(self, data: dict) -> bool:
@@ -373,7 +377,13 @@ class Database:
             if suma != 1:
                 raise DataError("coefficients sum is not 1")
         except KeyError:
-            raise DataError("invalid subBranches data structure")
+            try:
+                raise DataError("invalid subbranch data structure")
+            except DataError as e:
+                self.logger.error(e)
+        except DataError as e:
+            self.logger.error(e)
+
 
         sql_check_unique = "select * from branch where code = %(branch_code)s"
         sql_country_exists = "select id from country where code = %(country_code)s"
@@ -429,10 +439,9 @@ class Database:
 
             self._releaseConnection(dbConn)
             return True
-        except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+        except Union[psycopg2.DatabaseError, DataError] as error:
+            # print(error)
+            self.logger.error(error)
             return False
 
     def addCountry(self, data: dict) -> bool:
@@ -475,10 +484,9 @@ class Database:
 
             self._releaseConnection(dbConn)
             return True
-        except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+        except Union[psycopg2.DatabaseError, DataError] as error:
+            # print(error)
+            self.logger.error(error)
             return False
 
     def updateSport(self, data: dict) -> bool:
@@ -503,10 +511,9 @@ class Database:
                 dbConn.commit()
             self._releaseConnection(dbConn)
             return True
-        except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+        except Union[psycopg2.DatabaseError, DataError] as error:
+            # print(error)
+            self.logger.error(error)
             return False
 
     def importFundingData(self, country_id: id, branch_id: id, amount: float, currency: str):
@@ -526,9 +533,8 @@ class Database:
             self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
             return False
 
     def deleteSuccesTables(self):
@@ -647,9 +653,8 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
 
@@ -677,9 +682,8 @@ class Database:
 
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print("this err", error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             final_result = {}
@@ -711,9 +715,8 @@ class Database:
 
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print("this err", error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             final_result = {}
@@ -745,9 +748,8 @@ class Database:
 
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print("this err", error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             final_result = {}
@@ -775,9 +777,8 @@ class Database:
 
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             final_result = {}
@@ -805,9 +806,8 @@ class Database:
 
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             final_result = {}
@@ -835,9 +835,8 @@ class Database:
 
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             final_result = {}
@@ -866,9 +865,8 @@ class Database:
 
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             final_result = {}
@@ -901,9 +899,8 @@ class Database:
 
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             final_result = {}
@@ -937,9 +934,8 @@ class Database:
 
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             final_result = {}
@@ -972,9 +968,8 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             return result["countries"]
@@ -993,9 +988,8 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             return result["sports"]
@@ -1018,9 +1012,8 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             final_result = {}
@@ -1057,9 +1050,8 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
 
@@ -1097,9 +1089,8 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
 
@@ -1130,9 +1121,8 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
 
@@ -1159,12 +1149,9 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
-            # print(result)
-
             final_result = {}
 
             for record in result["sports"]:
@@ -1173,6 +1160,8 @@ class Database:
             return final_result
 
     def checkCodeTitle(self, sport_code: int, branch_code: int, sport_title: str, branch_title: str) -> bool:
+        """ Check if branch and sport with sport code and branch codes and titles exist and belongs together."""
+
 
         sql = "select * from sport s join branch b on s.id = b.sport_id and s.code = %(sport_code)s " \
               "and b.code = %(branch_code)s and s.title = %(sport_title)s and b.title = %(branch_title)s "
@@ -1186,12 +1175,12 @@ class Database:
             self._releaseConnection(dbConn)
             return tmp is not None
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
             return False
 
     def findSportByCode(self, sport_code: int) -> str:
+        """ Returns title of sport by entered code. """
 
         sql = "select title from sport where code = %(sport_code)s"
         try:
@@ -1202,12 +1191,13 @@ class Database:
             self._releaseConnection(dbConn)
             return tmp[0] if tmp is not None else None
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
             return ""
 
     def findBranchByCode(self, sport_code: int, branch_code: int) -> str:
+        """ Returns branch title of branch defined by entered sport and branch code."""
+
         sql = "select b.title from branch b join sport s on s.id = b.sport_id " \
               "and s.code = %(sport_code)s and b.code = %(branch_code)s"
         try:
@@ -1218,12 +1208,15 @@ class Database:
             self._releaseConnection(dbConn)
             return tmp[0] if tmp is not None else None
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
             return ""
 
-    def getSportBranches(self, sport_code: int) -> list:
+    def getSportBranches(self, sport_code: int) -> List[Dict[str, Any]]:
+        """
+            Returns all branches which belongs to entered sport.
+            Output format : list of dicts , each dict contains keys code, title.
+        """
 
         sql = "select b.code, b.title from branch b join sport s " \
               "on b.sport_id = s.id and s.code = %(code)s"
@@ -1239,15 +1232,19 @@ class Database:
                     self._releaseConnection(dbConn)
 
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
 
         finally:
             # print(result)
             return result["branches"]
 
-    def showCombiBranches(self) -> list:
+    def showCombiBranches(self) -> List[Dict[str, Any]]:
+        """
+            Returns data about combi branches from table combi_branch.
+            Output format : list of dicts , each dict contains keys countryCode, countryName,
+            combiCode, combiTitle, subCode, subTitle, coefficient.
+        """
 
         sql = "select c.code, c.name, b.code, b.title, b2.code, b2.title, coefficient " \
               "from combi_branch cb join branch b on combi_branch_id = b.id " \
@@ -1266,14 +1263,14 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             # print(result)
             return results
 
-    def checkCombi(self, branch_code, country_code):
+    def checkCombi(self, branch_code, country_code) -> tuple:
+        """ Check existance of combi branch. If exists, returns code, title else -1 and empty."""
 
         sql = "select b.code, b.title from branch b join country c " \
               "on c.id = b.country_id and c.code = %(country_code)s and is_combined and b.code = %(branch_code)s "
@@ -1288,11 +1285,11 @@ class Database:
                         return tmp[0], tmp[1]
 
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
 
     def suggestNewSportCode(self):
+        """ Returns suggestion for sport code. """
 
         sql = "select max(code)+1 from sport"
         try:
@@ -1302,11 +1299,12 @@ class Database:
                     tmp = cursor.fetchone()
                     return tmp[0] if tmp[0] is not None else 1
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
 
     def countryCodeToID(self, country_code: str) -> id:
+        """ Convert country code to country id."""
+
 
         sql = "select id from country where code=%(country_code)s"
         try:
@@ -1320,11 +1318,11 @@ class Database:
                         return tmp[0]
 
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
 
-    def suggestNewBranchCode(self, sport_code: int):
+    def suggestNewBranchCode(self, sport_code: int) -> int:
+        """ Returns suggestion for branch code in entered sport. """
 
         sql = "select max(b.code)+1 from branch b " \
               "join sport s on s.id = b.sport_id and s.code = %(sport_code)s"
@@ -1335,11 +1333,14 @@ class Database:
                     tmp = cursor.fetchone()
                     return tmp[0] if tmp[0] is not None else 1
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
 
     def branchCodeToId(self, sport_code: int, branch_code: int) -> id:
+        """
+            Convert branch code to id.
+            Branch is defined by branch code and sport code it belongs to.
+        """
 
         sql = "select b.id from branch b join sport s on s.id = b.sport_id and " \
               " b.code = %(branch_code)s and s.code =  %(sport_code)s "
@@ -1354,11 +1355,11 @@ class Database:
                     else:
                         return tmp[0]
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
 
-    def suggestNewCombiBranchCode(self):
+    def suggestNewCombiBranchCode(self) -> int:
+        """ Returns suggestion for combi branch code. """
 
         sql = "select max(b.code)+1 from branch b where is_combined"
         try:
@@ -1368,11 +1369,15 @@ class Database:
                     tmp = cursor.fetchone()
                     return tmp[0] if tmp[0] is not None else 10000
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
 
-    def getSportsWithExistingBranch(self):
+    def getSportsWithExisitingBranch(self) -> List[Dict[str, Any]]:
+        """
+            Returns sports from table sport which have at least one branch.
+            Output format : list of dicts , each dict contains keys title, code.
+        """
+
 
         sql = "select s.code, s.title from sport s " \
               " where exists(select * from branch where sport_id = s.id) "
@@ -1388,13 +1393,13 @@ class Database:
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
-            # TODO: logging
-            # TODO: define standard for database error messages
-            print(error)
+            # print(error)
+            self.logger.error(error)
         finally:
             return sports
 
     def combiBranchCodeToId(self, branch_code: int) -> id:
+        """ Convert combi branch code to id."""
 
         sql = "select b.id from branch b where is_combined and code = %(code)s"
 
@@ -1408,11 +1413,14 @@ class Database:
                     else:
                         return tmp[0]
         except psycopg2.DatabaseError as error:
-            print(error)
-        # TODO: logging
-        # TODO: define standard for database error messages
+            # print(error)
+            self.logger.error(error)
 
-    def getInterconnTypes(self):
+    def getInterconnTypes(self) -> List[Dict[str, Any]]:
+        """
+            Returns interconnectness types from table interconnectness_type.
+            Output format : list of dicts , each dict contains keys title, code.
+        """
 
         sql = "select code, title from interconnectness_type"
         results = []
@@ -1425,25 +1433,25 @@ class Database:
                         results.append({"code": tmp[0], "title": tmp[1]})
                         tmp = cursor.fetchone()
         except psycopg2.DatabaseError as error:
-            print(error)
-            # TODO: logging
-            # TODO: define standard for database error messages
+            # print(error)
+            self.logger.error(error)
         finally:
             return results
 
-    def getCountryIdByCode(self, countryCode: str):
+    def getCountryIdByCode(self, countryCode: str) -> id:
+        """ Convert country code to country id."""
 
         sql = "select id from country where code = %(countryCode)s and is_active"
         try:
             with self._getConnection() as dbConn:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-                    cursor.execute(sql, {"countryCode":countryCode})
+                    cursor.execute(sql, {"countryCode": countryCode})
                     tmp = cursor.fetchone()
                     if tmp is None:
                         raise DataError("country code does not exist")
                     else:
                         return tmp[0]
-        except psycopg2.DatabaseError as error:
-            print(error)
-            # TODO: logging
-            # TODO: define standard for database error messages
+        except Union[psycopg2.DatabaseError, DataError] as error:
+            # print(error)
+            self.logger.error(error)
+            return -1

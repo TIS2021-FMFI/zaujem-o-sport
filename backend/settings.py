@@ -4,6 +4,7 @@ Plenty of things here can throw exception and that's good, since settings are ca
 and it's necessary to have everything up and running.
 """
 
+
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
@@ -76,3 +77,6 @@ DB = Database(dbPool)
 
 #DB.addCombiBranch(data={"branchCode":11002, "branchTitle":"ultra mega sport", "isCombined":True, "countryCode":"SVK", "subbranch":[{"sportCode":1,"branchCode":1, "coefficient":1}]})
 #print(DB.getInterconnTypes())
+
+
+print(DB.getCountryIdByCode('SVK'))
