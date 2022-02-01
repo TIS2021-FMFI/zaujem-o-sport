@@ -1,7 +1,11 @@
-/** API adapters for the secretary part of the app. */
+/**
+ * API adapters for a secretary.
+ * All API urls should start with "/secretary".
+ */
 
 import {secretaryAxiosProvider as axios} from "secretary/axios_provider";
 import {AxiosResponse} from "axios";
+import {Correction} from "./pages/upload_data/components/correctionsSlice";
 
 export interface ApiListSportsType {
 	message: string,
@@ -11,30 +15,27 @@ export interface ApiListSportsType {
 	}
 }
 
-export const apiListSports = ()
+export const apiListSports = ()  // TODO: find usage => remove
 	: Promise<AxiosResponse<ApiListSportsType>> =>
 {
 	return axios.get("/secretary/sports");
 }
 
-export type countryType = {
-	name: string,
-	code: string
+export interface ApiUploadFundingProps {
+	csvFile: File,
+	countryCode: string,
+	currency: string,
+	corrections: Correction[]
 }
 
-export interface ApiListCountriesType {
-	message: string,
-	data: {
-		countries: countryType[]
+// TODO: return type
+export const apiUploadFunding = ({csvFile, countryCode, currency, corrections}: ApiUploadFundingProps): Promise<AxiosResponse<{}>> => {
+	const _corrections: any = {};
+	for (const correction of corrections) {
+		_corrections[correction.row] = correction;
 	}
-}
-
-export const apiListCountries = (): Promise<AxiosResponse<ApiListCountriesType>> => {
-	return axios.get("/secretary/countries");
-}
-
-export const apiUploadFunding = (csvFile: File): Promise<AxiosResponse<{}>> => {
 	const formData = new FormData();
 	formData.append("csvFile", csvFile);
+	formData.append("json", JSON.stringify({countryCode: countryCode, currency: currency, correction: _corrections}))
 	return axios.post("/secretary/funding/upload", formData);
 }

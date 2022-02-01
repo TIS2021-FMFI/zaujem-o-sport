@@ -4,6 +4,7 @@ Plenty of things here can throw exception and that's good, since settings are ca
 and it's necessary to have everything up and running.
 """
 
+
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
@@ -14,9 +15,10 @@ import psycopg2
 from psycopg2 import pool
 from db import Database
 
-PRODUCTION_IP = ""  # TODO (production): this will become https domain
 DEVELOPMENT_IP = "localhost"
-PORT = 3001
+DEVELOPMENT_PORT = 3001
+PRODUCTION_IP = "localhost"
+PRODUCTION_PORT = 8766
 
 """ Flask webserver setup. """
 app = Flask(__name__)
@@ -26,18 +28,21 @@ app.secret_key = os.urandom(12)
 CORS(app)  # TODO (production): allow only specific domains
 
 """ JWT tokens setup. """
-app.config["JWT_SECRET_KEY"] = "development secret key"  # TODO (production): exchange for something else
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=24)
+app.config["JWT_SECRET_KEY"] = "production secret key DSJF09830E9F8DS08F903280EJW030FM30F03VJ900F9023NV092F092UVJ02FJ2"
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=72)
 jwt = JWTManager(app)
 
-""" Database connection pool setup. """
+""" 
+Database connection pool setup. 
+Setting up max connections in the pool (great resource: https://www.enterprisedb.com/postgres-tutorials/why-you-should-use-connection-pooling-when-setting-maxconnections-postgres).
+"""
 dbPool = psycopg2.pool.ThreadedConnectionPool(
-	minconn=1,
-	maxconn=20,
-	host= env.get("DB_HOST"),
-	database= env.get("DB_NAME"),
-	user= env.get("DB_USER"),
-	password= env.get("DB_PASS")
+    minconn=1,
+    maxconn=1000,
+    host=env.get("DB_HOST"),
+    database=env.get("DB_NAME"),
+    user=env.get("DB_USER"),
+    password=env.get("DB_PASS")
 )
 DB = Database(dbPool)
 
@@ -68,3 +73,10 @@ DB = Database(dbPool)
 #print(DB.getNonCombiBranchIds())
 #print(DB.getNonCombiWithSportBranchIds())
 #print(DB.getAllSportInfo())
+
+
+#DB.addCombiBranch(data={"branchCode":11002, "branchTitle":"ultra mega sport", "isCombined":True, "countryCode":"SVK", "subbranch":[{"sportCode":1,"branchCode":1, "coefficient":1}]})
+#print(DB.getInterconnTypes())
+
+
+print(DB.getCountryIdByCode('SVK'))

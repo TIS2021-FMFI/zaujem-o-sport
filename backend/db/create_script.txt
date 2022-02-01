@@ -97,7 +97,6 @@ CREATE TABLE funding
      id                SERIAL PRIMARY KEY,
      country_id        INTEGER REFERENCES country(id),
      branch_id         INTEGER REFERENCES branch(id),
-     relative_funding  FLOAT,
      absolute_funding  FLOAT,
      currency          VARCHAR
   );
@@ -120,3 +119,36 @@ CREATE TABLE BGS
      sport_id          INTEGER UNIQUE,
      VALUE             INTEGER
   );
+
+DROP TABLE IF EXISTS NUM_IN_SPORT CASCADE;
+CREATE TABLE NUM_IN_SPORT
+  (
+     sport_id          INTEGER UNIQUE REFERENCES sport(id),
+     num_countries     INTEGER
+  );
+
+
+DROP TABLE IF EXISTS MAX_POINTS_IN_SPORT CASCADE;
+CREATE TABLE MAX_POINTS_IN_SPORT
+  (
+     sport_id          INTEGER UNIQUE REFERENCES sport(id),
+     points            FLOAT
+  );
+
+
+DROP TABLE IF EXISTS TOTAL_COUNTRY_POINTS CASCADE;
+CREATE TABLE TOTAL_COUNTRY_POINTS
+  (
+     country_id         INTEGER UNIQUE REFERENCES country(id),
+     points             FLOAT
+  );
+
+DROP TABLE IF EXISTS COUNTRY_BEST_ORDER CASCADE;
+CREATE TABLE COUNTRY_BEST_ORDER
+  (
+     country_id         INTEGER UNIQUE REFERENCES country(id),
+     best               FLOAT
+  );
+
+
+

@@ -285,7 +285,7 @@ class Computations:
             return 0
 
 
-
+    def getFinalOrderById(self, countryK: id) -> dict:
 
         sportInfo = DB.getAllSportInfo()
 
@@ -302,16 +302,13 @@ class Computations:
             result[order] = {"order": order, "code" : code, "title":title, "value": -value}
 
 
-            order += 1
-
-        return result
-
     def getFinalOrderByCountryCode(self, countryCode: str) -> dict:
         result = []
         id = DB.getCountryIdByCode(countryCode)
         for key in self.getFinalOrderById(id).values():
             result.append(key)
         return {"chart" : result}
+
 
 
 # print(c.BGS_data)
