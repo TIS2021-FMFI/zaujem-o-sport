@@ -14,7 +14,7 @@ class DataError(Exception):
 class Database:
 
     def __init__(self, dbPool: psycopg2.pool.ThreadedConnectionPool):
-        """ Initialize DB pool and db logger. """
+        """ Initialize DB pool and DB logger. """
 
         self.dbPool = dbPool
 
@@ -265,7 +265,16 @@ class Database:
             # print(result)
             return result
 
-    def getInterconnectnessData(self, type_id: int, country_code: str) -> dict:
+    def getInterconnectnessData(self, type_id: int, country_code: str) -> Dict[str,List[Dict[str, Any]]]:
+        """ Returns data from table interconnectness for specified country.
+
+                Args:
+                    type_id (int): type of intesconnectness, 1 = economic, 2 = non economic
+                    country_code (str): code of country
+
+                Returns:
+                    dict: dict with one key interconnectness which value is list of dicts with keyscountry, value, type
+        """
 
         sql = "select c2.name, i.value, it.title  from interconnectness i join country c1 " \
               "on country_one_id = c1.id join country c2 on country_two_id = c2.id join interconnectness_type it " \
@@ -290,6 +299,15 @@ class Database:
     # inputs to DB
 
     def addSport(self, code: str, title: str) -> bool:
+        """ Adding a new sport to DB.
+
+			Args:
+				code (str): code of new sport
+				title (str): title of new sport
+
+			Returns:
+				bool: true/false whether sport was successfully added
+        """
         sql_check = "select * from sport where code = %(code)s"
         sql = "insert into sport(code, title) values (%(code)s, %(title)s);"
         try:
@@ -309,8 +327,15 @@ class Database:
             self.logger.error(error)
             return False
 
-    def addBranch(self, data: dict) -> bool:
+    def addBranch(self, data: Dict[str, Any]) -> bool:
+        """ Adding a new branch to DB.
 
+            Args:
+                data (dict): dict with keys sportCode, branchCode, branchTitle to describe new branch
+
+            Returns:
+                bool: true/false whether branch was successfully added
+        """
         if "sportCode" not in data:
             raise DataError("sport code missing in data")
 
@@ -353,7 +378,18 @@ class Database:
             self.logger.error(error)
             return False
 
-    def addCombiBranch(self, data: dict) -> bool:
+    def addCombiBranch(self, data: Dict[str,Any]) -> bool:
+        """ Adding a new combi branch to DB.
+
+		Args:
+			data (dict): dict with items branchCode -> int , branchTitle -> str, countryCode -> str, subBranches -> list
+			subbranches value is list of dicts with keys sportCode, branchCode, coefficient which describe subbranch
+
+
+		Returns:
+			bool: true/false whether combi branch was successfully added
+
+        """
 
         if "branchCode" not in data:
             raise DataError("branch code missing in data")
@@ -444,7 +480,15 @@ class Database:
             self.logger.error(error)
             return False
 
-    def addCountry(self, data: dict) -> bool:
+    def addCountry(self, data: Dict[str,Any]) -> bool:
+        """ Activating inactive or adding a new country to DB.
+
+		Args:
+			data (dict): dict with keys name, translation, code which describe country
+
+		Returns:
+			bool: true/false whether combi country was successfully added / activated
+        """
 
         if "name" not in data:
             raise DataError("country name missing in data")
@@ -489,7 +533,15 @@ class Database:
             self.logger.error(error)
             return False
 
-    def updateSport(self, data: dict) -> bool:
+    def updateSport(self, data: Dict[str,Any]) -> bool:
+        """ Updating sport code or title or both.
+
+		Args:
+			data (dict): dict with keys oldCode, newCode newTitle which describe sport and changes
+
+		Returns:
+			bool: true/false whether sport was successfully updated
+        """
 
         if "oldCode" not in data:
             raise DataError("sport data do not contain old code")
