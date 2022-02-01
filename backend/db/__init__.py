@@ -34,18 +34,33 @@ class Database:
         self.logger = logger
 
     def _getConnection(self) -> psycopg2.extensions.connection:
-        """ Establish and return connection from DB pool. """
+        """ Establish and return connection from DB pool.
 
+		    Returns:
+			    psycopg2.extensions.connection: DB connection from DB pool
+        """
         dbConn = self.dbPool.getconn()
         return dbConn
 
     def _releaseConnection(self, dbConnection: psycopg2.extensions.connection):
-        """ Releases connection. """
+        """ Releases connection.
+
+		Args:
+			dbConnection (psycopg2.extensions.connection): database connection
+        """
 
         self.dbPool.putconn(dbConnection)
 
     def getSecretary(self, email: str) -> Union[None, dict]:
-        """ Use in secretary login process. """
+        """ Use in secretary login process.
+
+		Args:
+			email (str): entered admin email
+
+		Returns:
+			Union[None, dict]: dict of record in DB which email is same as entered email
+		"""
+
         sql = "select * from users where email=%s and type='secretary'"
         result = None
         try:
@@ -61,7 +76,14 @@ class Database:
             return result
 
     def getAdmin(self, email: str) -> Union[None, dict]:
-        """ Use in admin login process. """
+        """ Use in admin login process.
+
+		Args:
+			email (str): entered admin email
+
+		Returns:
+			Union[None, dict]: dict of record in DB which email is same as entered email
+        """
 
         sql = "select * from users where email=%s and type='admin'"
         result = None
@@ -78,9 +100,10 @@ class Database:
             return result
 
     def getAllCountries(self) -> List[Dict[str, Any]]:
-        """
-            Returns all active countries from table countries.
-            Output format : list of dicts , each dict contains keys name, code.
+        """  Returns all active countries from table countries.
+
+		Returns:
+			List[Dict[str, Any]]: list of dicts , each dict contains keys name, code
         """
 
         sql = "select code, name from country where is_active = true"
@@ -102,9 +125,10 @@ class Database:
             return countries
 
     def getAllSports(self) -> List[Dict[str, Any]]:
-        """
-            Returns all sports from table sports.
-            Output format : list of dicts , each dict contains keys title, code.
+        """ Returns all sports from table sports.
+
+		Returns:
+			List[Dict[str, Any]]:  list of dicts , each dict contains keys title, code
         """
 
         sql = "select code, title from sport"
@@ -125,10 +149,12 @@ class Database:
             return sports
 
     def getInactiveCountries(self) -> Dict[str, List[Dict[str, Any]]]:
-        """
-            Returns all inactive countries from table countries.
-            Output format : dict with one key = countries, its value is
-            list of dicts , each dict contains keys name, code.
+	
+        """ Get all inactive countries from table countries.
+
+		    Returns:
+			    dict:  dict with one key = countries, its value is
+                list of dicts , each dict contains keys name, code
         """
 
         sql = "select code, name from country where is_active = false"
@@ -150,9 +176,11 @@ class Database:
             return result
 
     def getBranchesWithSports(self) -> List[Dict[str, Any]]:
-        """
-            Returns non combi branches from table branch with sport they belong to.
-            Output format : list of dicts , each dict contains keys sportCode, sportTitle, branchCode, branchTitle.
+        
+        """  Returns non combi branches from table branch with sport they belong to.
+
+        Returns:
+            list:  list of dicts , each dict contains keys sportCode, sportTitle, branchCode, branchTitle.
         """
 
         sql = "select s.code, s.title, b.code, b.title from sport s join branch b on b.sport_id = s.id"
@@ -174,12 +202,14 @@ class Database:
             return results
 
     def getFundingData(self, country_code: str) -> Dict[str, List[Dict[str, Any]]]:
-        """
-            Returns funding data from table funding for selected country.
+        """ Returns funding data from table funding for selected country.
 
-            country_code -- selected country
+        Args:
+            country_code (str): selected country code
 
-            Output format : list of dicts , each dict contains keys branch_id, absolute_funding, currency.
+        Returns: Dict[str, List[Dict[str, Any]]]: list of dicts , each dict contains keys branch_id,
+        absolute_funding, currency.
+
         """
 
         sql = "select b.title, f.absolute_funding, f.currency from funding f cross join country c " \
@@ -201,10 +231,12 @@ class Database:
             # print(result)
             return result
 
-    def getFundingDistinctCurrencies(self) -> list:
+    def getFundingDistinctCurrencies(self) -> List[str]:
         """
-            Returns list of currencies used in funding data in table funding.
-            Output format : list of strings = currency.
+            Get list of currencies used in funding data in table funding.
+
+		    Returns:
+			    list: list of strings = currency names.
         """
 
         sql = " select distinct currency from funding where currency != '' "
@@ -221,7 +253,15 @@ class Database:
         finally:
             return results
 
-    def getSuccessBySport(self, sport_code: str) -> dict:
+    def getSuccessBySport(self, sport_code: str) -> Dict[str, List[Dict[str, Any]]]:
+        """ Return success records from table success for selected sport.
+
+		Args:
+			sport_code (str): code of selected sport
+
+		Returns:
+			dict: dict with one key = success, its value is list of dicts, each dict contains keys country_name, points, order
+        """
 
         sql = "select c.name, suc.points, suc.orders from success suc cross join sport sp " \
               "join country c on suc.sport_id = sp.id and sp.code = %(sport_code)s " \
@@ -243,7 +283,15 @@ class Database:
             # print(result)
             return result
 
-    def getSuccessByCountry(self, country_code: str) -> dict:
+    def getSuccessByCountry(self, country_code: str) -> Dict[str, List[Dict[str, Any]]]:
+        """ Return success records from table success for selected country.
+
+		Args:
+			country_code (str): code of selected country
+
+		Returns:
+			dict: dict with one key = success, its value is list of dicts, each dict contains keys sport_name, points, order
+        """
 
         sql = "select sp.title, suc.points, suc.orders from success suc cross join sport sp " \
               "join country c on suc.sport_id = sp.id and c.code = %(country_code)s " \
@@ -265,7 +313,7 @@ class Database:
             # print(result)
             return result
 
-    def getInterconnectnessData(self, type_id: int, country_code: str) -> Dict[str,List[Dict[str, Any]]]:
+    def getInterconnectnessData(self, type_id: int, country_code: str) -> Dict[str, List[Dict[str, Any]]]:
         """ Returns data from table interconnectness for specified country.
 
                 Args:
@@ -378,7 +426,7 @@ class Database:
             self.logger.error(error)
             return False
 
-    def addCombiBranch(self, data: Dict[str,Any]) -> bool:
+    def addCombiBranch(self, data: Dict[str, Any]) -> bool:
         """ Adding a new combi branch to DB.
 
 		Args:
@@ -419,7 +467,6 @@ class Database:
                 self.logger.error(e)
         except DataError as e:
             self.logger.error(e)
-
 
         sql_check_unique = "select * from branch where code = %(branch_code)s"
         sql_country_exists = "select id from country where code = %(country_code)s"
@@ -480,7 +527,7 @@ class Database:
             self.logger.error(error)
             return False
 
-    def addCountry(self, data: Dict[str,Any]) -> bool:
+    def addCountry(self, data: Dict[str, Any]) -> bool:
         """ Activating inactive or adding a new country to DB.
 
 		Args:
@@ -533,7 +580,7 @@ class Database:
             self.logger.error(error)
             return False
 
-    def updateSport(self, data: Dict[str,Any]) -> bool:
+    def updateSport(self, data: Dict[str, Any]) -> bool:
         """ Updating sport code or title or both.
 
 		Args:
@@ -601,12 +648,11 @@ class Database:
             self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
-            #print(error)
-            #self.logger.error(error)
+            # print(error)
+            # self.logger.error(error)
             return False
 
-
-    def importSuccessdata(self, sport_id: id, country_id: id, points: float, orders: int ):
+    def importSuccessdata(self, sport_id: id, country_id: id, points: float, orders: int):
         sql = "insert into success(sport_id, country_id, points, orders) " \
               "values (%(sport_id)s, %(country_id)s, %(points)s, %(orders)s)"
 
@@ -619,12 +665,11 @@ class Database:
             self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
-            #print(error)
-            #self.logger.error(error)
+            # print(error)
+            # self.logger.error(error)
             return False
 
-
-    def importNumberInSports(self, sport_id: id, num_countries : int ):
+    def importNumberInSports(self, sport_id: id, num_countries: int):
         sql = "insert into NUM_IN_SPORT(sport_id, num_countries) " \
               "values (%(sport_id)s, %(num_countries)s)"
         try:
@@ -635,12 +680,11 @@ class Database:
             self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
-            #print(error)
-            #self.logger.error(error)
+            # print(error)
+            # self.logger.error(error)
             return False
 
-
-    def importMaxPointsInSport(self, sport_id: id, points : float ):
+    def importMaxPointsInSport(self, sport_id: id, points: float):
         sql = "insert into MAX_POINTS_IN_SPORT(sport_id, points) " \
               "values (%(sport_id)s, %(points)s)"
         try:
@@ -651,11 +695,11 @@ class Database:
             self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
-            #print(error)
-            #self.logger.error(error)
+            # print(error)
+            # self.logger.error(error)
             return False
 
-    def importTotalCountryPoints(self, country_id : id , points : float):
+    def importTotalCountryPoints(self, country_id: id, points: float):
         sql = "insert into TOTAL_COUNTRY_POINTS(country_id, points) " \
               "values (%(country_id)s, %(points)s)"
         try:
@@ -666,12 +710,11 @@ class Database:
             self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
-            #print(error)
-            #self.logger.error(error)
+            # print(error)
+            # self.logger.error(error)
             return False
 
-
-    def importCountryBestOrder(self, country_id : id , best : int):
+    def importCountryBestOrder(self, country_id: id, best: int):
         sql = "insert into COUNTRY_BEST_ORDER(country_id, best) " \
               "values (%(country_id)s, %(best)s)"
         try:
@@ -682,8 +725,8 @@ class Database:
             self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
-            #print(error)
-            #self.logger.error(error)
+            # print(error)
+            # self.logger.error(error)
             return False
 
     def importInterconnectnessData(self):
@@ -1214,7 +1257,6 @@ class Database:
     def checkCodeTitle(self, sport_code: int, branch_code: int, sport_title: str, branch_title: str) -> bool:
         """ Check if branch and sport with sport code and branch codes and titles exist and belongs together."""
 
-
         sql = "select * from sport s join branch b on s.id = b.sport_id and s.code = %(sport_code)s " \
               "and b.code = %(branch_code)s and s.title = %(sport_title)s and b.title = %(branch_title)s "
         try:
@@ -1357,7 +1399,6 @@ class Database:
     def countryCodeToID(self, country_code: str) -> id:
         """ Convert country code to country id."""
 
-
         sql = "select id from country where code=%(country_code)s"
         try:
             with self._getConnection() as dbConn:
@@ -1429,7 +1470,6 @@ class Database:
             Returns sports from table sport which have at least one branch.
             Output format : list of dicts , each dict contains keys title, code.
         """
-
 
         sql = "select s.code, s.title from sport s " \
               " where exists(select * from branch where sport_id = s.id) "
