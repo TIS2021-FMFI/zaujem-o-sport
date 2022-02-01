@@ -284,7 +284,8 @@ class Computations:
         except KeyError:
             return 0
 
-    def getFinalOrderById(self, countryK: id) -> dict:
+
+
 
         sportInfo = DB.getAllSportInfo()
 
