@@ -734,7 +734,13 @@ class Database:
 
     # getters for DB mirroring in data computation modul
 
-    def getBGS(self) -> dict:
+    def getBGS(self) -> Dict[str, List[Dict[str, Any]]]:
+        """ Get all records from table BGS.
+
+		Returns:
+			Dict[str, List[Dict[str, Any]]]: dict with one key BGS,
+			which value is list of dicts with keys sport_id, value
+        """
 
         sql = "select sport_id, value from BGS"
         result = {"BGS": []}
@@ -761,7 +767,13 @@ class Database:
 
             return final_result
 
-    def getOrder(self) -> dict:
+    def getOrder(self) -> Dict[int, Dict[int, int]]:
+        """ Get order of each vcountry in each sport from table success .
+
+		Returns:
+			Dict[int, Dict[int, int]]:  dict with keys = country ids, its value is dict
+			with items sport id -> order
+        """
 
         sql = "select country_id, sport_id, orders from success"
         result = {"order": []}
