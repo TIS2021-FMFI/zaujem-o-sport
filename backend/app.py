@@ -193,7 +193,6 @@ app.add_url_rule(
 	methods=["GET"]
 )
 
-<<<<<<< HEAD
 app.add_url_rule(
 	"/api/user/interconnectnesstype",
 	view_func=user.endpoints.interconnectnesstype.ShowInterconnectnessTypeView.as_view("list_interconnectnesstype"),
@@ -213,9 +212,6 @@ app.add_url_rule(
 	methods=["GET", "POST"]
 )
 
-
-=======
->>>>>>> main
 
 if __name__ == "__main__":
 	ip = None
