@@ -300,6 +300,7 @@ class Computations:
         for value, id in p:
             code, title = sportInfo[id]
             result[order] = {"order": order, "code" : code, "title":title, "value": -value}
+            order += 1
 
         return result
 
@@ -368,4 +369,4 @@ c = Computations()
 
 # print(c.sport_importance_in_country(3,160))
 
-#print(c.getFinalOrderByCountryCode('SVK'))
+#print(c.getFinalOrderById(204))
