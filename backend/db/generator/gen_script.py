@@ -184,6 +184,8 @@ def parse_succes():
     # print(najvyssie_um)
     # print(pocet_statov)
     # print(max_bodov)
+    print(len(succes))
+    input()
     print("Succes done")
 
 branches = {}

@@ -5,6 +5,7 @@ import {useMutation, useQuery} from "react-query";
 import createSnackbar, {dismissSnackbar, resolveSnackbar, SnackTypes} from "../components/snackbar/Snackbar";
 import {AxiosResponse} from "axios";
 import {apiListCountries, Country} from "app/adapters";
+import textLang, {Language} from "app/string";
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = () => useDispatch<AppDispatch>();
@@ -15,17 +16,18 @@ export const useQueryWithNotifications = (
 	queryKey: string,
 	apiFetchFunction: (...args: any[]) => Promise<AxiosResponse<any>>,
 	initToastMsg: string,
-	cache: boolean = true
+	cache: boolean = true,
+	language: Language = "sk"
 ) => {
 	const {isLoading, data: response} = useQuery(queryKey, apiFetchFunction, {
 		onSuccess: (successResponse) => {
 			if (response === undefined)
-				resolveSnackbar(toastId, "Dáta úspešne načítané.");
+				resolveSnackbar(toastId, textLang[language].dataSuccessfullyLoaded);
 		},
 		onError: (error) => {
 			console.log(error);
 			if (response === undefined)
-				resolveSnackbar(toastId, "Dáta nebolo možné načítať.", false);
+				resolveSnackbar(toastId, textLang[language].unableToLoadData, false);
 		},
 		cacheTime: cache ? undefined : 0
 	});
@@ -43,15 +45,17 @@ export const useQueryWithNotifications = (
 export const useMutationWithNotifications = (
 	toastId: string,
 	apiFetchFunction: (...args: any[]) => Promise<AxiosResponse<any>>,
-	initToastMsg: string
+	initToastMsg: string,
+	language: Language = "sk"
 ) => {
+	const successToastMsg: string = textLang[language].dataSuccessfullySaved
+	const errorToastMsg: string = textLang[language].unableToSaveData
 	const mutation = useMutation(apiFetchFunction, {
 		onSuccess: (successResponse) => {
-			resolveSnackbar(toastId, "Dáta boli úspešne uložené.");
+			resolveSnackbar(toastId, successToastMsg);
 		},
-		onError: (error) => {
-			console.log(error);
-			resolveSnackbar(toastId, "Dáta nebolo možné uložiť.", false);
+		onError: (error: any) => {
+			resolveSnackbar(toastId, errorToastMsg, false);
 		},
 	});
 
@@ -65,12 +69,14 @@ export const useMutationWithNotifications = (
 	return mutation;
 }
 
-export const useCountries = (): { isLoading: boolean, countries: Country[] } => {
+export const useCountries = (language: Language = "sk"): { isLoading: boolean, countries: Country[] } => {
 	const toastId = "countries_fetching";
-	const toastMsg = "Načítavanie krajín...";
+	const toastMsg = textLang[language].loadingCountries;
 	const queryKey = "list_countries";
 
-	const {isLoading, response} = useQueryWithNotifications(toastId, queryKey, apiListCountries, toastMsg);
+	const {isLoading, response} = useQueryWithNotifications(
+		toastId, queryKey, apiListCountries, toastMsg, true, language
+	);
 
 	const [countries, setCountries] = useState<Country[]>([]);
 

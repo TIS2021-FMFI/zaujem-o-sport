@@ -537,8 +537,102 @@ class Database:
             self.logger.error(error)
             return False
 
-    def importSuccessdata(self):
-        ...
+    def deleteSuccesTables(self):
+
+        sql = "TRUNCATE  COUNTRY_BEST_ORDER, TOTAL_COUNTRY_POINTS, MAX_POINTS_IN_SPORT, NUM_IN_SPORT, success RESTART IDENTITY "
+
+        try:
+            with self._getConnection() as dbConn:
+                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                    cursor.execute(sql)
+                dbConn.commit()
+            self._releaseConnection(dbConn)
+            return True
+        except psycopg2.DatabaseError as error:
+            #print(error)
+            #self.logger.error(error)
+            return False
+
+
+    def importSuccessdata(self, sport_id: id, country_id: id, points: float, orders: int ):
+        sql = "insert into success(sport_id, country_id, points, orders) " \
+              "values (%(sport_id)s, %(country_id)s, %(points)s, %(orders)s)"
+
+        try:
+            with self._getConnection() as dbConn:
+                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                    cursor.execute(sql, {"sport_id": sport_id, "country_id": country_id, "points": points,
+                                         "orders": orders})
+                dbConn.commit()
+            self._releaseConnection(dbConn)
+            return True
+        except psycopg2.DatabaseError as error:
+            #print(error)
+            #self.logger.error(error)
+            return False
+
+
+    def importNumberInSports(self, sport_id: id, num_countries : int ):
+        sql = "insert into NUM_IN_SPORT(sport_id, num_countries) " \
+              "values (%(sport_id)s, %(num_countries)s)"
+        try:
+            with self._getConnection() as dbConn:
+                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                    cursor.execute(sql, {"sport_id": sport_id, "num_countries": num_countries})
+                dbConn.commit()
+            self._releaseConnection(dbConn)
+            return True
+        except psycopg2.DatabaseError as error:
+            #print(error)
+            #self.logger.error(error)
+            return False
+
+
+    def importMaxPointsInSport(self, sport_id: id, points : float ):
+        sql = "insert into MAX_POINTS_IN_SPORT(sport_id, points) " \
+              "values (%(sport_id)s, %(points)s)"
+        try:
+            with self._getConnection() as dbConn:
+                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                    cursor.execute(sql, {"sport_id": sport_id, "points": points})
+                dbConn.commit()
+            self._releaseConnection(dbConn)
+            return True
+        except psycopg2.DatabaseError as error:
+            #print(error)
+            #self.logger.error(error)
+            return False
+
+    def importTotalCountryPoints(self, country_id : id , points : float):
+        sql = "insert into TOTAL_COUNTRY_POINTS(country_id, points) " \
+              "values (%(country_id)s, %(points)s)"
+        try:
+            with self._getConnection() as dbConn:
+                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                    cursor.execute(sql, {"country_id": country_id, "points": points})
+                dbConn.commit()
+            self._releaseConnection(dbConn)
+            return True
+        except psycopg2.DatabaseError as error:
+            #print(error)
+            #self.logger.error(error)
+            return False
+
+
+    def importCountryBestOrder(self, country_id : id , best : int):
+        sql = "insert into COUNTRY_BEST_ORDER(country_id, best) " \
+              "values (%(country_id)s, %(best)s)"
+        try:
+            with self._getConnection() as dbConn:
+                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                    cursor.execute(sql, {"country_id": country_id, "best": best})
+                dbConn.commit()
+            self._releaseConnection(dbConn)
+            return True
+        except psycopg2.DatabaseError as error:
+            #print(error)
+            #self.logger.error(error)
+            return False
 
     def importInterconnectnessData(self):
         ...
@@ -1203,7 +1297,7 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql)
                     tmp = cursor.fetchone()
-                    return tmp[0]
+                    return tmp[0] if tmp[0] is not None else 1
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
@@ -1237,7 +1331,7 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql, {"sport_code": sport_code})
                     tmp = cursor.fetchone()
-                    return tmp[0]
+                    return tmp[0] if tmp[0] is not None else 1
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
@@ -1273,7 +1367,7 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql)
                     tmp = cursor.fetchone()
-                    return tmp[0]
+                    return tmp[0] if tmp[0] is not None else 10000
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)

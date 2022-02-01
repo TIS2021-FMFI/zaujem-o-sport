@@ -1,23 +1,21 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {Button, Col, FloatingLabel, Form, Row} from "react-bootstrap";
 import {useMutationWithNotifications} from "app/hooks";
 import {useNewSportCode} from "admin_secretary_shared/hooks";
 import {CenteredRow} from "components/basic/CenteredRow";
 import {apiAddNewSport} from "admin_secretary_shared/adapters";
 import textLang, {Language} from "app/string";
+import {LanguageContext} from "App";
 
-export interface AddSportProps {
-  lang: Language
-}
+export const AddSport = () => {
 
-export const AddSport = ({lang = "sk"}: AddSportProps) => {
+  const language = useContext<Language>(LanguageContext);
+  const text = textLang[language];
 
-  const text = textLang[lang];
-
-  const {newSportCode} = useNewSportCode();
+  const {newSportCode} = useNewSportCode(language);
   const [sportTitle, setSportTitle] = useState<string>("");
   const addNewSportMutation = useMutationWithNotifications(
-    "adding_new_sport", apiAddNewSport, text.addNewSportInitToastMsg
+    "adding_new_sport", apiAddNewSport, text.addNewSportInitToastMsg, language
   );
 
   const handleAddNewSportSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,9 +31,9 @@ export const AddSport = ({lang = "sk"}: AddSportProps) => {
       <Form onSubmit={handleAddNewSportSubmit}>
         <Form.Group as={Row} className="mb-4" controlId="formHorizontalSportCode">
           <Col>
-            <FloatingLabel controlId="floatingSportCode" label={text.sportCodeInputPlaceholder}>
+            <FloatingLabel controlId="floatingSportCode" label={text.newSportCodeInputPlaceholder}>
               <Form.Control type="text"
-                            placeholder={text.sportCodeInputPlaceholder}
+                            placeholder={text.newSportCodeInputPlaceholder}
                             defaultValue={newSportCode.toString()}
                             disabled />
             </FloatingLabel>
@@ -46,8 +44,8 @@ export const AddSport = ({lang = "sk"}: AddSportProps) => {
         </Form.Group>
         <Form.Group as={Row} className="mb-4" controlId="formHorizontalSportName">
           <Col>
-            <FloatingLabel controlId="floatingSportName" label={text.sportCodeInputPlaceholder}>
-              <Form.Control type="text" placeholder={text.sportCodeInputPlaceholder}
+            <FloatingLabel controlId="floatingSportName" label={text.sportTitleInputPlaceholder}>
+              <Form.Control type="text" placeholder={text.sportTitleInputPlaceholder}
                             required
                             onChange={(e) => setSportTitle(e.target.value)}
               />
