@@ -325,7 +325,7 @@ class Database:
                     dict: dict with one key interconnectness which value is list of dicts with keyscountry, value, type
         """
 
-        sql = "select c2.name, i.value, it.title  from interconnectness i join country c1 " \
+        sql = "select c2.code, c2.name, i.value, it.title  from interconnectness i join country c1 " \
               "on country_one_id = c1.id join country c2 on country_two_id = c2.id join interconnectness_type it " \
               "on i.type_id = it.id where i.type_id = %(type_id)s and c1.code = %(country_code)s "
         result = {"interconnectness": []}
@@ -335,7 +335,7 @@ class Database:
                     cursor.execute(sql, {"type_id": type_id, "country_code": country_code})
                     tmp = cursor.fetchone()
                     while tmp:
-                        result["interconnectness"].append({"country": tmp[0], "value": tmp[1], "type": tmp[2]})
+                        result["interconnectness"].append({"code": tmp[0], "country": tmp[1], "value": tmp[2], "type": tmp[3]})
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:

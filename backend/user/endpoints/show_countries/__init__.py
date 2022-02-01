@@ -6,5 +6,5 @@ from settings import DB
 class ShowCountriesView(SwaggerView):
 
     def get(self):
-        res = {"message": "ok", "data": DB.getAllCountries()}
+        res = {"message": "ok", "countries": DB.getAllCountries()}
         return res

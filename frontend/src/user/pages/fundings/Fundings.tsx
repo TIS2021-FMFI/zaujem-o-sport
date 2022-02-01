@@ -19,9 +19,7 @@ export const Fundings = () => {
 
     useQuery("list_countries2", apiListCountry, {
         onSuccess: (response) => {
-            const serverData = response.data.data;
-            setCountry(serverData.countries);
-
+            setCountry(response.data.countries);
         },
         onError: (error) => {
             alert(error);

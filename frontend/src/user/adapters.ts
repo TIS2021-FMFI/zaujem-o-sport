@@ -85,9 +85,7 @@ export type countryType = {
 
 export interface ApiListCountryType {
     message: string,
-    data: {
-        countries: countryType[]
-    }
+    countries: countryType[]
 }
 
 export const apiListCountry = ()

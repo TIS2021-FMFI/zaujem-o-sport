@@ -18,38 +18,25 @@ export const Chart = () => {
 
     useQuery("list_countries2", apiListCountry, {
         onSuccess: (response) => {
-            const serverData = response.data.data;
-            setCountry(serverData.countries);
-
+            setCountry(response.data.countries);
         },
         onError: (error) => {
             alert(error);
         }
     })
 
-
-
-
-    const [charts, setChart] = useState<chartType[]>();
     const [rowChart, setRowChart] = useState<(number | string)[][]>([]);
 
-    const {isLoading} = useQuery("list_chart", apiListChart, {
-        onSuccess: (response) => {
-            const serverData = response.data.data;
-            setChart(serverData.chart);
+    const [options, setOptions] = useState<{value: string, label: string}[]>([]);
 
-        },
-        onError: (error) => {
-            alert("psycopg2.pool.PoolError: connection pool exhausted")
+    useEffect(() => {
+        if (countries !== undefined) {
+            setOptions(countries.map(d => ({
+                "value": d.code,
+                "label": d.name
+            })));
         }
-    })
-
-    let options = countries?.map(d => ({
-        "value": d.code,
-        "label" : d.name
-    }))
-
-
+    }, [countries]);
 
     const [option, setOption] = useState<string[]>(["SVK","SLOVAKIA"]);
 
@@ -58,9 +45,8 @@ export const Chart = () => {
         () => apiChart(option[0]),
         {
             onSuccess: (response) => {
+                console.log(response.data);
                 const serverData = response.data.data;
-                console.log(response)
-                setChart(serverData.chart);
                 setRowChart(serverData.chart.map((ch) => [ch.order,ch.title, ch.value, ch.code]))
 
             },
@@ -96,27 +82,14 @@ export const Chart = () => {
                 <Button variant="primary"><CSVLink className='button' filename={"chart"+option[1]} data={rowChart}><Download size={25} /> Export data</CSVLink></Button>{' '}
 
             </div>
-            { isLoading
-                ? <Spinner animation="border" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </Spinner>
+            <div>
+                <Table columnNames={[{name: "Order", sortable: true},{name: "Sport", sortable: true}, {name: "Points", sortable: true}, {
+                    name: "Code",
+                    sortable: true
+                }]}
+                       rows={rowChart}/>
 
-
-                :
-                <div>
-                    <Table columnNames={[{name: "Order", sortable: true},{name: "Sport", sortable: true}, {name: "Points", sortable: true}, {
-                        name: "Code",
-                        sortable: true
-                    }]}
-                           rows={rowChart}/>
-
-                </div>
-
-
-                }
-
-
-
+            </div>
         </>
     )
 }

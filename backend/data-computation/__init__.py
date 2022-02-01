@@ -301,6 +301,8 @@ class Computations:
             code, title = sportInfo[id]
             result[order] = {"order": order, "code" : code, "title":title, "value": -value}
 
+        return result
+
 
     def getFinalOrderByCountryCode(self, countryCode: str) -> dict:
         result = []
