@@ -265,7 +265,7 @@ class Database:
             # print(result)
             return result
 
-    def getInterconnectnessData(self, type_id: int, country_code: str) -> dict:
+    def getInterconnectnessData(self, type_id: int, country_code: str) -> Dict[str,List[Dict[str, Any]]]:
         """ Returns data from table interconnectness for specified country.
 
                 Args:
@@ -273,7 +273,7 @@ class Database:
                     country_code (str): code of country
 
                 Returns:
-                    dict: [description]
+                    dict: dict with one key interconnectness which value is list of dicts with keyscountry, value, type
         """
 
         sql = "select c2.name, i.value, it.title  from interconnectness i join country c1 " \
