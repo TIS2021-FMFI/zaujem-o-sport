@@ -228,7 +228,7 @@ class excelParser:
     def parseInterconnectness(self, wb, type: int) -> List[InterconnectnessRecord]:
 
         sheet = wb.active
-        countries = DB.getActiveCountryTranslation()
+        countries = DB.getActiveCountryTranslations()
 
         def getCountryID(name):
             for item in countries:
