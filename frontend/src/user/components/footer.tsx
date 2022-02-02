@@ -28,7 +28,7 @@ function Footer() {
           <div className="col">
             <h4>Links</h4>
             <ul className="list-unstyled">
-              <li><a href = "https://www.google.com/">link</a></li>
+              <li><a href = "https://github.com/TIS2021-FMFI/zaujem-o-sport">github</a></li>
             </ul>
           </div>
         </div>
