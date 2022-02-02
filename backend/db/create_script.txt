@@ -82,7 +82,6 @@ DROP TABLE IF EXISTS interconnectness CASCADE;
 
 CREATE TABLE interconnectness
   (
-     id                SERIAL PRIMARY KEY,
      type_id           INTEGER REFERENCES interconnectness_type(id),
      country_one_id    INTEGER REFERENCES country(id),
      country_two_id    INTEGER REFERENCES country(id),
