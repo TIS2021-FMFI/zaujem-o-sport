@@ -125,7 +125,7 @@ class InterconnectnessRecord:
         return f"{self.type} {self.countryA} {self.countryB} {self.value}"
 
     def save(self):
-        DB.importInterconnectednessData(self.type, self.countryA, self.countryB, self.value)
+        print ( DB.importInterconnectednessData(self.type, self.countryA, self.countryB, self.value) )
 
 
 class ParseError(Exception):

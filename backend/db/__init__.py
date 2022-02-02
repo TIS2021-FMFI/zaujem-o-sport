@@ -732,7 +732,7 @@ class Database:
 
     def deleteInterconnectednessTables(self, type_id: id):
 
-        sql_del = "DELETE FROM interconnectness WHERE type_id = =%(type_id)s   "
+        sql_del = "DELETE FROM interconnectness WHERE type_id =%(type_id)s   "
 
         try:
             with self._getConnection() as dbConn:
@@ -748,7 +748,7 @@ class Database:
 
     def importInterconnectednessData(self, type_id: id, country_one_id: id, country_two_id: id, value: float):
         sql = "insert into interconnectness(type_id, country_one_id, country_two_id, value ) " \
-              "values (%(type_id)s, %(country_one_id)s), %(country_two_id)s) , %(value)s)"
+              "values (%(type_id)s, %(country_one_id)s, %(country_two_id)s , %(value)s)"
         try:
             with self._getConnection() as dbConn:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
@@ -758,7 +758,7 @@ class Database:
             self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
-            # print(error)
+            print(error)
             self.logger.error(error)
             return False
 
@@ -1111,25 +1111,24 @@ class Database:
             # print(result)
             return result["countries"]
 
-        def getActiveCountryTranslations(self) -> list:
-
-            sql = "select id, translation from country where is_active = true"
-            result = {"countries": []}
-            try:
-                with self._getConnection() as dbConn:
-                    with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-                        cursor.execute(sql)
+    def getActiveCountryTranslations(self) -> list:
+        sql = "select id, translation from country where is_active = true"
+        result = {"countries": []}
+        try:
+            with self._getConnection() as dbConn:
+                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                    cursor.execute(sql)
+                    tmp = cursor.fetchone()
+                    while tmp:
+                        result["countries"].append({"id": tmp[0], "translation": tmp[1]})
                         tmp = cursor.fetchone()
-                        while tmp:
-                            result["countries"].append({"id": tmp[0], "translation": tmp[1]})
-                            tmp = cursor.fetchone()
-                self._releaseConnection(dbConn)
-            except psycopg2.DatabaseError as error:
-                # print(error)
-                self.logger.error(error)
-            finally:
-                # print(result)
-                return result["countries"]
+            self._releaseConnection(dbConn)
+        except psycopg2.DatabaseError as error:
+            # print(error)
+            self.logger.error(error)
+        finally:
+            # print(result)
+            return result["countries"]
 
     def getSportIds(self) -> list:
 

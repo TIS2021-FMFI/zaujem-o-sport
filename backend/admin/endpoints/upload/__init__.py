@@ -5,6 +5,7 @@ from openpyxl import load_workbook
 from io import BytesIO
 from csv_parsers.excelParser import excelParser
 from settings import DB
+import time
 
 class UploadView(SwaggerView):
 
@@ -32,13 +33,16 @@ class UploadView(SwaggerView):
 
 			print(len(parsed), "tu")
 
-			DB.deleteInterconnectednessTables(type)
+			if DB.deleteInterconnectednessTables(type) :
+				print("deleted")
+				start_time = time.time()
+				for item in parsed:
+					item.save()
 
-			print("deleted")
-			for item in parsed:
-				item.save()
-
-			print("hotovo")
+				print("hotovo")
+				print("--- %s seconds ---" % (time.time() - start_time))
+			else:
+				print("nepodarilo sa")
 
 
 		if successFile:
