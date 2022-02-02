@@ -1,0 +1,18 @@
+.mainNavbar {
+    background-color: #0d6efd ;
+    padding: 10px;
+
+    a {
+        color: white !important;
+        font-size: x-large;
+        text-decoration: none;
+    }
+
+    .navItem {
+        padding: 10px 10px 10px 10px;
+    }
+}
+
+.mainNavbar a:hover {
+    background-color: #0092ff;
+}

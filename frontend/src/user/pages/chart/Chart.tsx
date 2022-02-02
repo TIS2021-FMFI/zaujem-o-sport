@@ -12,18 +12,11 @@ import Select from "react-select";
 import {Table} from "../../../components/table/Table";
 import {CSVLink} from "react-csv";
 import {Download} from "react-bootstrap-icons";
+import {useCountries} from "../../../app/hooks";
 
 export const Chart = () => {
-    const [countries, setCountry] = useState<countryType[]>();
 
-    useQuery("list_countries2", apiListCountry, {
-        onSuccess: (response) => {
-            setCountry(response.data.countries);
-        },
-        onError: (error) => {
-            alert(error);
-        }
-    })
+    const {countries} = useCountries("en");
 
     const [rowChart, setRowChart] = useState<(number | string)[][]>([]);
 

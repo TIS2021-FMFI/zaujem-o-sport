@@ -14,68 +14,25 @@ import Select from "react-select";
 import {Table} from "../../../components/table/Table";
 import {CSVLink} from "react-csv";
 import {Download} from "react-bootstrap-icons";
+import {useCountries} from "../../../app/hooks";
+import {useInterconnectednessType} from "../../hooks";
 
 
 export const InterconnectnessTable = () => {
 
-    const [countries, setCountry] = useState<countryType[]>();
+    const {countries} = useCountries("en");
 
-    useQuery("list_countries2", apiListCountry, {
-        onSuccess: (response) => {
-            setCountry(response.data.countries);
-        },
-        onError: (error) => {
-            alert(error);
-        }
-    })
-
-    const [interconnectnesstype, setInterconnectesstype] = useState<interconnectnessTypeType[]>();
-
-    useQuery("list_interconnectnesstype", apiListInterconnectnessType, {
-        onSuccess: (response) => {
-            const serverData = response.data.data;
-            setInterconnectesstype(serverData.interconnectnesstype);
-
-        },
-        onError: (error) => {
-            alert(error);
-        }
-    })
-
-
-
-
-
-
-
-
-    const [interconnectnesses, setInterconnectness] = useState<interconnectnessType[]>();
-
-    const {isLoading} = useQuery("list_interconnectness", apiListInterconnectness, {
-        onSuccess: (response) => {
-            const serverData = response.data.data;
-            setInterconnectness(serverData.interconnectness);
-
-        },
-        onError: (error) => {
-            alert(error);
-        }
-    })
+    const {isLoading, interconnectednessType} = useInterconnectednessType("en");
 
     let options = countries?.map(d => ({
         "value": d.code,
         "label" : d.name
-    }))
+    }));
 
-    let options2 = interconnectnesstype?.map(d => ({
+    let options2 = interconnectednessType?.map(d => ({
         "value": d.code,
         "label" : d.title
-    }))
-
-
-
-
-
+    }));
 
     const [option, setOption] = useState<string>("SVK");
     const [option2, setOption2] = useState<number>(1);
@@ -86,7 +43,6 @@ export const InterconnectnessTable = () => {
         {
             onSuccess: (response) => {
                 const serverData = response.data.data;
-                setInterconnectness(serverData.interconnectness);
                 setRowInterconnectness(serverData.interconnectness.map((i) => [i.code, i.country, i.value, i.type]))
             },
             onError: (error) => {

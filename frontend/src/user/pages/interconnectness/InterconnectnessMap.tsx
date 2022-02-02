@@ -13,42 +13,15 @@ import Select from "react-select";
 import {MapShow} from "../../components/map/Map";
 import {CSVLink} from "react-csv";
 import {Download} from "react-bootstrap-icons";
+import {useCountries} from "../../../app/hooks";
+import {useInterconnectednessType} from "../../hooks";
 
 
 export const InterconnectnessMap = () => {
 
-    const [countries, setCountry] = useState<countryType[]>();
+    const {countries} = useCountries("en");
 
-    useQuery("list_countries2", apiListCountry, {
-        onSuccess: (response) => {
-            setCountry(response.data.countries);
-        },
-        onError: (error) => {
-            alert(error);
-        }
-    })
-
-    const [interconnectnesstype, setInterconnectesstype] = useState<interconnectnessTypeType[]>();
-
-    useQuery("list_interconnectnesstype", apiListInterconnectnessType, {
-        onSuccess: (response) =>
-        {
-            console.log("res : " + response.data.data);
-            const serverData = response.data.data;
-            setInterconnectesstype(serverData.interconnectnesstype);
-
-        },
-        onError: (error) => {
-            alert(error);
-        }
-    })
-
-
-
-
-
-
-
+    const {interconnectednessType} = useInterconnectednessType("en");
 
     const [interconnectnesses, setInterconnectness] = useState<interconnectnessType[]>();
 
@@ -68,7 +41,7 @@ export const InterconnectnessMap = () => {
         "label" : d.name
     }))
 
-    let options2 = interconnectnesstype?.map(d => ({
+    let options2 = interconnectednessType?.map(d => ({
         "value": d.code,
         "label" : d.title
     }))

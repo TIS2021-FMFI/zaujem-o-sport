@@ -65,6 +65,7 @@ const UserRouters = () => {
             <Navbar />
             <Switch>
                 <div className="site">
+	                  <Route path="/"><Redirect to="/home" /></Route>
                     <Route path="/home"><HomeUser /></Route>
                     <Route path="/chart"><Chart /></Route>
                     <Route path="/export"><Export /></Route>

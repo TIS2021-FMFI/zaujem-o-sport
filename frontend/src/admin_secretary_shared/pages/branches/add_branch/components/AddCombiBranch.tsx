@@ -49,16 +49,16 @@ export const AddCombiBranch = () => {
 		const coefficientsSum: number = coefficients.reduce((partialSum, c) => partialSum + parseFloat(c), 0);
 
 		if (branchTitle.length === 0 || newCombiBranchCode.length === 0 || selectedCountry === undefined) {
-			createSnackbar("Všetky polia musia byť vyplnené.", SnackTypes.warn); return;
+			createSnackbar(text.allFieldsAreRequired, SnackTypes.warn); return;
 		}
 		if (selectedBranchesWithSports.length === 0) {
-			createSnackbar("Je potrebné zvoliť aspoň jedno sub-odvetvie.", SnackTypes.warn); return;
+			createSnackbar("Je potrebné zvoliť aspoň jedno sub-odvetvie.", SnackTypes.warn); return;  // TODO
 		}
 		if (isNaN(coefficientsSum)) {
-			createSnackbar("Neplatné koeficienty.", SnackTypes.warn); return;
+			createSnackbar("Neplatné koeficienty.", SnackTypes.warn); return;  // TODO
 		}
 		if (coefficientsSum !== 1) {
-			createSnackbar("Suma koeficientov sa nerovná jednej.", SnackTypes.warn); return;
+			createSnackbar("Suma koeficientov sa nerovná jednej.", SnackTypes.warn); return;  // TODO
 		}
 
 		const subBranches: SubBranch[] = [];

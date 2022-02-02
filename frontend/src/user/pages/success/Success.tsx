@@ -6,21 +6,11 @@ import Select from "react-select";
 import {Table} from "../../../components/table/Table";
 import {CSVLink} from "react-csv";
 import {Download} from "react-bootstrap-icons";
+import {useCountries} from "../../../app/hooks";
 
 export const Success = () => {
-    const [countries, setCountry] = useState<countryType[]>();
 
-    useQuery("list_countries2", apiListCountry, {
-        onSuccess: (response) => {
-            setCountry(response.data.countries);
-        },
-        onError: (error) => {
-            alert(error);
-        }
-    })
-
-
-
+    const {countries} = useCountries("en");
 
     const [successes, setSuccess] = useState<successType[]>();
     const [rowSuccess, setRowSuccess] = useState<(number | string)[][]>([]);
