@@ -508,8 +508,15 @@ class Computations:
             return 0
 
 
-    def getFinalOrderById(self, countryK: id) -> dict:
-        
+    def getFinalOrderById(self, countryK: id) -> Dict[int, Dict[str, Any]]:
+        """ Create final sport order for selected country id.
+
+        Args:
+            countryK (id): selected country id
+
+        Returns:
+            Dict[int, Dict[str, Any]]: dict with keys = ranks and values = dicts with keys order, code, title, value.
+        """
         sportInfo = DB.getAllSportInfo()
 
         result = {}
@@ -528,7 +535,15 @@ class Computations:
         return result
 
 
-    def getFinalOrderByCountryCode(self, countryCode: str) -> dict:
+    def getFinalOrderByCountryCode(self, countryCode: str) -> Dict[int, Dict[str, Any]]:
+        """ Create final sport order for selected country code.
+
+        Args:
+            countryCode (str): selected country code
+
+        Returns:
+            Dict[int, Dict[str, Any]]: dict with keys = ranks and values = dicts with keys order, code, title, value.
+        """
         result = []
         id = DB.getCountryIdByCode(countryCode)
         for key in self.getFinalOrderById(id).values():
