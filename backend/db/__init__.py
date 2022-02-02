@@ -13,6 +13,7 @@ class DataError(Exception):
 
 class Database:
 
+
     def __init__(self, dbPool: psycopg2.pool.ThreadedConnectionPool):
         """ Initialize DB pool and DB logger. """
 
@@ -324,7 +325,7 @@ class Database:
                     dict: dict with one key interconnectness which value is list of dicts with keyscountry, value, type
         """
 
-        sql = "select c2.name, i.value, it.title  from interconnectness i join country c1 " \
+        sql = "select c2.code, c2.name, i.value, it.title  from interconnectness i join country c1 " \
               "on country_one_id = c1.id join country c2 on country_two_id = c2.id join interconnectness_type it " \
               "on i.type_id = it.id where i.type_id = %(type_id)s and c1.code = %(country_code)s "
         result = {"interconnectness": []}
@@ -334,7 +335,7 @@ class Database:
                     cursor.execute(sql, {"type_id": type_id, "country_code": country_code})
                     tmp = cursor.fetchone()
                     while tmp:
-                        result["interconnectness"].append({"country": tmp[0], "value": tmp[1], "type": tmp[2]})
+                        result["interconnectness"].append({"code": tmp[0], "country": tmp[1], "value": tmp[2], "type": tmp[3]})
                         tmp = cursor.fetchone()
             self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
@@ -1527,14 +1528,14 @@ class Database:
         """
 
         sql = "select code, title from interconnectness_type"
-        results = []
+        results = {"interconnectnesstype":[]}
         try:
             with self._getConnection() as dbConn:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql)
                     tmp = cursor.fetchone()
                     while tmp:
-                        results.append({"code": tmp[0], "title": tmp[1]})
+                        results["interconnectnesstype"].append({"code": tmp[0], "title": tmp[1]})
                         tmp = cursor.fetchone()
         except psycopg2.DatabaseError as error:
             # print(error)
@@ -1559,3 +1560,4 @@ class Database:
             # print(error)
             self.logger.error(error)
             return -1
+

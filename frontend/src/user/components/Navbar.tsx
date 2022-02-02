@@ -1,34 +1,30 @@
 import React from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import "./Navbar.css";
+import styles from "./navbar.module.scss"
 import { Link } from "react-router-dom";
-import {HouseDoor, BarChart, ArrowDownSquareFill,Wallet, Download, List, Easel} from "react-bootstrap-icons";
+import {HouseDoor, BarChart, Wallet,  List, Easel} from "react-bootstrap-icons";
 
-import { Container, Nav } from "react-bootstrap";
+import {  Nav } from "react-bootstrap";
 
 function Navbar() {
     return (
-        <div className="main-navbar">
+        <div className={styles.mainNavbar}>
         <Nav
             activeKey="/home"
         >
-            <Nav.Item>
-                <Nav.Link href="/home"><HouseDoor size={25} /> Domov</Nav.Link>
+            <Nav.Item >
+                <Link  className={styles.navItem} to="/home"><HouseDoor size={25} /> Home</Link>
             </Nav.Item>
             <Nav.Item>
-                <Nav.Link href="/chart"><BarChart size={25} /> Rebríček</Nav.Link>
+                <Link className={styles.navItem} to="/chart"><BarChart size={25} /> Chart</Link>
             </Nav.Item>
             <Nav.Item>
-                <Nav.Link href="/export"><Download size={25} /> Export</Nav.Link>
+                <Link className={styles.navItem} to="/funding"><Wallet size={25} /> Fundings</Link>
             </Nav.Item>
             <Nav.Item>
-                <Nav.Link href="/funding"><Wallet size={25} /> Rozpočty</Nav.Link>
+                <Link className={styles.navItem} to="/success"><List size={25} /> Success</Link>
             </Nav.Item>
             <Nav.Item>
-                <Nav.Link href="/success"><List size={25} /> Úspešnosť</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-                <Nav.Link href="/interconnectness"><Easel size={25} /> Prepojenie</Nav.Link>
+                <Link className={styles.navItem} to="/interconnectness"><Easel size={25} /> Interconnectedness</Link>
             </Nav.Item>
         </Nav>
         </div>

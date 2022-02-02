@@ -1,6 +1,5 @@
 from settings import DB
 
-
 class CompError(Exception):
     ...
 
@@ -285,6 +284,7 @@ class Computations:
         except KeyError:
             return 0
 
+
     def getFinalOrderById(self, countryK: id) -> dict:
 
         sportInfo = DB.getAllSportInfo()
@@ -299,16 +299,19 @@ class Computations:
         order = 1
         for value, id in p:
             code, title = sportInfo[id]
-            result[order] = [code, title, -value]
+            result[order] = {"order": order, "code" : code, "title":title, "value": -value}
             order += 1
 
         return result
 
+
     def getFinalOrderByCountryCode(self, countryCode: str) -> dict:
-
+        result = []
         id = DB.getCountryIdByCode(countryCode)
+        for key in self.getFinalOrderById(id).values():
+            result.append(key)
+        return {"chart" : result}
 
-        return self.getFinalOrderById(id)
 
 
 # print(c.BGS_data)
@@ -366,4 +369,4 @@ c = Computations()
 
 # print(c.sport_importance_in_country(3,160))
 
-#print(c.getFinalOrderByCountryCode('SVK'))
+#print(c.getFinalOrderById(204))

@@ -60,23 +60,29 @@ const App = () => {
 }
 
 const UserRouters = () => {
-	return (
-		<Router>
-			<Navbar />
-			<Switch>
-				<div className="site">
-					<Route path="/sports"><SportsWithBranches /></Route>
-					<Route path="/home"><HomeUser /></Route>
-					<Route path="/chart"><Chart /></Route>
-					<Route path="/export"><Export /></Route>
-					<Route path="/funding"><Fundings /></Route>
-					<Route path="/success"><Success /></Route>
-					<Route path="/interconnectness"><Interconnectness /></Route>
-				</div>
-			</Switch>
-			<Footer />
-		</Router>
-	);
+    return (
+        <Router>
+            <Navbar />
+            <Switch>
+                <div className="site">
+	                  <Route path="/"><Redirect to="/home" /></Route>
+                    <Route path="/home"><HomeUser /></Route>
+                    <Route path="/chart"><Chart /></Route>
+                    <Route path="/export"><Export /></Route>
+                    <Route path="/funding"><Fundings /></Route>
+                    <Route path="/success"><Success /></Route>
+                    <Route path="/interconnectness"><Interconnectness /></Route>
+                </div>
+            </Switch>
+
+
+
+            <Footer />
+
+        </Router>
+
+    );
+
 }
 
 const SecretaryRoutes = () => {

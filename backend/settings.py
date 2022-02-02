@@ -79,4 +79,5 @@ DB = Database(dbPool)
 #print(DB.getInterconnTypes())
 
 
-print(DB.getCountryIdByCode('SVK'))
+# print(DB.getCountryIdByCode('SVK'))
+# print(DB.getAllCountries())

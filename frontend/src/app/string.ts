@@ -1,3 +1,5 @@
+import {useInterconnectednessType} from "../user/hooks";
+
 export type Language = "sk" | "en";
 
 export const text = {
@@ -59,6 +61,7 @@ export const text = {
 		dataSuccessfullyLoaded: "Dáta úspešne načítané.",
 		unableToLoadData: "Dáta nebolo možné načítať.",
 		loadingCountries: "Načítavanie krajín...",
+		loadingInterconnectednessType: "Načítavanie...",
 		loadingSports: "Načítavanie športov...",
 		gettingNewSportCode: "Zisťuje sa nový kód športu...",
 		loadingSportsWithBranches: "Načítavanie odvetví so športami...",
@@ -121,9 +124,10 @@ export const text = {
 		code: "Code",
 		dataSuccessfullySaved: "Data has been successfully saved.",
 		unableToSaveData: "Unable to save data.",
-		dataSuccessfullyLoaded: "Data has been successfully loaded..",
+		dataSuccessfullyLoaded: "Data has been successfully loaded...",
 		unableToLoadData: "Unable to load data.",
 		loadingCountries: "Loading countries...",
+		loadingInterconnectednessType: "Loading interconnectedness types...",
 		loadingSports: "Loading sports...",
 		gettingNewSportCode: "Getting new sport code...",
 		loadingSportsWithBranches: "Loading sports with branches...",

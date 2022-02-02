@@ -3,8 +3,8 @@ from verification.jwt import is_secretary
 from settings import DB
 
 
-class ShowCountriesView(SwaggerView):
+class ShowInterconnectnessTypeView(SwaggerView):
 
     def get(self):
-        res = {"message": "ok", "countries": DB.getAllCountries()}
+        res = {"message": "ok", "data": DB.getInterconnTypes()}
         return res
