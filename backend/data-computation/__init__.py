@@ -1,3 +1,5 @@
+from typing import List, Dict, Any
+
 from settings import DB
 
 class CompError(Exception):
@@ -7,6 +9,7 @@ class CompError(Exception):
 class Computations:
 
     def __init__(self):
+        """ Set constants PV, initialize DB mirroring. """
 
         self.PV1 = 0.5
         self.PV2 = 0.16
@@ -38,7 +41,12 @@ class Computations:
         self.total_country_fund_data = {}
         self.total_success_of_country_data = {}
 
-    def allActiveCountryIds(self) -> list:
+    def allActiveCountryIds(self) -> List[int]:
+        """ Function that parse country data from DB mirroring and returns list of active country ids.
+
+        Returns:
+            List[int]:
+        """
 
         res = []
 
@@ -47,7 +55,12 @@ class Computations:
 
         return res
 
-    def allBranchIds(self) -> list:
+    def allBranchIds(self) -> List[int]:
+        """ Function that parse non combi branch data from DB mirroring and returns list of non combi branch of ids.
+
+        Returns:
+            List[int]: list of branch ids
+        """
 
         res = []
 
@@ -56,8 +69,16 @@ class Computations:
 
         return res
 
-    def allBranchInSportIds(self, sportN: id) -> list:
+    def allBranchInSportIds(self, sportN: id) ->  List[int]:
+        """ Function that parse non combi branch data which belongs to selected sport
+        from DB mirroring and returns list of non combi branch of ids.
 
+        Args:
+            sportN (id): selected sport id
+
+        Returns:
+            List[int]: list of branch ids
+        """
         res = []
 
         try:
@@ -68,8 +89,12 @@ class Computations:
 
         return res
 
-    def allSportIds(self) -> list:
+    def allSportIds(self) -> List[int]:
+        """ Function that parse sport data from DB mirroring and returns list of sport ids.
 
+        Returns:
+            List[int]: list of sport ids
+        """
         res = []
 
         for record in self.sport_data:
@@ -77,8 +102,15 @@ class Computations:
 
         return res
 
-    def allSportImportance(self, countryK: id) -> dict:
+    def allSportImportance(self, countryK: id) -> Dict[int, float]:
+        """ Calutale importance of each sport in selected country.
 
+        Args:
+            countryK (id): sleected country id
+
+        Returns:
+            Dict[int, float]: dict which keys are sport ids and values are importance numbers.
+        """
         res = {}
         for sport in self.allSportIds():
             res[sport] = self.importance(countryK, sport)
@@ -86,6 +118,15 @@ class Computations:
         return res
 
     def importance(self, countryK: id, sportN: id) -> float:
+        """ Calculate importtance for selected sport in selected country.
+
+        Args:
+            countryK (id): selected country id
+            sportN (id): selected sport id
+
+        Returns:
+            float: importance of sport in country
+        """
         suma = 0
         for countryJ in self.allActiveCountryIds():
             if countryK != countryJ:
@@ -95,21 +136,54 @@ class Computations:
         return self.PV3 * self.norm_BGS(sportN) + (1 - self.PV3) * suma
 
     def norm_interconnectness(self, countryK: id, countryJ: id) -> float:
+        """ Calculate normed interconnectness between selected countries.
 
+        Args:
+            countryK (id): country one id
+            countryJ (id): country two id
+
+        Raises:
+            CompError: countries cant be the same
+
+        Returns:
+            float: normed interconnectness between country one and two
+        """
         if countryK == countryJ:
             raise CompError("cannot compute norm interconectness for same countries")
 
         return self.total_interconnectness(countryK, countryJ) * (1 - self.econ_interconnectness(countryK, countryJ))
 
     def total_interconnectness(self, countryK: id, countryJ: id) -> float:
+        """ Calculate total interconnectness between selected countries.
 
+        Args:
+            countryK (id): country one id
+            countryJ (id): country two id
+
+        Raises:
+            CompError: countries cant be the same
+
+        Returns:
+            float: total interconnectness between one and two
+        """
         if countryK == countryJ:
             raise CompError("cannot compute total interconectness for same countries")
 
         return (self.econ_interconnectness(countryK, countryJ) + self.nonecon_interconnectness(countryK, countryJ)) / 2
 
     def econ_interconnectness(self, countryK: id, countryJ: id) -> float:
+        """ Returns economic interconnectness between selected countries from DB mirroring.
 
+        Args:
+            countryK (id): country one id
+            countryJ (id): country two id
+
+        Raises:
+            CompError: countries cant be the same
+
+        Returns:
+            float: economic interconnectness between one and two
+        """
         if countryK == countryJ:
             raise CompError("cannot compute econ interconectness for same countries")
 
@@ -119,6 +193,18 @@ class Computations:
             return 0
 
     def nonecon_interconnectness(self, countryK: id, countryJ: id) -> float:
+        """ Returns non-economic interconnectness between selected countries from DB mirroring.
+
+                Args:
+                    countryK (id): country one id
+                    countryJ (id): country two id
+
+                Raises:
+                    CompError: countries cant be the same
+
+                Returns:
+                    float: non-economic interconnectness between one and two
+                """
 
         if countryK == countryJ:
             raise CompError("cannot compute nonecon interconectness for same countries")
@@ -129,7 +215,15 @@ class Computations:
             return 0
 
     def sport_importance_in_country(self, sportN: id, countryK: id) -> float:
+        """ Calculate importance of selected sport in selected country.
 
+        Args:
+            sportN (id): selected sport id
+            countryK (id): selected country id
+
+        Returns:
+            float: importance of sport
+        """
         normFun = self.norm_funding(sportN, countryK)
         normSuc = self.norm_success(sportN, countryK)
 
@@ -139,7 +233,15 @@ class Computations:
             return normSuc
 
     def norm_funding(self, sportN: id, countryK: id) -> float:
+        """ Calculate normed funding of selected sport in selected country.
 
+        Args:
+            sportN (id): selected sport
+            countryK (id): selected country
+
+        Returns:
+            float: normed funding
+        """
         if self.total_country_funding(countryK) == 0:
             return 0
 
@@ -151,7 +253,15 @@ class Computations:
         return suma
 
     def total_branch_funding(self, countryK, sportN, branchB) -> float:
+        """ Calculate total branch funding = direct funding + funding from combi branches.
 
+        Args:
+            countryK ([type]): selected country id
+            sportN ([type]): selected sport id
+            branchB ([type]): selected branch id
+        Returns:
+            float: [description]
+        """
         res = self.branch_funding(countryK, sportN, branchB)
 
         try:
@@ -165,12 +275,30 @@ class Computations:
         return res
 
     def branch_funding(self, countryK: id, sportN: id, branchB: id) -> float:
+        """ Get non combi branch funding from DB mirror.
+
+        Args:
+            countryK ([type]): selected country id
+            sportN ([type]): selected sport id
+            branchB ([type]): selected branch id
+
+        Returns:
+            float: non combi branch funding = direct funding
+        """
         try:
             return self.noncombi_funding_data[countryK][sportN][branchB]
         except KeyError:
             return 0
 
     def total_country_funding(self, countryK: id) -> float:
+        """ Sum of all fundings in selected country.
+
+        Args:
+            countryK (id):selected country id
+
+        Returns:
+            float: total funding of country
+        """
 
         if countryK in self.total_country_fund_data:
             return self.total_country_fund_data[countryK]
@@ -186,14 +314,29 @@ class Computations:
             return suma
 
     def norm_success(self, sportN: id, countryK: id) -> float:
+        """ Calculate normed success of selected sport in selected country.
 
+        Args:
+            sportN (id): selected sport
+            countryK (id): selected country
+
+        Returns:
+            float: normed success
+        """
         if self.total_success(countryK) == 0:
             return 0
 
         return self.success(sportN, countryK) / self.total_success(countryK)
 
     def total_success(self, countryK: id) -> float:
+        """ Calculate sum of successes in each sport in selected country.
 
+        Args:
+            countryK (id): selected country
+
+        Returns:
+            float: total success
+        """
         if countryK in self.total_success_of_country_data:
             return self.total_success_of_country_data[countryK]
         else:
@@ -206,7 +349,16 @@ class Computations:
             return suma
 
     def success(self, sportN: id, countryK: id) -> float:
+        """ Calculate success of selected sport in selected country using order, points, total pointsm
+        min order, max points.
 
+        Args:
+            sportN (id): selected sport id
+            countryK (id): selected country id
+
+        Returns:
+            float: [description]
+        """
         res = 0
 
         order = self.order(countryK, sportN)
@@ -226,46 +378,109 @@ class Computations:
         return res
 
     def order(self, countryK: id, sportN: id) -> float:
+        """ Getter for order data from DB mirroring.
+
+        Args:
+            countryK (id):  selected country id
+            sportN (id): selected sport id
+
+        Returns:
+            float: sport order in country
+        """
         try:
             return self.order_data[countryK][sportN]
         except KeyError:
             return 0
 
     def points(self, countryK: id, sportN: id) -> float:
+        """ Getter for points data from DB mirroring.
+
+        Args:
+            countryK (id):  selected country id
+            sportN (id): selected sport id
+
+        Returns:
+            float: sport points in country
+        """
         try:
             return self.points_data[countryK][sportN]
         except KeyError:
             return 0
 
     def max_points(self, sportN: id) -> float:
+        """ Getter for max points = best score data from DB mirroring.
+
+        Args:
+            sportN (id): selected sport id
+
+        Returns:
+            float: best score in sport
+        """
         try:
             return self.max_points_data[sportN]
         except KeyError:
             return 0
 
     def num_countries_in_sport(self, sportN: id) -> float:
+        """ Getter for number of countries in selected sport scoring table data from DB mirroring.
+
+        Args:
+            sportN (id): selected sport id
+
+        Returns:
+            float: number of countries in selected sport
+        """
         try:
             return self.num_countries_in_sport_data[sportN]
         except KeyError:
             return 0
 
     def total_points(self, countryK: id) -> float:
+        """ Getter for sum of points of selected country in all sports - from DB mirroring.
+
+        Args:
+            countryK (id): selected country id
+
+        Returns:
+            float: total points of country
+        """
         try:
             return self.total_country_points_data[countryK]
         except KeyError:
             return 0
 
     def min_order(self, countryK: id) -> float:
+        """ Getter for min order = best ranking of selected country - data from DB mirroring.
+
+        Args:
+            countryK (id):  selected country id
+
+        Returns:
+            float: best ranking of selected country
+        """
         try:
             return self.min_order_data[countryK]
         except KeyError:
             return 0
 
     def norm_BGS(self, sportN: id) -> float:
+        """ Calculate normed value of BGS for selected sport.
+
+        Args:
+            sportN (id): selected sport
+
+        Returns:
+            float: normed BGS
+        """
 
         return self.BGS(sportN) / self.total_BGS()
 
     def total_BGS(self) -> float:
+        """ Calculate sum of BGS of all sports.
+
+        Returns:
+            float: sum of BGSs
+        """
 
         if self.total_BGS_data is not None:
             return self.total_BGS_data
@@ -279,6 +494,14 @@ class Computations:
             return suma
 
     def BGS(self, sportN: id) -> float:
+        """ Returns biggest global sport number for selected sport - from DB mirror.
+
+        Args:
+            sportN (id): selected sport
+
+        Returns:
+            float: BGS of sport
+        """
         try:
             return self.BGS_data[sportN]
         except KeyError:
@@ -286,7 +509,7 @@ class Computations:
 
 
     def getFinalOrderById(self, countryK: id) -> dict:
-
+        
         sportInfo = DB.getAllSportInfo()
 
         result = {}
