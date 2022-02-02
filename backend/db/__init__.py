@@ -2,7 +2,7 @@ import psycopg2
 from psycopg2 import pool
 import psycopg2.extras
 import psycopg2.extensions
-from typing import Union, List, Dict, Any
+from typing import Union, List, Dict, Any, Tuple
 import logging
 from os.path import join
 
@@ -1196,9 +1196,13 @@ class Database:
 
             return final_result
 
-    def getNonCombiBranchIds(self) -> Dict[str, id]:
+    def getNonCombiBranchIds(self) -> List[Dict[str, id]]:
 
-        
+        """ Returns all ids of non combi branches in table branch.
+
+        Returns:
+            Dict[str, id]: list of dicts with key 'id' and value combi branch id
+        """
 
         sql = "select id from branch where is_combined = false"
         result = {"branches": []}
@@ -1219,7 +1223,12 @@ class Database:
 
             return result["branches"]
 
-    def getTotalBranchFunding(self):
+    def getTotalBranchFunding(self) -> Dict[id, Dict[id, float]]:
+        """Returns total branch fnding = sum of direct funding and funding from combi branches.
+
+        Returns:
+            Dict[id, Dict[id, float]]: dict of country id -> dict of branch id -> total funding
+        """
 
         sql = """select country_id, branch_id, sum(absolute_funding) from
 
@@ -1269,8 +1278,12 @@ class Database:
 
             return final_result
 
-    def getNonCombiWithSportBranchIds(self):
+    def getNonCombiWithSportBranchIds(self) -> Dict[id, List[id]]:
+        """ Get non combi branch ids with sport it belongs to.
 
+        Returns:
+            Dict[id, List[id]]: dict of sport id -> list of branch ids in this sport
+        """
         sql = "select id, sport_id from branch where is_combined = false"
         result = {"branches": []}
         try:
@@ -1297,8 +1310,12 @@ class Database:
                 final_result[sport_id].append(id)
             return final_result
 
-    def getAllSportInfo(self):
+    def getAllSportInfo(self) -> Dict[Any, Tuple[Any, Any]]:
+        """ Get records from table sport.
 
+        Returns:
+            Dict[Any, Tuple[Any, Any]]: dict of sport id -> (sport code, sport title)
+        """
         sql = "select id, code, title from sport"
         result = {"sports": []}
         try:
@@ -1322,8 +1339,17 @@ class Database:
             return final_result
 
     def checkCodeTitle(self, sport_code: int, branch_code: int, sport_title: str, branch_title: str) -> bool:
-        """ Check if branch and sport with sport code and branch codes and titles exist and belongs together."""
+        """ Check if branch and sport with sport code and branch code and titles exist and belongs together.
 
+        Args:
+            sport_code (int): selected sport code
+            branch_code (int): selected branch code
+            sport_title (str): selected sport title
+            branch_title (str): selected branch title
+
+        Returns:
+            bool: true/false whether branch belongs to sport
+        """
         sql = "select * from sport s join branch b on s.id = b.sport_id and s.code = %(sport_code)s " \
               "and b.code = %(branch_code)s and s.title = %(sport_title)s and b.title = %(branch_title)s "
         try:
@@ -1341,7 +1367,14 @@ class Database:
             return False
 
     def findSportByCode(self, sport_code: int) -> str:
-        """ Returns title of sport by entered code. """
+        """Returns title of sport by entered code.
+
+        Args:
+            sport_code (int): selected sport code
+
+        Returns:
+            str: sport title
+        """
 
         sql = "select title from sport where code = %(sport_code)s"
         try:
@@ -1357,7 +1390,15 @@ class Database:
             return ""
 
     def findBranchByCode(self, sport_code: int, branch_code: int) -> str:
-        """ Returns branch title of branch defined by entered sport and branch code."""
+        """Returns branch title of branch defined by entered sport and branch code.
+
+        Args:
+            sport_code (int): selected sport code
+            branch_code (int): selected branch code
+
+        Returns:
+            str: branch title
+        """
 
         sql = "select b.title from branch b join sport s on s.id = b.sport_id " \
               "and s.code = %(sport_code)s and b.code = %(branch_code)s"
@@ -1374,9 +1415,13 @@ class Database:
             return ""
 
     def getSportBranches(self, sport_code: int) -> List[Dict[str, Any]]:
-        """
-            Returns all branches which belongs to entered sport.
-            Output format : list of dicts , each dict contains keys code, title.
+        """Returns all branches which belongs to entered sport.
+
+        Args:
+            sport_code (int): selected sport code
+
+        Returns:
+            List[Dict[str, Any]]: list of dicts , each dict contains keys code, title.
         """
 
         sql = "select b.code, b.title from branch b join sport s " \
@@ -1401,10 +1446,11 @@ class Database:
             return result["branches"]
 
     def showCombiBranches(self) -> List[Dict[str, Any]]:
-        """
-            Returns data about combi branches from table combi_branch.
-            Output format : list of dicts , each dict contains keys countryCode, countryName,
-            combiCode, combiTitle, subCode, subTitle, coefficient.
+        """Returns data about combi branches from table combi_branch.
+
+        Returns:
+            List[Dict[str, Any]]: list of dicts , each dict contains keys countryCode, countryName,
+            combiCode, combiTitle, subCode, subTitle, coefficient
         """
 
         sql = "select c.code, c.name, b.code, b.title, b2.code, b2.title, coefficient " \
@@ -1430,8 +1476,16 @@ class Database:
             # print(result)
             return results
 
-    def checkCombi(self, branch_code, country_code) -> tuple:
-        """ Check existance of combi branch. If exists, returns code, title else -1 and empty."""
+    def checkCombi(self, branch_code: int, country_code: str) -> Tuple[int, str]:
+        """ Check existance of combi branch. If exists, returns code, title else -1 and empty.
+
+        Args:
+            branch_code ([type]): selected branch code
+            country_code ([type]): selected country code
+
+        Returns:
+             Tuple[int, str]: (branch code, country code)
+        """
 
         sql = "select b.code, b.title from branch b join country c " \
               "on c.id = b.country_id and c.code = %(country_code)s and is_combined and b.code = %(branch_code)s "
@@ -1449,8 +1503,12 @@ class Database:
             # print(error)
             self.logger.error(error)
 
-    def suggestNewSportCode(self):
-        """ Returns suggestion for sport code. """
+    def suggestNewSportCode(self) -> int:
+        """ Returns suggestion for sport code.
+
+        Returns:
+            int: suggestion for sport code
+        """
 
         sql = "select max(code)+1 from sport"
         try:
@@ -1464,7 +1522,14 @@ class Database:
             self.logger.error(error)
 
     def countryCodeToID(self, country_code: str) -> id:
-        """ Convert country code to country id."""
+        """ Convert country code to country id.
+
+        Args:
+            country_code (str):  selected country code
+
+        Returns:
+            id: id of the country with selected code, if not exist then -1
+        """
 
         sql = "select id from country where code=%(country_code)s"
         try:
@@ -1482,7 +1547,14 @@ class Database:
             self.logger.error(error)
 
     def suggestNewBranchCode(self, sport_code: int) -> int:
-        """ Returns suggestion for branch code in entered sport. """
+        """ Returns suggestion for branch code in entered sport.
+
+        Args:
+            sport_code (int): selected sport code
+
+        Returns:
+            int: suggestion for branch code under selected sport
+        """
 
         sql = "select max(b.code)+1 from branch b " \
               "join sport s on s.id = b.sport_id and s.code = %(sport_code)s"
@@ -1497,9 +1569,16 @@ class Database:
             self.logger.error(error)
 
     def branchCodeToId(self, sport_code: int, branch_code: int) -> id:
-        """
-            Convert branch code to id.
+        """ Convert branch code to id.
             Branch is defined by branch code and sport code it belongs to.
+
+
+        Args:
+            sport_code (int): selected sport code
+            branch_code (int): selected branch code
+
+        Returns:
+            id: return branch id
         """
 
         sql = "select b.id from branch b join sport s on s.id = b.sport_id and " \
@@ -1519,8 +1598,11 @@ class Database:
             self.logger.error(error)
 
     def suggestNewCombiBranchCode(self) -> int:
-        """ Returns suggestion for combi branch code. """
+        """ Returns suggestion for combi branch code.
 
+        Returns:
+            int: suggestion for new combi branch code
+        """
         sql = "select max(b.code)+1 from branch b where is_combined"
         try:
             with self._getConnection() as dbConn:
@@ -1533,11 +1615,12 @@ class Database:
             self.logger.error(error)
 
     def getSportsWithExisitingBranch(self) -> List[Dict[str, Any]]:
-        """
-            Returns sports from table sport which have at least one branch.
-            Output format : list of dicts , each dict contains keys title, code.
-        """
+        """ Returns sports from table sport which have at least one branch.
+            
+        Returns:
+            List[Dict[str, Any]]: list of dicts , each dict contains keys title, code.
 
+        """
         sql = "select s.code, s.title from sport s " \
               " where exists(select * from branch where sport_id = s.id) "
 
@@ -1558,7 +1641,14 @@ class Database:
             return sports
 
     def combiBranchCodeToId(self, branch_code: int) -> id:
-        """ Convert combi branch code to id."""
+        """ Convert combi branch code to id.
+
+        Args:
+            branch_code (int): selected branch code
+
+        Returns:
+            id: return id of combi branch
+        """
 
         sql = "select b.id from branch b where is_combined and code = %(code)s"
 
@@ -1576,9 +1666,10 @@ class Database:
             self.logger.error(error)
 
     def getInterconnTypes(self) -> Dict[str, list]:
-        """
-            Returns interconnectness types from table interconnectness_type.
-            Output format : list of dicts , each dict contains keys title, code.
+        """ Returns interconnectness types from table interconnectness_type.
+
+        Returns:
+            Dict[str, list]: list of dicts , each dict contains keys title, code.
         """
 
         sql = "select code, title from interconnectness_type"
@@ -1598,7 +1689,14 @@ class Database:
             return results
 
     def getCountryIdByCode(self, countryCode: str) -> id:
-        """ Convert country code to country id."""
+        """ Convert country code to country id.
+
+        Args:
+            countryCode (str): selected country code
+
+        Returns:
+            id: id of country with selected code
+        """
 
         sql = "select id from country where code = %(countryCode)s and is_active"
         try:

@@ -81,4 +81,4 @@ DB = Database(dbPool)
 
 # print(DB.getCountryIdByCode('SVK'))
 # print(DB.getAllCountries())
-print(DB.getNonCombiBranchIds())
+print(DB.getSportsWithExisitingBranch())
