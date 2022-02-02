@@ -23,6 +23,22 @@ class UploadView(SwaggerView):
 
 		# TODO: handle file uploads
 
+		if interconnectednessFile:
+			wb = load_workbook(filename=BytesIO(interconnectednessFile.read()))
+			type = 1 # TODO: prepojit cez API
+
+			p = excelParser()
+			parsed = p.parseInterconnectness(wb, type)
+
+			print(len(parsed), "tu")
+
+			DB.deleteInterconnectednessTables(type)
+
+			print("deleted")
+			for item in parsed:
+				item.save()
+
+			print("hotovo")
 
 
 		if successFile:
