@@ -119,13 +119,13 @@ class InterconnectnessRecord:
         self.countryA = countryA
         self.countryB = countryB
         self.type = type
-        self.value = value
+        self.value = round(value, 5)
 
     def __str__(self) -> str:
         return f"{self.type} {self.countryA} {self.countryB} {self.value}"
 
     def save(self):
-        print ( DB.importInterconnectednessData(self.type, self.countryA, self.countryB, self.value) )
+        DB.importInterconnectednessData(self.type, self.countryA, self.countryB, self.value)
 
 
 class ParseError(Exception):

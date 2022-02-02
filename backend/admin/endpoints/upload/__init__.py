@@ -31,18 +31,11 @@ class UploadView(SwaggerView):
 			p = excelParser()
 			parsed = p.parseInterconnectness(wb, type)
 
-			print(len(parsed), "tu")
-
-			if DB.deleteInterconnectednessTables(type) :
-				print("deleted")
-				start_time = time.time()
+			if DB.deleteInterconnectednessTables(type):
 				for item in parsed:
 					item.save()
-
-				print("hotovo")
-				print("--- %s seconds ---" % (time.time() - start_time))
 			else:
-				print("nepodarilo sa")
+				pass #TODO raise error alebo nieco ???
 
 
 		if successFile:
@@ -51,13 +44,13 @@ class UploadView(SwaggerView):
 			p = excelParser()
 			parsed = p.parseSuccess(wb)
 
-			DB.deleteSuccesTables()
+			if DB.deleteSuccesTables():
 
-			for s in parsed[0]:
-				s.save()
+				for s in parsed[0]:
+					s.save()
 
-			for table in parsed[2:]:
-				table.save()
+				for table in parsed[2:]:
+					table.save()
 
 			# TODO: list of unknown sports in parsed[1]
 
