@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {
     apiInterconnectness,
-    apiListCountry, apiListInterconnectness, apiListInterconnectnessType,
-    countryType,
-    interconnectnessType, interconnectnessTypeType,
+    apiListInterconnectness,
+    interconnectnessType
+
 
 
 } from "../../adapters";
