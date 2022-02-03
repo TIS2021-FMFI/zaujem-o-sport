@@ -9,3 +9,200 @@ LINE 1: selecxt id from country where code = 'SVK' and is_active
 LINE 1: selecxt id from country where code = 'SVK' and is_active
         ^
 
+2022-02-03 14:38:50,294 ERROR    operator does not exist: character varying = text[]
+LINE 1: ...i.type_id = it.id where i.type_id = 1 and c1.code = ARRAY['S...
+                                                             ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+
+2022-02-03 20:27:10,667 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 20:27:13,173 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 20:27:13,206 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 20:27:13,241 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 20:27:13,281 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 20:27:13,313 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 20:27:13,347 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 20:27:13,383 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 20:27:13,415 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 20:27:13,448 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 20:27:13,481 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 20:27:13,515 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 20:27:13,547 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 20:27:13,580 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 20:27:13,616 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 20:27:13,657 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:19,260 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:19,497 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:19,553 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:19,617 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:19,669 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:19,718 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:19,769 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:19,872 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:19,918 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:19,961 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:20,004 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:20,055 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:20,101 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:20,139 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:20,177 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:20,221 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:21,021 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:21,061 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:21,100 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:21,141 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:21,179 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:21,221 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:21,260 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:21,297 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:21,337 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:21,374 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:21,414 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:21,450 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:21,488 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:21,533 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:21,573 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:25,721 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:25,983 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:26,234 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:26,267 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:26,301 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:26,338 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:26,372 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:26,406 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:26,440 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:26,471 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:26,503 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:26,535 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:26,571 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:26,606 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:26,644 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:26,681 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:26,716 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:28,349 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:28,669 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:28,717 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:28,760 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:28,803 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:28,846 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:28,886 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:28,935 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:28,982 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:29,020 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:29,057 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:29,097 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:29,132 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:29,167 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:29,204 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:57:29,239 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:46,318 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:46,561 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:46,599 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:46,635 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:46,672 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:46,709 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:46,744 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:46,781 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:46,816 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:46,854 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:46,890 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:46,925 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:46,960 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:46,996 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:47,032 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+
+2022-02-03 22:58:47,070 ERROR    connection to server at "localhost" (::1), port 5432 failed: FATAL:  sorry, too many clients already
+

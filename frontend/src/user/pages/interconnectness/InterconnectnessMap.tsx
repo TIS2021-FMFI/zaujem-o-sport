@@ -12,6 +12,9 @@ import {CSVLink} from "react-csv";
 import {Download} from "react-bootstrap-icons";
 import {useCountries} from "../../../app/hooks";
 import {useInterconnectednessType} from "../../hooks";
+import {ChoiceState} from "../../components/choicestate/ChoiceState";
+
+
 
 
 export const InterconnectnessMap = () => {
@@ -48,7 +51,7 @@ export const InterconnectnessMap = () => {
 
 
 
-    const [option, setOption] = useState<string[]>(["SVK","SLOVAKIA"]);
+    const [option, setOption] = useState<string[]>(["",""]);
     const [option2, setOption2] = useState<number>(1);
     const [rowInterconnectness, setRowInterconnectness] = useState<(number | string)[][]>([]);
 
@@ -74,10 +77,12 @@ export const InterconnectnessMap = () => {
 
     return (
         <>
-            <h5><b>Map</b> is chosen</h5>
+            <div className="alert alert-success col-md-6 mt-md-4" role="alert">
+                <h4><b>Map</b> is chosen </h4>
+            </div>
             <div>
 
-                <Form.Label>Country</Form.Label>
+                <Form.Label><h4>Country</h4></Form.Label>
                 <Select
                     id="setcountry"
                     options={options}
@@ -89,7 +94,7 @@ export const InterconnectnessMap = () => {
 
 
 
-                <Form.Label>Interconnectedness type</Form.Label>
+                <Form.Label><h4>Interconnectedness type</h4></Form.Label>
                 <Select
                     id="setinterconnectness"
                     options={options2}
@@ -98,11 +103,10 @@ export const InterconnectnessMap = () => {
                         if (selectedOption !== null)
                             setOption2(selectedOption.value) }}
                 />
-                <Button variant="primary"><CSVLink className='button' filename={"interconnectedness"+option[1]} data={rowInterconnectness}><Download size={25} />Export data</CSVLink></Button>{' '}
+                <ChoiceState state={option[1]} interconnectness={true} />
 
-                <div className="alert alert-success" role="alert">
-                    <h4>  You can see results for chosen country <b>{option[1]} :</b>  </h4>
-                </div>
+                <Button variant="outline-primary mt-md-2 mb-md-2"><CSVLink className='button' filename={"interconnectedness"+option[1]} data={rowInterconnectness}><Download size={25} />Export data</CSVLink></Button>{' '}
+
 
 
             </div>

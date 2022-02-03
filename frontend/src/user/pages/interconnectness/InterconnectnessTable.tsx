@@ -1,14 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {
-    apiInterconnectness,
-    apiListCountry, apiListInterconnectness, apiListInterconnectnessType,
-
-    countryType,
-    interconnectnessType, interconnectnessTypeType,
+    apiInterconnectness
 
 
 } from "../../adapters";
-import {useMutation, useQuery} from "react-query";
+import {useMutation} from "react-query";
 import {Button, Form, Spinner} from "react-bootstrap";
 import Select from "react-select";
 import {Table} from "../../../components/table/Table";
@@ -16,6 +12,7 @@ import {CSVLink} from "react-csv";
 import {Download} from "react-bootstrap-icons";
 import {useCountries} from "../../../app/hooks";
 import {useInterconnectednessType} from "../../hooks";
+import {ChoiceState} from "../../components/choicestate/ChoiceState";
 
 
 export const InterconnectnessTable = () => {
@@ -34,12 +31,12 @@ export const InterconnectnessTable = () => {
         "label" : d.title
     }));
 
-    const [option, setOption] = useState<string>("SVK");
+    const [option, setOption] = useState<string[]>(["",""]);
     const [option2, setOption2] = useState<number>(1);
     const [rowInterconnectness, setRowInterconnectness] = useState<(number | string)[][]>([]);
 
     const { mutateAsync: asyncInterconnectness } = useMutation(["setCountry", option, option2],
-        () => apiInterconnectness(option2,option),
+        () => apiInterconnectness(option2,option[0]),
         {
             onSuccess: (response) => {
                 const serverData = response.data.data;
@@ -60,20 +57,23 @@ export const InterconnectnessTable = () => {
 
     return (
         <>
-            <h5><b>Table</b> is chosen</h5>
+            <div className="alert alert-success col-md-6 mt-md-4" role="alert">
+                <h4><b>Table</b> is chosen </h4>
+            </div>
+
             <div>
 
-                <Form.Label>Country</Form.Label>
+                <Form.Label><h4>Country</h4></Form.Label>
                 <Select
                     id="setcountry"
                     options={options}
                     placeholder="Choose country"
                     onChange={ (selectedOption) => {
                         if (selectedOption !== null)
-                            setOption(selectedOption.value) }}
+                            setOption([selectedOption.value, selectedOption.label]) }}
                 />
 
-                <Form.Label>Interconnectedness type</Form.Label>
+                <Form.Label><h4>Interconnectedness type</h4></Form.Label>
                 <Select
                     id="setinterconnectness"
                     options={options2}
@@ -82,12 +82,11 @@ export const InterconnectnessTable = () => {
                         if (selectedOption !== null)
                             setOption2(selectedOption.value) }}
                 />
+                <ChoiceState state={option[1]} interconnectness={true} />
 
-                <Button variant="primary"><CSVLink className='button' filename={"interconnectedness"+option} data={rowInterconnectness}><Download size={25} />Export data</CSVLink></Button>{' '}
+                <Button variant="outline-primary mt-md-2 mb-md-2"><CSVLink className='button' filename={"interconnectedness"+option} data={rowInterconnectness}><Download size={25} />Export data</CSVLink></Button>{' '}
 
-                <div className="alert alert-success" role="alert">
-                    <h4>  You can see results for chosen country <b>{option[1]} :</b>  </h4>
-                </div>
+
             </div>
             {isLoading
                 ? <Spinner animation="border" role="status">
