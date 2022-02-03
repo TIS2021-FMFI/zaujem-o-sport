@@ -3,9 +3,6 @@ import {
     apiInterconnectness,
     apiListInterconnectness,
     interconnectnessType
-
-
-
 } from "../../adapters";
 import {useMutation, useQuery} from "react-query";
 import {Button, Form, Spinner} from "react-bootstrap";
@@ -51,17 +48,18 @@ export const InterconnectnessMap = () => {
 
 
 
-    const [option, setOption] = useState<string>("SVK");
+    const [option, setOption] = useState<string[]>(["SVK","SLOVAKIA"]);
     const [option2, setOption2] = useState<number>(1);
     const [rowInterconnectness, setRowInterconnectness] = useState<(number | string)[][]>([]);
 
 
     const { mutateAsync: asyncInterconnectness } = useMutation(["setCountry", option, option2],
-        () => apiInterconnectness(option2,option),
+        () => apiInterconnectness(option2,option[0]),
         {
             onSuccess: (response) => {
                 const serverData = response.data.data;
                 setInterconnectness(serverData.interconnectness);
+                setRowInterconnectness(serverData.interconnectness.map((i) => [i.code, i.country, i.value, i.type]))
             },
             onError: (error) => {
                 console.log(error);
@@ -69,13 +67,10 @@ export const InterconnectnessMap = () => {
         }
     );
 
-
-
     useEffect(() => {
         asyncInterconnectness();
 
     }, [option,option2]);
-
 
     return (
         <>
@@ -89,8 +84,10 @@ export const InterconnectnessMap = () => {
                     placeholder="Choose country"
                     onChange={ (selectedOption) => {
                         if (selectedOption !== null)
-                            setOption(selectedOption.value) }}
+                            setOption([selectedOption.value, selectedOption.label]) }}
                 />
+
+
 
                 <Form.Label>Interconnectedness type</Form.Label>
                 <Select
@@ -101,8 +98,12 @@ export const InterconnectnessMap = () => {
                         if (selectedOption !== null)
                             setOption2(selectedOption.value) }}
                 />
+                <Button variant="primary"><CSVLink className='button' filename={"interconnectedness"+option[1]} data={rowInterconnectness}><Download size={25} />Export data</CSVLink></Button>{' '}
 
-                <Button variant="primary"><CSVLink className='button' filename={"interconnectedness"+option} data={rowInterconnectness}><Download size={25} />Export data</CSVLink></Button>{' '}
+                <div className="alert alert-success" role="alert">
+                    <h4>  You can see results for chosen country <b>{option[1]} :</b>  </h4>
+                </div>
+
 
             </div>
             { isLoading
@@ -112,9 +113,7 @@ export const InterconnectnessMap = () => {
 
                 :interconnectnesses !== undefined &&
                 <MapShow input={interconnectnesses.map((interconnectness) => { return (
-                    {code: interconnectness.code , value: interconnectness.value}
-
-
+                    {name: interconnectness.country, code: interconnectness.code , value: interconnectness.value}
                 )})} />
 
 

@@ -85,6 +85,9 @@ export const InterconnectnessTable = () => {
 
                 <Button variant="primary"><CSVLink className='button' filename={"interconnectedness"+option} data={rowInterconnectness}><Download size={25} />Export data</CSVLink></Button>{' '}
 
+                <div className="alert alert-success" role="alert">
+                    <h4>  You can see results for chosen country <b>{option[1]} :</b>  </h4>
+                </div>
             </div>
             {isLoading
                 ? <Spinner animation="border" role="status">
