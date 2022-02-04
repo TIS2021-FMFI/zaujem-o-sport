@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from "react";
 import {useMutation, useQuery} from "react-query";
-import {apiListCountry, apiListSuccess, apiSuccess, countryType, successType} from "../../adapters";
+import { apiListSuccess, apiSuccess,  successType} from "../../adapters";
 import {Button, Form, Spinner} from "react-bootstrap";
 import Select from "react-select";
 import {Table} from "../../../components/table/Table";
 import {CSVLink} from "react-csv";
 import {Download} from "react-bootstrap-icons";
 import {useCountries} from "../../../app/hooks";
+import {Info} from "../../components/info/Info";
+import {ChoiceState} from "../../components/choicestate/ChoiceState";
 
 export const Success = () => {
 
@@ -23,7 +25,7 @@ export const Success = () => {
 
         },
         onError: (error) => {
-
+            alert(error);
         }
     })
 
@@ -34,7 +36,7 @@ export const Success = () => {
 
 
 
-    const [option, setOption] = useState<string[]>(["SVK","SLOVAKIA"]);
+    const [option, setOption] = useState<string[]>(["",""]);
 
 
     const { mutateAsync: asyncSuccess } = useMutation(["setCountry", option],
@@ -60,10 +62,14 @@ export const Success = () => {
 
     return (
         <>
-            <h1>Success</h1>
+            <header>
+            <h1 className="mt-3 mb-4"> Success <Info label="What is Ranking" input="After selecting a sport, this page displays a table showing
+            the ranking of countries according to the number of points earned in the sport."/></h1>
+            </header>
+
             <div>
 
-                <Form.Label>Country</Form.Label>
+                <Form.Label><h4>Country</h4></Form.Label>
                 <Select
                     id="country"
                     options={options}
@@ -72,8 +78,10 @@ export const Success = () => {
                         if (selectedOption !== null)
                             setOption([selectedOption.value, selectedOption.label]) }}
                 />
-                <h4>  You can see results for chosen country <b>{option[1]} :</b> </h4>
-                <Button variant="primary"><CSVLink className='button' filename={"success"+option[1]} data={rowSuccess}><Download size={25} /> Export data</CSVLink></Button>{' '}
+                <ChoiceState state={option[1]} />
+                <Button variant="outline-primary mt-md-2 mb-md-2"><CSVLink className='button' filename={"success"+option[1]} data={rowSuccess}><Download size={25} /> Export data</CSVLink></Button>{' '}
+
+
             </div>
             {isLoading
                 ? <Spinner animation="border" role="status">

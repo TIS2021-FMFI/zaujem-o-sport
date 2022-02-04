@@ -1,22 +1,24 @@
 import React, {useEffect, useState} from "react";
-import {useMutation, useQuery} from "react-query";
+import {useMutation} from "react-query";
 import {
-    apiChart,
-    apiListChart,
-    apiListCountry,
-    chartType,
-    countryType
+    apiChart
 } from "../../adapters";
-import {Button, Form, Spinner} from "react-bootstrap";
+import {Button, Form} from "react-bootstrap";
 import Select from "react-select";
 import {Table} from "../../../components/table/Table";
 import {CSVLink} from "react-csv";
 import {Download} from "react-bootstrap-icons";
 import {useCountries} from "../../../app/hooks";
+import {Info} from "../../components/info/Info";
+import {ChoiceState} from "../../components/choicestate/ChoiceState";
 
-export const Chart = () => {
+
+
+
+export const Ranking = () => {
 
     const {countries} = useCountries("en");
+
 
     const [rowChart, setRowChart] = useState<(number | string)[][]>([]);
 
@@ -31,7 +33,7 @@ export const Chart = () => {
         }
     }, [countries]);
 
-    const [option, setOption] = useState<string[]>(["SVK","SLOVAKIA"]);
+    const [option, setOption] = useState<string[]>(["",""]);
 
 
     const { mutateAsync: asyncChart } = useMutation(["setCountry", option],
@@ -58,10 +60,13 @@ export const Chart = () => {
 
     return (
         <>
-            <h1>Chart</h1>
+            <h1 className="mt-3 mb-4"> Ranking <Info label="What is Ranking" input="The page displays the global (universal) order of sports
+            (order, sport,points and code )."/></h1>
+
+
             <div>
 
-                <Form.Label>Country</Form.Label>
+                <Form.Label><h4>Country</h4></Form.Label>
                 <Select
                     id="country"
                     options={options}
@@ -70,12 +75,15 @@ export const Chart = () => {
                         if (selectedOption !== null)
                             setOption([selectedOption.value, selectedOption.label]) }}
                 />
+                <ChoiceState state={option[1]} />
+                <Button variant="outline-primary mt-md-2 mb-md-2"><CSVLink className='button' filename={"ranking"+option[1]} data={rowChart}><Download size={25} /> Export data</CSVLink></Button>{' '}
 
-                <h4>  You can see results for chosen country <b>{option[1]} :</b> </h4>
-                <Button variant="primary"><CSVLink className='button' filename={"chart"+option[1]} data={rowChart}><Download size={25} /> Export data</CSVLink></Button>{' '}
 
             </div>
             <div>
+
+
+
                 <Table columnNames={[{name: "Order", sortable: true},{name: "Sport", sortable: true}, {name: "Points", sortable: true}, {
                     name: "Code",
                     sortable: true

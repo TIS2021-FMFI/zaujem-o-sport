@@ -17,13 +17,13 @@ import {AddSport} from "admin_secretary_shared/pages/sports/add_sport/AddSport";
 import {AddBranch} from "admin_secretary_shared/pages/branches/add_branch/AddBranch";
 import {Countries} from "admin_secretary_shared/pages/countries/Countries";
 import Navbar from "./user/components/Navbar";
-import {Chart} from "./user/pages/chart/Chart";
+import {Ranking} from "./user/pages/chart/Ranking";
 import {Export} from "./user/pages/export/Export";
 import {Fundings} from "./user/pages/fundings/Fundings";
 import {Success} from "./user/pages/success/Success";
 import {Interconnectness} from "./user/pages/interconnectness/Interconnectness";
 import {UploadData as AdminUploadData} from "./admin/pages/upload_data/UploadData";
-import Footer from "./user/components/footer";
+import {Footer} from "./user/components/footer";
 import {HomeUser} from "./user/pages/home/HomeUser";
 import 'user/pages/styles/site.scss';
 import {ToastContainer} from "react-toastify";
@@ -67,7 +67,7 @@ const UserRouters = () => {
                 <div className="site">
 	                  <Route path="/"><Redirect to="/home" /></Route>
                     <Route path="/home"><HomeUser /></Route>
-                    <Route path="/chart"><Chart /></Route>
+                    <Route path="/ranking"><Ranking /></Route>
                     <Route path="/export"><Export /></Route>
                     <Route path="/funding"><Fundings /></Route>
                     <Route path="/success"><Success /></Route>

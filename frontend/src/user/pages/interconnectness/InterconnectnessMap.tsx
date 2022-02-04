@@ -1,11 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {
     apiInterconnectness,
-    apiListCountry, apiListInterconnectness, apiListInterconnectnessType,
-    countryType,
-    interconnectnessType, interconnectnessTypeType,
-
-
+    apiListInterconnectness,
+    interconnectnessType
 } from "../../adapters";
 import {useMutation, useQuery} from "react-query";
 import {Button, Form, Spinner} from "react-bootstrap";
@@ -15,6 +12,9 @@ import {CSVLink} from "react-csv";
 import {Download} from "react-bootstrap-icons";
 import {useCountries} from "../../../app/hooks";
 import {useInterconnectednessType} from "../../hooks";
+import {ChoiceState} from "../../components/choicestate/ChoiceState";
+
+
 
 
 export const InterconnectnessMap = () => {
@@ -51,17 +51,18 @@ export const InterconnectnessMap = () => {
 
 
 
-    const [option, setOption] = useState<string>("SVK");
+    const [option, setOption] = useState<string[]>(["",""]);
     const [option2, setOption2] = useState<number>(1);
     const [rowInterconnectness, setRowInterconnectness] = useState<(number | string)[][]>([]);
 
 
     const { mutateAsync: asyncInterconnectness } = useMutation(["setCountry", option, option2],
-        () => apiInterconnectness(option2,option),
+        () => apiInterconnectness(option2,option[0]),
         {
             onSuccess: (response) => {
                 const serverData = response.data.data;
                 setInterconnectness(serverData.interconnectness);
+                setRowInterconnectness(serverData.interconnectness.map((i) => [i.code, i.country, i.value, i.type]))
             },
             onError: (error) => {
                 console.log(error);
@@ -69,30 +70,31 @@ export const InterconnectnessMap = () => {
         }
     );
 
-
-
     useEffect(() => {
         asyncInterconnectness();
 
     }, [option,option2]);
 
-
     return (
         <>
-            <h5><b>Map</b> is chosen</h5>
+            <div className="alert alert-success col-md-6 mt-md-4" role="alert">
+                <h4><b>Map</b> is chosen </h4>
+            </div>
             <div>
 
-                <Form.Label>Country</Form.Label>
+                <Form.Label><h4>Country</h4></Form.Label>
                 <Select
                     id="setcountry"
                     options={options}
                     placeholder="Choose country"
                     onChange={ (selectedOption) => {
                         if (selectedOption !== null)
-                            setOption(selectedOption.value) }}
+                            setOption([selectedOption.value, selectedOption.label]) }}
                 />
 
-                <Form.Label>Interconnectedness type</Form.Label>
+
+
+                <Form.Label><h4>Interconnectedness type</h4></Form.Label>
                 <Select
                     id="setinterconnectness"
                     options={options2}
@@ -101,8 +103,11 @@ export const InterconnectnessMap = () => {
                         if (selectedOption !== null)
                             setOption2(selectedOption.value) }}
                 />
+                <ChoiceState state={option[1]} interconnectness={true} />
 
-                <Button variant="primary"><CSVLink className='button' filename={"interconnectedness"+option} data={rowInterconnectness}><Download size={25} />Export data</CSVLink></Button>{' '}
+                <Button variant="outline-primary mt-md-2 mb-md-2"><CSVLink className='button' filename={"interconnectedness"+option[1]} data={rowInterconnectness}><Download size={25} />Export data</CSVLink></Button>{' '}
+
+
 
             </div>
             { isLoading
@@ -112,9 +117,7 @@ export const InterconnectnessMap = () => {
 
                 :interconnectnesses !== undefined &&
                 <MapShow input={interconnectnesses.map((interconnectness) => { return (
-                    {code: interconnectness.code , value: interconnectness.value}
-
-
+                    {name: interconnectness.country, code: interconnectness.code , value: interconnectness.value}
                 )})} />
 
 
