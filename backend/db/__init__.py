@@ -373,7 +373,7 @@ class Database:
                     dbConn.commit()
             self._releaseConnection(dbConn)
             return True
-        except Union[psycopg2.DatabaseError, DataError] as error:
+        except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
             self.logger.error(error)
             return False
@@ -424,7 +424,7 @@ class Database:
                     dbConn.commit()
             self._releaseConnection(dbConn)
             return True
-        except Union[psycopg2.DatabaseError, DataError] as error:
+        except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
             self.logger.error(error)
             return False
@@ -525,7 +525,7 @@ class Database:
 
             self._releaseConnection(dbConn)
             return True
-        except Union[psycopg2.DatabaseError, DataError] as error:
+        except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
             self.logger.error(error)
             return False
@@ -578,7 +578,7 @@ class Database:
 
             self._releaseConnection(dbConn)
             return True
-        except Union[psycopg2.DatabaseError, DataError] as error:
+        except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
             self.logger.error(error)
             return False
@@ -613,7 +613,7 @@ class Database:
                 dbConn.commit()
             self._releaseConnection(dbConn)
             return True
-        except Union[psycopg2.DatabaseError, DataError] as error:
+        except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
             self.logger.error(error)
             return False
@@ -1761,7 +1761,7 @@ class Database:
                         raise DataError("country code does not exist")
                     else:
                         return tmp[0]
-        except Union[psycopg2.DatabaseError, DataError] as error:
+        except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
             self.logger.error(error)
             return -1
