@@ -5,7 +5,7 @@ from openpyxl import load_workbook
 from io import BytesIO
 from csv_parsers.excelParser import excelParser
 from settings import DB
-import time
+
 
 class UploadView(SwaggerView):
 
@@ -24,11 +24,12 @@ class UploadView(SwaggerView):
 
 		# TODO: handle file uploads
 
+		p = excelParser()
+
 		if interconnectednessFile:
 			wb = load_workbook(filename=BytesIO(interconnectednessFile.read()))
 			type = 1 # TODO: prepojit cez API
 
-			p = excelParser()
 			parsed = p.parseInterconnectness(wb, type)
 
 			if DB.deleteInterconnectednessTables(type):
@@ -41,17 +42,31 @@ class UploadView(SwaggerView):
 		if successFile:
 
 			wb = load_workbook(filename=BytesIO(successFile.read()))
-			p = excelParser()
+
 			parsed = p.parseSuccess(wb)
 
 			if DB.deleteSuccesTables():
 
-				for s in parsed[0]:
-					s.save()
+				for item in parsed[0]:
+					item.save()
 
 				for table in parsed[2:]:
 					table.save()
 
 			# TODO: list of unknown sports in parsed[1]
+
+		BGSfile = load_workbook(filename='BGS_test.xlsx')
+
+		if BGSfile:
+			wb = BGSfile
+			# wb = load_workbook(filename=BytesIO(BGSfile.read()))
+
+			parsed = p.parseBGS(wb)
+
+			if DB.deleteBGS():
+
+				for item in parsed:
+					item.save()
+
 
 		return {}
