@@ -2,6 +2,7 @@ from typing import List, Dict, Any
 
 from settings import DB
 
+
 class CompError(Exception):
     ...
 
@@ -69,7 +70,7 @@ class Computations:
 
         return res
 
-    def allBranchInSportIds(self, sportN: id) ->  List[int]:
+    def allBranchInSportIds(self, sportN: id) -> List[int]:
         """ Function that parse non combi branch data which belongs to selected sport
         from DB mirroring and returns list of non combi branch of ids.
 
@@ -507,9 +508,15 @@ class Computations:
         except KeyError:
             return 0
 
+    def getFinalOrderById(self, countryK: id) -> Dict[int, Dict[str, Any]]:
+        """ Create final sport order for selected country id.
 
-    def getFinalOrderById(self, countryK: id) -> dict:
-        
+        Args:
+            countryK (id): selected country id
+
+        Returns:
+            Dict[int, Dict[str, Any]]: dict with keys = ranks and values = dicts with keys order, code, title, value.
+        """
         sportInfo = DB.getAllSportInfo()
 
         result = {}
@@ -522,19 +529,26 @@ class Computations:
         order = 1
         for value, id in p:
             code, title = sportInfo[id]
-            result[order] = {"order": order, "code" : code, "title":title, "value": -value}
+            result[order] = {"order": order, "code": code, "title": title, "value": -value}
             order += 1
 
         return result
 
+    def getFinalOrderByCountryCode(self, countryCode: str) -> Dict[str, List[Dict[str, Any]]]:
+        """ Create final sport order for selected country code.
 
-    def getFinalOrderByCountryCode(self, countryCode: str) -> dict:
+        Args:
+            countryCode (str): selected country code
+
+        Returns:
+            Dict[str, List[Dict[str, Any]]]: dict with one key = chart, and value = list of dicts with
+             keys order, code, title, value.
+        """
         result = []
         id = DB.getCountryIdByCode(countryCode)
         for key in self.getFinalOrderById(id).values():
             result.append(key)
-        return {"chart" : result}
-
+        return {"chart": result}
 
 
 # print(c.BGS_data)
@@ -592,4 +606,4 @@ c = Computations()
 
 # print(c.sport_importance_in_country(3,160))
 
-#print(c.getFinalOrderById(204))
+#print(c.getFinalOrderByCountryCode('SVK'))
