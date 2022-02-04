@@ -13,7 +13,7 @@ export const AddCountry = () => {
 	const [countryCode, setCountryCode] = useState<string>("");
 
 	const addNewCountryMutation = useMutationWithNotifications(
-		"adding_new_country", apiAddNewCountry, "Adding new country..."
+		"adding_new_country", apiAddNewCountry, "Adding new country...", "en"
 	);
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
