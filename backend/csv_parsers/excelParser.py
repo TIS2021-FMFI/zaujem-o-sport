@@ -312,7 +312,6 @@ class excelParser:
         records = []
         LAST_ROW = sheet.max_row
 
-
         for row in range(2, LAST_ROW+1):
             cell = sheet.cell(row=row, column=2)
 
@@ -326,7 +325,9 @@ class excelParser:
                 else:
                     value = int(value)
 
-                records.append( [ sheet.cell(row=row, column=2).value , BGSRecord(sport_id, value) ])
+                records.append( BGSRecord(sport_id, value) )
+            else:
+                break
 
         return records
 

@@ -639,6 +639,23 @@ class Database:
             self.logger.error(error)
             return False
 
+    def deleteBGS(self):
+
+        sql = "TRUNCATE BGS RESTART IDENTITY "
+
+        try:
+            with self._getConnection() as dbConn:
+                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                    cursor.execute(sql)
+                dbConn.commit()
+            self._releaseConnection(dbConn)
+            return True
+        except psycopg2.DatabaseError as error:
+            # print(error)
+            self.logger.error(error)
+            return False
+
+
     def deleteSuccesTables(self):
 
         sql = "TRUNCATE  COUNTRY_BEST_ORDER, TOTAL_COUNTRY_POINTS," \
