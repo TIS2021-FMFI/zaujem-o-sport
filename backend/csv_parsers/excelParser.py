@@ -128,6 +128,20 @@ class InterconnectnessRecord:
         DB.importInterconnectednessData(self.type, self.countryA, self.countryB, self.value)
 
 
+class BGSRecord:
+
+    def __init__(self, sport_id : int, value : int):
+        self.sport_id = sport_id
+        self.value = value
+
+    def __repr__(self) -> str:
+        return f'BGS : {self.sport_id} , {self.value} '
+
+    def save(self):
+        ...
+
+
+
 class ParseError(Exception):
     ...
 
@@ -285,7 +299,40 @@ class excelParser:
 
         return records
 
-# p = excelParser()
+    def parseBGS(self, wb) -> List[BGSRecord]:
+        sheet = wb.active
+        sports = DB.getAllSports()
+
+        def getSportID(title):
+            for item in sports:
+                if item['title'] == title.strip().replace("/", " AND "):
+                    return item["code"]
+            return -1
+
+        records = []
+        LAST_ROW = sheet.max_row
+
+
+        for row in range(2, LAST_ROW+1):
+            cell = sheet.cell(row=row, column=2)
+
+            if cell.value is not None:
+                sport_id = getSportID(cell.value)
+
+                value = sheet.cell(row=row, column=4).value
+
+                if value is None:
+                    value = 0
+                else:
+                    value = int(value)
+
+                records.append( [ sheet.cell(row=row, column=2).value , BGSRecord(sport_id, value) ])
+
+        return records
+
+
+
+p = excelParser()
 
 # example of usage - Success
 # wb = openpyxl.load_workbook(filename='ALL SPORTS RANKING 2019.xlsx')
@@ -301,8 +348,11 @@ class excelParser:
 # for n in nieco:
 #     print ( n )
 
-
 # example of usage - Interconnectness
-
 # parsed = p.parseInterconnectness("intercon_test.xlsx", 1)
 # print(len(parsed), "velkost")
+
+wb = openpyxl.load_workbook(filename='BGS_test.xlsx')
+nieco = p.parseBGS(wb)
+for item in nieco:
+    print(item)
