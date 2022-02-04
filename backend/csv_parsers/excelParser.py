@@ -119,10 +119,14 @@ class InterconnectnessRecord:
         self.countryA = countryA
         self.countryB = countryB
         self.type = type
-        self.value = value
+        self.value = round(value, 5)
 
     def __str__(self) -> str:
         return f"{self.type} {self.countryA} {self.countryB} {self.value}"
+
+    def save(self):
+        DB.importInterconnectednessData(self.type, self.countryA, self.countryB, self.value)
+
 
 class ParseError(Exception):
     ...
@@ -221,43 +225,69 @@ class excelParser:
 
         return [ success, unknown_sports, pocet_statov, max_bodov, pocet_bodov, najvyssie_um ]
 
-    def parseInterconnectness(file: str, type: str) -> List[InterconnectnessRecord]:
+    def parseInterconnectness(self, wb, type: int) -> List[InterconnectnessRecord]:
 
-        wb_obj = openpyxl.load_workbook(file)
-        sheet = wb_obj.active
+        sheet = wb.active
+        countries = DB.getActiveCountryTranslations()
 
-        LAST_ROW = sheet.max_row  # aby sme vedeli pokial sa pozerat
-        LAST_COL = sheet.max_column  # kolko max stlpcov je rozdiel medzi 2 menami sportov -> aby sme neprehladavali donekonecna
+        def getCountryID(name):
+            for item in countries:
+                if item['translation'] == name.strip():
+                    return item["id"]
+            return -1
 
-        records = []
-        countries = []
-        FIRST_ROW = 1
-        FIRST_COL = 1
+        LAST_ROW = sheet.max_row  # kolko rows obsahuje zdroj
+        country_index = 1
+        last_country_index = 2
 
-        key = None
-        for col in range(2, LAST_COL + 1):
-            cell = sheet.cell(row=1, column=col)
-            countries.append(cell.value)
-
-        # check if countries in first row and first col are in same order
         for row in range(2, LAST_ROW + 1):
-            cell = sheet.cell(row=row, column=FIRST_COL)
-            if countries[row - 2] != cell.value:
+
+            if sheet.cell(row=row, column=country_index).value is None:
+                break
+
+            last_country_index = row
+            country1 = sheet.cell(row=row, column=country_index).value  # country(x,1)
+            country2 = sheet.cell(row=country_index, column=row).value  # country(1,x)
+
+            if country1 != country2:
                 raise ParseError("Inconsistance in countries in first row and first col.")
 
-        for row in range(2, LAST_ROW + 1):
-            for col in range(2, LAST_COL + 1):
-                cell = sheet.cell(row=row, column=col)
-                records.append(InterconnectnessRecord(countries[row - 2], countries[col - 2], type, float(cell.value)))
+            if getCountryID(country1) == -1:
+                raise ParseError(f"Unknown country in row : {country1}")
+
+            if getCountryID(country2) == -1:
+                raise ParseError(f"Unknown country in column : {country2}")
+
+        records = []
+        for row in range(2, last_country_index + 1):
+            sucet = 0
+
+            c1 = sheet.cell(row=row, column=1)
+            country1 = getCountryID(c1.value.strip())
+
+            for col in range(2, last_country_index + 1):
+
+                if row != col:
+
+                    cell = sheet.cell(row=row, column=col)
+                    value = float(cell.value)
+
+                    if value != 0:
+                        c2 = sheet.cell(row=1, column=col)
+                        country2 = getCountryID(c2.value.strip())
+
+                        records.append(InterconnectnessRecord(country1, country2, type, value))
+
+                        sucet += value
+
+            if abs(1 - sucet) > 0.00000000000005:  # priemerna odchylka = 2.62662520460098e-16
+                raise ParseError(f'Sum of interconnectedness for country {c1.value} is not equal to 1')
 
         return records
 
+# p = excelParser()
 
 # example of usage - Success
-
-
-
-# p = excelParser()
 # wb = openpyxl.load_workbook(filename='ALL SPORTS RANKING 2019.xlsx')
 # parsed = p.parseSuccess(wb)
 
@@ -268,17 +298,11 @@ class excelParser:
 #     s += len(r.records)
 #     nieco.append( [r.sport_id , len(r.records)] )
 
-
 # for n in nieco:
 #     print ( n )
 
 
-
-
 # example of usage - Interconnectness
-# print("-----------------")
-# parsed = p.parseInterconnectness("export.xlsx", "export")
-# for i in parsed:
-#     if i.countryA == "Izrael":
-#         print(i)
-# print(len(parsed))
+
+# parsed = p.parseInterconnectness("intercon_test.xlsx", 1)
+# print(len(parsed), "velkost")
