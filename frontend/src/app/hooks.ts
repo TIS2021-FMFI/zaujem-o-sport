@@ -46,13 +46,15 @@ export const useMutationWithNotifications = (
 	toastId: string,
 	apiFetchFunction: (...args: any[]) => Promise<AxiosResponse<any>>,
 	initToastMsg: string,
-	language: Language = "sk"
+	language: Language = "sk",
+	runOnSuccess?: Function
 ) => {
 	const successToastMsg: string = textLang[language].dataSuccessfullySaved
 	const errorToastMsg: string = textLang[language].unableToSaveData
 	const mutation = useMutation(apiFetchFunction, {
 		onSuccess: (successResponse) => {
 			resolveSnackbar(toastId, successToastMsg);
+			if (runOnSuccess) runOnSuccess();
 		},
 		onError: (error: any) => {
 			resolveSnackbar(toastId, errorToastMsg, false);

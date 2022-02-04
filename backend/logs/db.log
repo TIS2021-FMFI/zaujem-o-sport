@@ -9,3 +9,21 @@ LINE 1: selecxt id from country where code = 'SVK' and is_active
 LINE 1: selecxt id from country where code = 'SVK' and is_active
         ^
 
+2022-02-04 21:53:45,969 ERROR    insert or update on table "num_in_sport" violates foreign key constraint "num_in_sport_sport_id_fkey"
+DETAIL:  Key (sport_id)=(-1) is not present in table "sport".
+
+2022-02-04 21:53:46,041 ERROR    insert or update on table "max_points_in_sport" violates foreign key constraint "max_points_in_sport_sport_id_fkey"
+DETAIL:  Key (sport_id)=(-1) is not present in table "sport".
+
+2022-02-04 21:55:19,117 ERROR    insert or update on table "num_in_sport" violates foreign key constraint "num_in_sport_sport_id_fkey"
+DETAIL:  Key (sport_id)=(-1) is not present in table "sport".
+
+2022-02-04 21:55:19,193 ERROR    insert or update on table "max_points_in_sport" violates foreign key constraint "max_points_in_sport_sport_id_fkey"
+DETAIL:  Key (sport_id)=(-1) is not present in table "sport".
+
+2022-02-04 22:44:42,517 ERROR    insert or update on table "num_in_sport" violates foreign key constraint "num_in_sport_sport_id_fkey"
+DETAIL:  Key (sport_id)=(-1) is not present in table "sport".
+
+2022-02-04 22:44:42,594 ERROR    insert or update on table "max_points_in_sport" violates foreign key constraint "max_points_in_sport_sport_id_fkey"
+DETAIL:  Key (sport_id)=(-1) is not present in table "sport".
+

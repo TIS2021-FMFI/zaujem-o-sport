@@ -15,6 +15,8 @@ class UploadView(SwaggerView):
 		if len(request.files) == 0:
 			return {"message": "Missing uploaded file."}, 400
 
+		DB.createDatabaseBackup()
+
 		fundingFile = request.files.get("fundingFile")
 		successFile = request.files.get("successFile")
 		interconnectednessFile = request.files.get("interconnectednessFile")
