@@ -733,6 +733,39 @@ class Database:
             self.logger.error(error)
             return False
 
+
+    def deleteInterconnectednessTables(self, type_id: id):
+
+        sql_del = "DELETE FROM interconnectness WHERE type_id =%(type_id)s   "
+
+        try:
+            with self._getConnection() as dbConn:
+                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                    cursor.execute(sql_del, {"type_id": type_id})
+                dbConn.commit()
+            self._releaseConnection(dbConn)
+            return True
+        except psycopg2.DatabaseError as error:
+            # print(error)
+            self.logger.error(error)
+            return False
+
+    def importInterconnectednessData(self, type_id: id, country_one_id: id, country_two_id: id, value: float):
+        sql = "insert into interconnectness(type_id, country_one_id, country_two_id, value ) " \
+              "values (%(type_id)s, %(country_one_id)s, %(country_two_id)s , %(value)s)"
+        try:
+            with self._getConnection() as dbConn:
+                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                    cursor.execute(sql, {"type_id": type_id, "country_one_id": country_one_id,
+                                         "country_two_id": country_two_id, "value": value})
+                dbConn.commit()
+            self._releaseConnection(dbConn)
+            return True
+        except psycopg2.DatabaseError as error:
+            print(error)
+            self.logger.error(error)
+            return False
+
     # getters for DB mirroring in data computation modul
 
     def getBGS(self) -> Dict[str, List[Dict[str, Any]]]:
@@ -1123,6 +1156,28 @@ class Database:
         finally:
             # print(result)
             return result["countries"]
+
+
+    def getActiveCountryTranslations(self) -> list:
+        sql = "select id, translation from country where is_active = true"
+        result = {"countries": []}
+        try:
+            with self._getConnection() as dbConn:
+                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                    cursor.execute(sql)
+                    tmp = cursor.fetchone()
+                    while tmp:
+                        result["countries"].append({"id": tmp[0], "translation": tmp[1]})
+                        tmp = cursor.fetchone()
+            self._releaseConnection(dbConn)
+        except psycopg2.DatabaseError as error:
+            # print(error)
+            self.logger.error(error)
+        finally:
+            # print(result)
+            return result["countries"]
+
+    def getSportIds(self) -> list:
 
     def getSportIds(self) -> List[Dict[str, Any]]:
         """ Returns sports data from table sport.
