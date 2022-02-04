@@ -52,13 +52,13 @@ export const AddCombiBranch = () => {
 			createSnackbar(text.allFieldsAreRequired, SnackTypes.warn); return;
 		}
 		if (selectedBranchesWithSports.length === 0) {
-			createSnackbar("Je potrebné zvoliť aspoň jedno sub-odvetvie.", SnackTypes.warn); return;  // TODO
+			createSnackbar(text.atLeastOneSubBranchMustBeSelected, SnackTypes.warn); return;
 		}
 		if (isNaN(coefficientsSum)) {
-			createSnackbar("Neplatné koeficienty.", SnackTypes.warn); return;  // TODO
+			createSnackbar(text.invalidCoefficients, SnackTypes.warn); return;
 		}
 		if (coefficientsSum !== 1) {
-			createSnackbar("Suma koeficientov sa nerovná jednej.", SnackTypes.warn); return;  // TODO
+			createSnackbar(text.invalidSumOfCoefficients, SnackTypes.warn); return;
 		}
 
 		const subBranches: SubBranch[] = [];
