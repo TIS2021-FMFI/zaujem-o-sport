@@ -359,5 +359,6 @@ p = excelParser()
 #
 # DB.deleteBGS()
 # input("cakam")
+
 # for item in nieco:
 #     item.save()
