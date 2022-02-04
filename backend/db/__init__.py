@@ -1177,8 +1177,6 @@ class Database:
             # print(result)
             return result["countries"]
 
-    def getSportIds(self) -> list:
-
     def getSportIds(self) -> List[Dict[str, Any]]:
         """ Returns sports data from table sport.
 
