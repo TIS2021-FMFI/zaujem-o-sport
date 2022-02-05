@@ -1,12 +1,12 @@
 import React from "react";
 import {BarChart, Easel, HouseDoor, List, Wallet} from "react-bootstrap-icons";
-
 export const HomeUser = () => {
 
 
     return (<>
+        <div className="main">
         <header>
-            <h1>This is the home page</h1>
+            <h1 className="mt-3 mb-4"> Homepage </h1>
 
         </header>
         <section>
@@ -27,22 +27,9 @@ export const HomeUser = () => {
                 <li><Wallet size={25} /> Fundings</li>
                 <li><List size={25} /> Success</li>
                 <li><Easel size={25} /> Interconnectedness</li>
-
-
-
-
-
-
-
-
-
-
-
-
-
             </ul>
 
         </section>
-
+    </div>
     </>)
 }

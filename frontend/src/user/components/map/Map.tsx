@@ -5,6 +5,7 @@ import {locations} from "./locationProvider";
 
 
 export type MapType = {
+        name: string,
         code: string,
         value: number
 }
@@ -26,8 +27,9 @@ export const MapShow = ({input}: MapProps) => {
                 {input.map((item, i) => (
                     <Marker position={[ locations.get(item.code)![0],locations.get(item.code)![1] ]} key={`mapShow${i}`}>
                         <Popup>
-                            <h1>Kód krajiny: {item.code}</h1>
-                            <p>Previazanosť: {item.value}</p>
+                            <p><b>Country name:</b> {item.name}</p>
+                            <p><b>Country code:</b> {item.code}</p>
+                            <p><b>Interconnectedness:</b> {item.value}</p>
                         </Popup>
                     </Marker>
                 ))}
