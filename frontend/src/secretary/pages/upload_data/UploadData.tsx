@@ -8,9 +8,9 @@ import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
 import {useAppDispatch, useAppSelector, useCountries, useMutationWithNotifications} from "app/hooks";
 import {currencies} from "data/active_currency_codes";
 import {CenteredRow} from "components/basic/CenteredRow";
-import {RowToSuggestion, RowWithSuggestion, Suggestions} from "./components/Suggestions";
-import {RootState} from "../../../app/store";
-import {setCorrections} from "./components/correctionsSlice";
+import {RowToSuggestion, RowWithSuggestion, Suggestions} from "admin_secretary_shared/components/upload_funding_data/Suggestions";
+import {RootState} from "app/store";
+import {setCorrections} from "admin_secretary_shared/components/upload_funding_data/correctionsSlice";
 
 const acceptedFileExtensions = ".csv";
 
@@ -44,8 +44,15 @@ export const UploadData = () => {
 		}}));
 	}, [responseCountries]);
 
+	const runOnMutationSuccess = () => {
+		setFiles([]);
+		setRowErrors([]);
+		setSuggestions([]);
+		setNumOfRealSuggestions(0);
+	}
+
 	const uploadMutation = useMutationWithNotifications(
-		"funding_upload", apiUploadFunding, "Dáta sa nahrávajú."
+		"funding_upload", apiUploadFunding, "Dáta sa nahrávajú.", "sk", runOnMutationSuccess
 	);
 
 	useEffect(() => {
@@ -67,6 +74,7 @@ export const UploadData = () => {
 				_suggestions.push({...suggestion, row: row});
 		}
 		setRowErrors(_rowErrors);
+		if (_rowErrors.length !== 0) return;
 
 		// update potential previous suggestions
 		const _numOfRealSuggestions: number = _suggestions.length;
@@ -88,15 +96,6 @@ export const UploadData = () => {
 		setSuggestions(_suggestions);
 		setNumOfRealSuggestions(_numOfRealSuggestions);
 	}, [uploadMutation.error]);
-
-	useEffect(() => {
-		if (uploadMutation.isSuccess) {
-			setFiles([]);
-			setRowErrors([]);
-			setSuggestions([]);
-			setNumOfRealSuggestions(0);
-		}
-	}, [uploadMutation.isSuccess]);
 
 	const handleSubmit = () => {
 		if (selectedCountry === undefined || selectedCurrency === undefined)
@@ -167,7 +166,9 @@ export const UploadData = () => {
 			</Row>
 		</CenteredRow>
 
-		<Suggestions suggestions={suggestions} rowErrors={rowErrors} numOfRealSuggestions={numOfRealSuggestions} />
+		<CenteredRow as="section" lg={numOfRealSuggestions === 0 ? 7 : 12} md={numOfRealSuggestions === 0 ? 8 : 12} className="mt-4">
+			<Suggestions suggestions={suggestions} rowErrors={rowErrors} numOfRealSuggestions={numOfRealSuggestions} />
+		</CenteredRow>
 
 	</>)
 }

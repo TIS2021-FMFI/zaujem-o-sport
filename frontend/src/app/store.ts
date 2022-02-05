@@ -1,5 +1,5 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import uploadCorrectionsReducer from "secretary/pages/upload_data/components/correctionsSlice";
+import uploadCorrectionsReducer from "admin_secretary_shared/components/upload_funding_data/correctionsSlice";
 
 export const store = configureStore({
   reducer: {
