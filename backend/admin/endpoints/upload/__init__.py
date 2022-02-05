@@ -16,7 +16,10 @@ class UploadView(SwaggerView):
 		if len(request.files) == 0:
 			return {"message": "Missing uploaded file."}, 400
 
+
+
 		DB.createDatabaseBackup()
+
 
 		fundingFile = request.files.get("fundingFile")
 		successFile = request.files.get("successFile")
@@ -46,18 +49,32 @@ class UploadView(SwaggerView):
 
 		if successFile:
 			wb = load_workbook(filename=BytesIO(successFile.read()))
-			p = excelParser()
+
 			parsed = p.parseSuccess(wb)
 
 			if DB.deleteSuccesTables():
 
-				for s in parsed[0]:
-					s.save()
+				for item in parsed[0]:
+					item.save()
 
 				for table in parsed[2:]:
 					table.save()
 
 			# TODO: list of unknown sports in parsed[1]
+
+		BGSfile = load_workbook(filename='BGS_test.xlsx')
+
+		if BGSfile:
+			wb = BGSfile
+			# wb = load_workbook(filename=BytesIO(BGSfile.read()))
+
+			parsed = p.parseBGS(wb)
+
+			if DB.deleteBGS():
+
+				for item in parsed:
+					item.save()
+
 
 		if fundingFile:
 			# if correction is None:
