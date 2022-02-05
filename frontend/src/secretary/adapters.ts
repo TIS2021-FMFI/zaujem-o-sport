@@ -5,7 +5,7 @@
 
 import {secretaryAxiosProvider as axios} from "secretary/axios_provider";
 import {AxiosResponse} from "axios";
-import {Correction} from "./pages/upload_data/components/correctionsSlice";
+import {Correction} from "admin_secretary_shared/components/upload_funding_data/correctionsSlice";
 
 export interface ApiListSportsType {
 	message: string,

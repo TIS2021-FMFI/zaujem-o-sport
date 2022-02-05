@@ -1,5 +1,3 @@
-import json
-
 from flask import request
 from flasgger import SwaggerView
 from verification.jwt import is_admin
@@ -9,7 +7,6 @@ import csv_parsers.csvParser as parser
 from csv_parsers.excelParser import excelParser
 from settings import DB
 import json
-import time
 
 class UploadView(SwaggerView):
 
@@ -28,31 +25,26 @@ class UploadView(SwaggerView):
 		requestJSON = json.loads(request.form["json"])
 		countryCode = requestJSON.get("countryCode")
 		currency = requestJSON.get("currency")
+		# correction = requestJSON.get("correction")
+		correction = []
 		interconnectednessType = requestJSON.get("interconnectednessType")
 
-		print(countryCode, currency, interconnectednessType)
-
-		# at least one must be uploaded e.g. fundingFile could have been uploaded, but successFile and
+		# At least one must be uploaded e.g. fundingFile could have been uploaded, but successFile and
 		# interconnectednessFile are going to be None.
-
-		# TODO: handle file uploads
 
 		if interconnectednessFile:
 			wb = load_workbook(filename=BytesIO(interconnectednessFile.read()))
-			type = 1 # TODO: prepojit cez API
 
 			p = excelParser()
-			parsed = p.parseInterconnectness(wb, type)
+			parsed = p.parseInterconnectness(wb, interconnectednessType)
 
-			if DB.deleteInterconnectednessTables(type):
+			if DB.deleteInterconnectednessTables(interconnectednessType):
 				for item in parsed:
 					item.save()
 			else:
 				pass #TODO raise error alebo nieco ???
 
-
 		if successFile:
-
 			wb = load_workbook(filename=BytesIO(successFile.read()))
 			p = excelParser()
 			parsed = p.parseSuccess(wb)
@@ -68,14 +60,8 @@ class UploadView(SwaggerView):
 			# TODO: list of unknown sports in parsed[1]
 
 		if fundingFile:
-
-			requestJSON = json.loads(request.form["json"])
-			correction = requestJSON.get("correction")
-			countryCode = requestJSON.get("countryCode")
-			currency = requestJSON.get("currency")
-
-			if correction is None:
-				return {"message": "Missing required parameter: `correction`.", "data": {}}, 400
+			# if correction is None:
+				# return {"message": "Missing required parameter: `correction`.", "data": {}}, 400
 			if not countryCode:
 				return {"message": "Missing required parameter: `countryCode`.", "data": {}}, 400
 			if not currency:
@@ -91,8 +77,7 @@ class UploadView(SwaggerView):
 
 			if len(suggestions) == 0:
 				p.saveResults()
-				return {"message": "ok"}
 			else:
 				return {"message": "fail", "suggestions": suggestions}, 400
 
-		return {}
+		return {"message": "ok"}

@@ -1,28 +1,36 @@
 import {Table, TableCellComponent, TableColumnNameType} from "components/table/Table";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Form} from "react-bootstrap";
 import {RowWithSuggestion} from "./Suggestions";
 import {useAppDispatch, useAppSelector} from "app/hooks";
 import {RootState} from "app/store";
-import {setCorrections, updateBranchTitle, updateBranchCode, updateSportTitle, clearState, Correction} from "./correctionsSlice";
+import {
+	setCorrections, updateBranchTitle, updateBranchCode, updateSportTitle, clearState, Correction
+} from "admin_secretary_shared/components/upload_funding_data/correctionsSlice";
+import textLang, {Language} from "../../../app/string";
+import {LanguageContext} from "../../../App";
 
 interface SuggestionsTableProps {
-	suggestions: RowWithSuggestion[]
+	suggestions: RowWithSuggestion[],
+	editing?: boolean
 }
 
-export const SuggestionsTable = ({suggestions}: SuggestionsTableProps) => {
+export const SuggestionsTable = ({suggestions, editing = true}: SuggestionsTableProps) => {
 
 	const dispatch = useAppDispatch();
 
+	const language = useContext<Language>(LanguageContext);
+	const text = textLang[language];
+
 	const columnNames: TableColumnNameType[] = [
-		{name: "číslo riadka z CSV", sortable: false},
-		{name: "Kód športu", sortable: false},
-		{name: "Starý názov športu", sortable: false},
-		{name: "Nový názov športu", sortable: false},
-		{name: "Starý kód odvetvia", sortable: false},
-		{name: "Nový kód odvetvia", sortable: false},
-		{name: "Starý názov odvetvia", sortable: false},
-		{name: "Nový názov odvetvia", sortable: false}
+		{name: text.rowInCSV, sortable: false},
+		{name: text.sportCode, sortable: false},
+		{name: text.oldSportTitle, sortable: false},
+		{name: text.newSportTitle, sortable: false},
+		{name: text.oldBranchCode, sortable: false},
+		{name: text.newBranchCode, sortable: false},
+		{name: text.oldBranchTitle, sortable: false},
+		{name: text.newBranchTitle, sortable: false}
 	];
 
 	const [rows, setRows] = useState<TableCellComponent[][]>([]);
@@ -38,15 +46,15 @@ export const SuggestionsTable = ({suggestions}: SuggestionsTableProps) => {
 				{value: s.row},
 				{value: s.sportCode},
 				{value: s.oldSportTitle},
-				(s.newSportTitle.length === 0 || s.newSportTitle === s.oldSportTitle)
+				(s.newSportTitle.length === 0 || s.newSportTitle === s.oldSportTitle || !editing)
 					? {value: s.newSportTitle}
 					: {element: <SuggestionNewSportTitleCell row={s.row} />, value: ""},
 				{value: s.oldBranchCode},
-				(s.newBranchCode.length === 0 || s.newBranchCode === s.oldBranchCode)
+				(s.newBranchCode.length === 0 || s.newBranchCode === s.oldBranchCode || !editing)
 					? {value: s.newBranchCode}
 					: {element: <SuggestionNewBranchCodeCell row={s.row} />, value: ""},
 				{value: s.oldBranchTitle},
-				(s.newBranchTitle.length === 0 || s.newBranchTitle === s.oldBranchTitle)
+				(s.newBranchTitle.length === 0 || s.newBranchTitle === s.oldBranchTitle || !editing)
 					? {value: s.newBranchTitle}
 					: {element: <SuggestionNewBranchTitleCell row={s.row} />, value: ""},
 			];

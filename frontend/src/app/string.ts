@@ -67,7 +67,27 @@ export const text = {
 		gettingNewBranchCode: "Zisťuje sa nový kód odvetvia...",
 		atLeastOneSubBranchMustBeSelected: "Potrebné zvoliť aspoň jedno sub-odvetvie.",
 		invalidCoefficients: "Neplatné koeficienty.",
-		invalidSumOfCoefficients: "Suma koeficientov sa nerovná jednej."
+		invalidSumOfCoefficients: "Suma koeficientov sa nerovná jednej.",
+		uploadFundingErrorType2: "Nedostatok parametrov v riadku.",
+		uploadFundingErrorType3: "Kód športu neexistuje.",
+		uploadFundingErrorType5: "Kód športu neobsahuje číselnú hodnotu.",
+		uploadFundingErrorType6: "Kód odvetvia neobsahuje číselnú hodnotu.",
+		uploadFundingErrorType7: "Suma financovania neobsahuje číselnú hodnotu.",
+		uploadFundingErrorType8: "Kombinované odvetvie so zadaným kódom v danej krajine neexistuje.",
+		uploadFundingErrorFoundMistakes: "Nájdené chyby v nahranom súbore. Chyby je potrebné v súbore opraviť a nahranie zopakovať.",
+		row: "riadok",
+		foundSingular: "Nájdená",
+		foundPlural: "Nájdené",
+		inconsistencySingular: "nekonzistencia",
+		inconsistencyPlural: "nekonzistencie",
+		inTheUploadedFile: "v nahranom súbore",
+		rowInCSV: "Číslo riadka z CSV",
+		oldSportTitle: "Starý názov športu",
+		newSportTitle: "Nový názov športu",
+		oldBranchCode: "Starý kód odvetvia",
+		newBranchCode: "Nový kód odvetvia",
+		oldBranchTitle: "Starý názov odvetvia",
+		newBranchTitle: "Nový názov odvetvia"
 	}
 	,
 	en: {
@@ -136,7 +156,27 @@ export const text = {
 		gettingNewBranchCode: "Getting new branch code...",
 		atLeastOneSubBranchMustBeSelected: "It's necessary to pick up at least one sub-branch.",
 		invalidCoefficients: "Invalid coefficients.",
-		invalidSumOfCoefficients: "Sum of coefficients isn't one."
+		invalidSumOfCoefficients: "Sum of coefficients isn't one.",
+		uploadFundingErrorType2: "Insufficient amount of parameters in the row.",
+		uploadFundingErrorType3: "Sport code doesn't exist.",
+		uploadFundingErrorType5: "Sport code isn't number.",
+		uploadFundingErrorType6: "Branch code isn't number.",
+		uploadFundingErrorType7: "The amount of financing isn't number.",
+		uploadFundingErrorType8: "The combined branch with its code doesn't exist in the specified country.",
+		uploadFundingErrorFoundMistakes: "Found mistakes in the uploaded file. Fix the mistakes and re-upload the file again.",
+		row: "row",
+		foundSingular: "Found",
+		foundPlural: "Found",
+		inconsistencySingular: "inconsistency",
+		inconsistencyPlural: "inconsistencies",
+		inTheUploadedFile: "in the uploaded file",
+		rowInCSV: "Row number from the CSV",
+		oldSportTitle: "Old sport title",
+		newSportTitle: "New sport title",
+		oldBranchCode: "Old branch code",
+		newBranchCode: "New branch code",
+		oldBranchTitle: "Old branch title",
+		newBranchTitle: "New branch title"
 	}
 }
 

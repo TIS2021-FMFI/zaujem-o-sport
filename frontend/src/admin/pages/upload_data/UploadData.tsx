@@ -8,10 +8,17 @@ import {currencies} from "../../../data/active_currency_codes";
 import {Col, Form, Row} from "react-bootstrap";
 import Select from "react-select";
 import {useInterconnectednessType} from "../../../user/hooks";
+import {RowToSuggestion, RowWithSuggestion, Suggestions} from "admin_secretary_shared/components/upload_funding_data/Suggestions";
+import {setCorrections} from "../../../admin_secretary_shared/components/upload_funding_data/correctionsSlice";
 
 const acceptedFundingFileExtensions = ".csv";
 const acceptedSuccessFileExtensions = ".xlsx, .xlsm, .xltx, .xltm";
 const acceptedInterconnectednessFileExtensions = acceptedSuccessFileExtensions;
+
+interface UploadFundingError {
+	message: string,
+	suggestions: RowToSuggestion
+}
 
 export const UploadData = () => {
 
@@ -62,6 +69,40 @@ export const UploadData = () => {
 		}
 	}
 
+	const [rowErrors, setRowErrors] = useState<RowWithSuggestion[]>([]);
+	const [suggestions, setSuggestions] = useState<RowWithSuggestion[]>([]);  // suggestion type = 1 or type 4
+	const [numOfRealSuggestions, setNumOfRealSuggestions] = useState<number>(0);
+
+	useEffect(() => {
+		setRowErrors([]);
+		setSuggestions([]);
+		setNumOfRealSuggestions(0);
+	}, [fundingFile]);
+
+	useEffect(() => {
+		if (uploadMutation.error === null) return;
+		const apiSuggestions: RowToSuggestion = (uploadMutation.error.response.data as UploadFundingError).suggestions;
+		const _rowErrors: RowWithSuggestion[] = [], _suggestions: RowWithSuggestion[] = [];
+		for (const [row, suggestion] of Object.entries(apiSuggestions)) {
+			if (suggestion.type !== 1 && suggestion.type !== 4)
+				_rowErrors.push({...suggestion, row: row});
+			else
+				_suggestions.push({...suggestion, row: row});
+		}
+		setRowErrors(_rowErrors);
+
+		// update potential previous suggestions
+		const _numOfRealSuggestions: number = _suggestions.length;
+		const previousSuggestions: RowWithSuggestion[] = [...suggestions];
+		for (const previousSuggestion of previousSuggestions) {
+			const s = _suggestions.find(s => s.row === previousSuggestion.row);
+			if (s === undefined)
+				_suggestions.push(previousSuggestion);
+		}
+		setSuggestions(_suggestions);
+		setNumOfRealSuggestions(_numOfRealSuggestions);
+	}, [uploadMutation.error]);
+
 	return (<>
 		<CenteredRow as="header">
 			<h1>Upload data</h1>
@@ -108,6 +149,11 @@ export const UploadData = () => {
           </a>
         </div>
 				}
+			</CenteredRow>
+			<CenteredRow as="section" className="mt-4">
+				<Suggestions suggestions={suggestions} rowErrors={rowErrors} numOfRealSuggestions={numOfRealSuggestions}
+				             editing={false}
+				/>
 			</CenteredRow>
 		</section>
 		<section>
