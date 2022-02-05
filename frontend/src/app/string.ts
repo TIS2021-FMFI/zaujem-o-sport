@@ -1,5 +1,3 @@
-import {useInterconnectednessType} from "../user/hooks";
-
 export type Language = "sk" | "en";
 
 export const text = {
@@ -67,6 +65,9 @@ export const text = {
 		loadingSportsWithBranches: "Načítavanie odvetví so športami...",
 		loadingCombiBranches: "Načítavanie kombinovaných odvetví...",
 		gettingNewBranchCode: "Zisťuje sa nový kód odvetvia...",
+		atLeastOneSubBranchMustBeSelected: "Potrebné zvoliť aspoň jedno sub-odvetvie.",
+		invalidCoefficients: "Neplatné koeficienty.",
+		invalidSumOfCoefficients: "Suma koeficientov sa nerovná jednej."
 	}
 	,
 	en: {
@@ -133,6 +134,9 @@ export const text = {
 		loadingSportsWithBranches: "Loading sports with branches...",
 		loadingCombiBranches: "Loading combined branches...",
 		gettingNewBranchCode: "Getting new branch code...",
+		atLeastOneSubBranchMustBeSelected: "It's necessary to pick up at least one sub-branch.",
+		invalidCoefficients: "Invalid coefficients.",
+		invalidSumOfCoefficients: "Sum of coefficients isn't one."
 	}
 }
 

@@ -27,7 +27,7 @@ export const UpdateSport = () => {
 	}, [sports]);
 
 	const updateSportMutation = useMutationWithNotifications(
-		"adding_new_sport", apiUpdateSport, "Saving changes..."
+		"adding_new_sport", apiUpdateSport, "Saving changes...", "en"
 	);
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

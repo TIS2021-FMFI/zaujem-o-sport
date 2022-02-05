@@ -4,15 +4,27 @@ import {adminAxiosProvider as axios} from "admin/axios_provider";
 export interface ApiUploadFiles {
 	fundingFile?: File,
 	successFile?: File,
-	interconnectednessFile?: File
+	interconnectednessFile?: File,
+	interconnectednessType?: number,
+	countryCode?: string,
+	currency?: string
 }
 
-// TODO: return type
-export const apiUploadFiles = ({fundingFile, successFile, interconnectednessFile}: ApiUploadFiles): Promise<AxiosResponse<{}>> => {
+export const apiUploadFiles = ({
+	fundingFile,
+	successFile,
+	interconnectednessFile,
+	interconnectednessType,
+	countryCode,
+	currency
+}: ApiUploadFiles): Promise<AxiosResponse<{}>> => {
 	const formData = new FormData();
 	if (fundingFile !== undefined)            formData.append("fundingFile", fundingFile);
 	if (successFile !== undefined)            formData.append("successFile", successFile);
 	if (interconnectednessFile !== undefined) formData.append("interconnectednessFile", interconnectednessFile);
+	formData.append("json", JSON.stringify(
+		{countryCode: countryCode, currency: currency, interconnectednessType: interconnectednessType})
+	);
 	return axios.post("/admin/upload", formData);
 }
 

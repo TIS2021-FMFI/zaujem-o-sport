@@ -8,6 +8,7 @@ from io import BytesIO
 import csv_parsers.csvParser as parser
 from csv_parsers.excelParser import excelParser
 from settings import DB
+import json
 import time
 
 class UploadView(SwaggerView):
@@ -18,9 +19,21 @@ class UploadView(SwaggerView):
 		if len(request.files) == 0:
 			return {"message": "Missing uploaded file."}, 400
 
+
+
+		DB.createDatabaseBackup()
+
+
 		fundingFile = request.files.get("fundingFile")
 		successFile = request.files.get("successFile")
 		interconnectednessFile = request.files.get("interconnectednessFile")
+
+		requestJSON = json.loads(request.form["json"])
+		countryCode = requestJSON.get("countryCode")
+		currency = requestJSON.get("currency")
+		interconnectednessType = requestJSON.get("interconnectednessType")
+
+		print(countryCode, currency, interconnectednessType)
 
 		# at least one must be uploaded e.g. fundingFile could have been uploaded, but successFile and
 		# interconnectednessFile are going to be None.

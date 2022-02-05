@@ -5,6 +5,9 @@ import psycopg2.extensions
 from typing import Union, List, Dict, Any, Tuple
 import logging
 from os.path import join
+from os import system
+from os import environ as env
+from time import time
 
 
 class DataError(Exception):
@@ -12,6 +15,18 @@ class DataError(Exception):
 
 
 class Database:
+
+    @staticmethod
+    def createDatabaseBackup():
+        """ Create (save) backup of current version of the database.
+            Saved file names are in format sport_db_backup{timestamp_in_ms}.bak
+        """
+        DB_HOST = env.get("DB_HOST")
+        DB_NAME = env.get("DB_NAME")
+        DB_USER = env.get("DB_USER")
+        DB_PASS = env.get("DB_PASS")
+        system(f'pg_dump "host={DB_HOST} port=5432 dbname={DB_NAME} user={DB_USER} password={DB_PASS}" > '
+               f'db/backups/sport_db_backup{int(round(time() * 1000))}.bak')
 
     def __init__(self, dbPool: psycopg2.pool.ThreadedConnectionPool):
         """ Initialize DB pool and DB logger. """
@@ -68,11 +83,12 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql, (email,))
                     result = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
+            self._releaseConnection(dbConn)
             return result
 
     def getAdmin(self, email: str) -> Union[None, dict]:
@@ -92,11 +108,12 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql, (email,))
                     result = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
+            self._releaseConnection(dbConn)
             return result
 
     def getAllCountries(self) -> List[Dict[str, Any]]:
@@ -116,12 +133,13 @@ class Database:
                     while tmp:
                         countries.append({"name": tmp[1], "code": tmp[0]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             return countries
 
     def getAllSports(self) -> List[Dict[str, Any]]:
@@ -141,11 +159,12 @@ class Database:
                     while tmp:
                         sports.append({"title": tmp[1], "code": tmp[0]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
+            self._releaseConnection(dbConn)
             return sports
 
     def getInactiveCountries(self) -> Dict[str, List[Dict[str, Any]]]:
@@ -167,12 +186,13 @@ class Database:
                     while tmp:
                         result["countries"].append({"name": tmp[1], "code": tmp[0]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             return result
 
     def getBranchesWithSports(self) -> List[Dict[str, Any]]:
@@ -194,11 +214,12 @@ class Database:
                         results.append(
                             {"sportCode": tmp[0], "sportTitle": tmp[1], "branchCode": tmp[2], "branchTitle": tmp[3]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
+            self._releaseConnection(dbConn)
             return results
 
     def getFundingData(self, country_code: str) -> Dict[str, List[Dict[str, Any]]]:
@@ -223,12 +244,13 @@ class Database:
                     while tmp:
                         result["funding"].append({"branch_id": tmp[0], "absolute_funding": tmp[1], "currency": tmp[2]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             return result
 
     def getFundingDistinctCurrencies(self) -> List[str]:
@@ -246,11 +268,12 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
                     cursor.execute(sql)
                     results = cursor.fetchall()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
+            self._releaseConnection(dbConn)
             return results
 
     def getSuccessBySport(self, sport_code: str) -> Dict[str, List[Dict[str, Any]]]:
@@ -276,12 +299,13 @@ class Database:
                     while tmp:
                         result["success"].append({"country_name": tmp[0], "points": tmp[1], "order": tmp[2]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             return result
 
     def getSuccessByCountry(self, country_code: str) -> Dict[str, List[Dict[str, Any]]]:
@@ -307,12 +331,13 @@ class Database:
                     while tmp:
                         result["success"].append({"sport_name": tmp[0], "points": tmp[1], "order": tmp[2]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             return result
 
     def getInterconnectnessData(self, type_id: int, country_code: str) -> Dict[str, List[Dict[str, Any]]]:
@@ -339,12 +364,13 @@ class Database:
                         result["interconnectness"].append(
                             {"code": tmp[0], "country": tmp[1], "value": tmp[2], "type": tmp[3]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             return result
 
     # inputs to DB
@@ -376,6 +402,7 @@ class Database:
             return True
         except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -430,6 +457,7 @@ class Database:
             return True
         except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -534,6 +562,7 @@ class Database:
             return True
         except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -588,6 +617,7 @@ class Database:
             return True
         except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -624,6 +654,7 @@ class Database:
             return True
         except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -645,6 +676,7 @@ class Database:
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -695,6 +727,7 @@ class Database:
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -712,6 +745,7 @@ class Database:
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -727,6 +761,7 @@ class Database:
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -742,6 +777,7 @@ class Database:
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -757,6 +793,7 @@ class Database:
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -772,6 +809,7 @@ class Database:
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -789,6 +827,7 @@ class Database:
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -804,7 +843,8 @@ class Database:
             self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
-            print(error)
+            #print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -828,12 +868,13 @@ class Database:
                     while tmp:
                         result["BGS"].append({"sport_id": tmp[0], "value": tmp[1]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
 
             result = result["BGS"]
             final_result = {}
@@ -863,12 +904,13 @@ class Database:
                         result["order"].append({"country_id": country_id, "sport_id": sport_id, "order": order})
                         tmp = cursor.fetchone()
 
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["order"]:
@@ -902,12 +944,13 @@ class Database:
                         result["points"].append({"country_id": country_id, "sport_id": sport_id, "points": points})
                         tmp = cursor.fetchone()
 
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["points"]:
@@ -940,12 +983,13 @@ class Database:
                         result["points"].append({"sport_id": sport_id, "points": points})
                         tmp = cursor.fetchone()
 
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["points"]:
@@ -974,12 +1018,13 @@ class Database:
                         result["num"].append({"sport_id": sport_id, "num": num})
                         tmp = cursor.fetchone()
 
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["num"]:
@@ -1007,12 +1052,13 @@ class Database:
                         result["sum"].append({"country_id": country_id, "sum": suma})
                         tmp = cursor.fetchone()
 
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["sum"]:
@@ -1041,12 +1087,13 @@ class Database:
                         result["order"].append({"country_id": country_id, "order": order})
                         tmp = cursor.fetchone()
 
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["order"]:
@@ -1075,12 +1122,13 @@ class Database:
                             {"country_one_id": country_one_id, "country_two_id": country_two_id, "value": value})
                         tmp = cursor.fetchone()
 
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["inter"]:
@@ -1113,12 +1161,13 @@ class Database:
                             {"country_one_id": country_one_id, "country_two_id": country_two_id, "value": value})
                         tmp = cursor.fetchone()
 
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["inter"]:
@@ -1153,12 +1202,13 @@ class Database:
                             {"country_id": country_id, "sport_id": sport_id, "branch_id": branch_id, "sum": suma})
                         tmp = cursor.fetchone()
 
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["funding"]:
@@ -1191,12 +1241,13 @@ class Database:
                     while tmp:
                         result["countries"].append({"id": tmp[0], "name": tmp[1]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             return result["countries"]
 
 
@@ -1211,12 +1262,13 @@ class Database:
                     while tmp:
                         result["countries"].append({"id": tmp[0], "translation": tmp[1]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             return result["countries"]
 
     def getSportIds(self) -> List[Dict[str, Any]]:
@@ -1235,12 +1287,13 @@ class Database:
                     while tmp:
                         result["sports"].append({"id": tmp[0], "title": tmp[1]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             return result["sports"]
 
     def getCombiFunding(self) -> Dict[id, Dict[id, Dict[id, float]]]:
@@ -1265,12 +1318,13 @@ class Database:
                         result["funding"].append(
                             {"country_id": tmp[0], "subbranch_id": tmp[1], "combi_branch_id": tmp[2], "fund": tmp[3]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["funding"]:
@@ -1309,13 +1363,13 @@ class Database:
                     while tmp:
                         result["branches"].append({"id": tmp[0]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
-
+            self._releaseConnection(dbConn)
             return result["branches"]
 
     def getTotalBranchFunding(self) -> Dict[id, Dict[id, float]]:
@@ -1353,13 +1407,13 @@ class Database:
                         result["funding"].append(
                             {"country_id": tmp[0], "branch_id": tmp[1], "absolute_funding": tmp[2]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
-
+            self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["funding"]:
@@ -1389,13 +1443,13 @@ class Database:
                     while tmp:
                         result["branches"].append({"id": tmp[0], "sport_id": tmp[1]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
-
+            self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["branches"]:
@@ -1421,13 +1475,14 @@ class Database:
                     while tmp:
                         result["sports"].append({"id": tmp[0], "code": tmp[1], "title": tmp[2]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
-            final_result = {}
+            self._releaseConnection(dbConn)
 
+            final_result = {}
             for record in result["sports"]:
                 id, code, title = record["id"], record["code"], record["title"]
                 final_result[id] = (code, title)
@@ -1458,6 +1513,7 @@ class Database:
             return tmp is not None
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -1481,6 +1537,7 @@ class Database:
             return tmp[0] if tmp is not None else None
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return ""
 
@@ -1506,6 +1563,7 @@ class Database:
             return tmp[0] if tmp is not None else None
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
             return ""
 
@@ -1530,7 +1588,7 @@ class Database:
                     while tmp:
                         result["branches"].append({"code": tmp[0], "title": tmp[1]})
                         tmp = cursor.fetchone()
-                    self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
 
         except psycopg2.DatabaseError as error:
             # print(error)
@@ -1538,6 +1596,7 @@ class Database:
 
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             return result["branches"]
 
     def showCombiBranches(self) -> List[Dict[str, Any]]:
@@ -1563,12 +1622,13 @@ class Database:
                             {"countryCode": tmp[0], "countryName": tmp[1], "combiCode": tmp[2], "combiTitle": tmp[3],
                              "subCode": tmp[4], "subTitle": tmp[5], "coefficient": tmp[6]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
             self.logger.error(error)
         finally:
             # print(result)
+            self._releaseConnection(dbConn)
             return results
 
     def checkCombi(self, branch_code: int, country_code: str) -> Tuple[int, str]:
@@ -1596,6 +1656,7 @@ class Database:
 
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
 
     def suggestNewSportCode(self) -> int:
@@ -1614,6 +1675,7 @@ class Database:
                     return tmp[0] if tmp[0] is not None else 1
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
 
     def countryCodeToID(self, country_code: str) -> id:
@@ -1639,6 +1701,7 @@ class Database:
 
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
 
     def suggestNewBranchCode(self, sport_code: int) -> int:
@@ -1661,6 +1724,7 @@ class Database:
                     return tmp[0] if tmp[0] is not None else 1
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
 
     def branchCodeToId(self, sport_code: int, branch_code: int) -> id:
@@ -1690,6 +1754,7 @@ class Database:
                         return tmp[0]
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
 
     def suggestNewCombiBranchCode(self) -> int:
@@ -1707,6 +1772,7 @@ class Database:
                     return tmp[0] if tmp[0] is not None else 10000
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
 
     def getSportsWithExisitingBranch(self) -> List[Dict[str, Any]]:
@@ -1728,9 +1794,10 @@ class Database:
                     while tmp:
                         sports.append({"title": tmp[1], "code": tmp[0]})
                         tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
         finally:
             return sports
@@ -1758,6 +1825,7 @@ class Database:
                         return tmp[0]
         except psycopg2.DatabaseError as error:
             # print(error)
+            self._releaseConnection(dbConn)
             self.logger.error(error)
 
     def getInterconnTypes(self) -> Dict[str, list]:
@@ -1781,30 +1849,5 @@ class Database:
             # print(error)
             self.logger.error(error)
         finally:
+            self._releaseConnection(dbConn)
             return results
-
-    def getCountryIdByCode(self, countryCode: str) -> id:
-        """ Convert country code to country id.
-
-        Args:
-            countryCode (str): selected country code
-
-        Returns:
-            id: id of country with selected code
-        """
-
-        sql = "select id from country where code = %(countryCode)s and is_active"
-        try:
-            with self._getConnection() as dbConn:
-                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-                    cursor.execute(sql, {"countryCode": countryCode})
-                    tmp = cursor.fetchone()
-                    if tmp is None:
-                        self._releaseConnection(dbConn)
-                        raise DataError("country code does not exist")
-                    else:
-                        return tmp[0]
-        except (psycopg2.DatabaseError, DataError) as error:
-            # print(error)
-            self.logger.error(error)
-            return -1

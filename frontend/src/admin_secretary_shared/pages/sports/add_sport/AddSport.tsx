@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Button, Col, FloatingLabel, Form, Row} from "react-bootstrap";
 import {useMutationWithNotifications} from "app/hooks";
 import {useNewSportCode} from "admin_secretary_shared/hooks";
@@ -6,6 +6,7 @@ import {CenteredRow} from "components/basic/CenteredRow";
 import {apiAddNewSport} from "admin_secretary_shared/adapters";
 import textLang, {Language} from "app/string";
 import {LanguageContext} from "App";
+import {useQueryClient} from "react-query";
 
 export const AddSport = () => {
 
@@ -14,8 +15,15 @@ export const AddSport = () => {
 
   const {newSportCode} = useNewSportCode(language);
   const [sportTitle, setSportTitle] = useState<string>("");
+  const queryClient = useQueryClient();
+
+  const runOnMutationSuccess = () => {
+    queryClient.clear();
+    setSportTitle("");
+  }
+
   const addNewSportMutation = useMutationWithNotifications(
-    "adding_new_sport", apiAddNewSport, text.addNewSportInitToastMsg, language
+    "adding_new_sport", apiAddNewSport, text.addNewSportInitToastMsg, language, runOnMutationSuccess
   );
 
   const handleAddNewSportSubmit = (e: React.FormEvent<HTMLFormElement>) => {
