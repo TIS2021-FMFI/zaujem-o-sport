@@ -545,7 +545,7 @@ class Computations:
              keys order, code, title, value.
         """
         result = []
-        id = DB.getCountryIdByCode(countryCode)
+        id = DB.countryCodeToID(countryCode)
         for key in self.getFinalOrderById(id).values():
             result.append(key)
         return {"chart": result}

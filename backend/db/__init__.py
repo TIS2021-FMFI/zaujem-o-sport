@@ -1803,30 +1803,3 @@ class Database:
         finally:
             self._releaseConnection(dbConn)
             return results
-
-    def getCountryIdByCode(self, countryCode: str) -> id:
-        """ Convert country code to country id.
-
-        Args:
-            countryCode (str): selected country code
-
-        Returns:
-            id: id of country with selected code
-        """
-
-        sql = "select id from country where code = %(countryCode)s and is_active"
-        try:
-            with self._getConnection() as dbConn:
-                with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-                    cursor.execute(sql, {"countryCode": countryCode})
-                    tmp = cursor.fetchone()
-                    if tmp is None:
-                        self._releaseConnection(dbConn)
-                        raise DataError("country code does not exist")
-                    else:
-                        return tmp[0]
-        except (psycopg2.DatabaseError, DataError) as error:
-            # print(error)
-            self._releaseConnection(dbConn)
-            self.logger.error(error)
-            return -1
