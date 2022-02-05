@@ -367,13 +367,14 @@ class Database:
                     cursor.execute(sql_check, {"code": code})
                     tmp = cursor.fetchone()
                     if tmp is not None:  # sport code already exists
+                        self._releaseConnection(dbConn)
                         raise DataError(
                             "unable to insert, sport with entered code already exists, please select another code")
                     cursor.execute(sql, {"code": code, "title": title})
                     dbConn.commit()
             self._releaseConnection(dbConn)
             return True
-        except Union[psycopg2.DatabaseError, DataError] as error:
+        except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
             self.logger.error(error)
             return False
@@ -407,6 +408,8 @@ class Database:
                     cursor.execute(sql_sport, {"sport_code": data["sportCode"]})
                     tmp = cursor.fetchone()
                     if tmp is None:
+                        self._releaseConnection(dbConn)
+
                         raise DataError(
                             f"unable to insert, sport with entered code doesnt exist, please select another code")
                     sport_id = tmp[0]
@@ -414,6 +417,7 @@ class Database:
                     cursor.execute(sql_check, {"sport_code": data['sportCode'], "branch_code": data['branchCode']})
                     tmp = cursor.fetchone()
                     if tmp is not None:  # branch code already exists
+                        self._releaseConnection(dbConn)
                         raise DataError(
                             f"unable to insert, branch with entered code already exists - {tmp[1]}, "
                             f"please select another code")
@@ -424,7 +428,7 @@ class Database:
                     dbConn.commit()
             self._releaseConnection(dbConn)
             return True
-        except Union[psycopg2.DatabaseError, DataError] as error:
+        except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
             self.logger.error(error)
             return False
@@ -490,12 +494,13 @@ class Database:
                     cursor.execute(sql_check_unique, {"branch_code": data['branchCode']})
                     tmp = cursor.fetchone()
                     if tmp is not None:  # branch code already exists
-
+                        self._releaseConnection(dbConn)
                         raise DataError("branch with entered code already exists")
 
                     cursor.execute(sql_country_exists, {"country_code": data["countryCode"]})
                     tmp = cursor.fetchone()
                     if tmp is None:
+                        self._releaseConnection(dbConn)
                         raise DataError("country with entered code does not exist")
                     country_id = tmp[0]
 
@@ -504,9 +509,11 @@ class Database:
                             cursor.execute(sql_sub_exists,
                                            {"sport_code": sub["sportCode"], "branch_code": sub["branchCode"]})
                         except KeyError:
+                            self._releaseConnection(dbConn)
                             raise DataError("invalid subBranches data structure")
                         tmp = cursor.fetchone()
                         if tmp is None:
+                            self._releaseConnection(dbConn)
                             raise DataError("subBranches does not exist")
                         else:
                             inserting_data.append((tmp[0], sub["coefficient"]))
@@ -525,7 +532,7 @@ class Database:
 
             self._releaseConnection(dbConn)
             return True
-        except Union[psycopg2.DatabaseError, DataError] as error:
+        except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
             self.logger.error(error)
             return False
@@ -570,6 +577,7 @@ class Database:
                     else:  # activating country
 
                         if tmp[1] is True or tmp[0] != data["name"]:  # country already active
+                            self._releaseConnection(dbConn)
                             raise DataError(
                                 f"country with entered code already exists - {tmp[0]}, please select another code")
 
@@ -578,7 +586,7 @@ class Database:
 
             self._releaseConnection(dbConn)
             return True
-        except Union[psycopg2.DatabaseError, DataError] as error:
+        except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
             self.logger.error(error)
             return False
@@ -608,12 +616,13 @@ class Database:
                     cursor.execute(sql_check, {"old_code": data['oldCode']})
                     tmp = cursor.fetchone()
                     if tmp is None:  # sport doesnt exist
+                        self._releaseConnection(dbConn)
                         raise DataError("unable to update sport, sport with entered code doesnt exist")
                     cursor.execute(sql, {"new_code": data['newCode'], "new_title": data['newTitle'], "id": tmp[0]})
                 dbConn.commit()
             self._releaseConnection(dbConn)
             return True
-        except Union[psycopg2.DatabaseError, DataError] as error:
+        except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
             self.logger.error(error)
             return False
@@ -1791,10 +1800,11 @@ class Database:
                     cursor.execute(sql, {"countryCode": countryCode})
                     tmp = cursor.fetchone()
                     if tmp is None:
+                        self._releaseConnection(dbConn)
                         raise DataError("country code does not exist")
                     else:
                         return tmp[0]
-        except Union[psycopg2.DatabaseError, DataError] as error:
+        except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
             self.logger.error(error)
             return -1
