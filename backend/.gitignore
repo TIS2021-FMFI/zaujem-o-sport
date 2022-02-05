@@ -3,3 +3,5 @@ create_env_db_vars.bat
 run_production.sh
 db/backups/*
 !db/backups/.keep
+logs/*
+!logs/.keep

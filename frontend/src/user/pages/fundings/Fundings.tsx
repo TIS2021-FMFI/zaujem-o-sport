@@ -2,9 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useMutation, useQuery} from "react-query";
 import {
     apiFunding,
-    apiListCountry,
     apiListFunding,
-    countryType,
     fundingType
 
 } from "../../adapters";
@@ -14,6 +12,8 @@ import {Table} from "../../../components/table/Table";
 import {CSVLink} from "react-csv";
 import {Download} from "react-bootstrap-icons";
 import {useCountries} from "../../../app/hooks";
+import {Info} from "../../components/info/Info";
+import {ChoiceState} from "../../components/choicestate/ChoiceState";
 
 export const Fundings = () => {
     
@@ -40,7 +40,7 @@ export const Fundings = () => {
 
 
 
-    const [option, setOption] = useState<string[]>(["SVK","SLOVAKIA"]);
+    const [option, setOption] = useState<string[]>(["",""]);
 
 
     const { mutateAsync: asyncFunding } = useMutation(["setCountry", option],
@@ -66,11 +66,13 @@ export const Fundings = () => {
 
     return (
         <>
-            <h1>Fundings
-            </h1>
+            <header><h1 className="mt-3 mb-4"> Fundings <Info label="What is Ranking" input="
+            On this page, after selecting a country, it is displayed as a given funding between individual sports.
+            The branches the columns will be: name of the sport,  amount (money) in the local currency of the given country and currency"/></h1></header>
+
             <div>
 
-                <Form.Label>Country</Form.Label>
+                <Form.Label><h4>Country</h4></Form.Label>
 
                 <Select
                     id="country"
@@ -82,8 +84,10 @@ export const Fundings = () => {
                             }}
                 />
 
-              <h4>  You can see results for chosen country <b>{option[1]} :</b> </h4>
-                <Button variant="primary"><CSVLink className='button' filename={"funding"+option[1]} data={rowFundings}><Download size={25} /> Export data</CSVLink></Button>{' '}
+                <ChoiceState state={option[1]} />
+
+                <Button variant="outline-primary mt-md-2 mb-md-2"><CSVLink className='button' filename={"funding"+option[1]} data={rowFundings}><Download size={25} /> Export data</CSVLink></Button>{' '}
+
 
 
 

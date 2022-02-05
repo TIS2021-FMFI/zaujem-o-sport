@@ -1,8 +1,7 @@
 import React from "react";
-import "./Footer.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function Footer() {
+export const Footer = () => {
   return (
     <div className="main-footer">
       <div className="container">
@@ -43,5 +42,3 @@ function Footer() {
     </div>
   );
 }
-
-export default Footer;
