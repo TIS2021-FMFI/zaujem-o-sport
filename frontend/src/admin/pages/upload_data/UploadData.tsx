@@ -1,9 +1,13 @@
 import {CenteredRow} from "components/basic/CenteredRow";
 import {Dropzone, dropzoneFileProp} from "components/drag_and_drop/Dropzone";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import createSnackbar, {SnackTypes} from "../../../components/snackbar/Snackbar";
-import {useMutationWithNotifications} from "../../../app/hooks";
+import {useCountries, useMutationWithNotifications} from "../../../app/hooks";
 import {apiUploadFiles} from "../../adapters";
+import {currencies} from "../../../data/active_currency_codes";
+import {Col, Form, Row} from "react-bootstrap";
+import Select from "react-select";
+import {useInterconnectednessType} from "../../../user/hooks";
 
 const acceptedFundingFileExtensions = ".csv";
 const acceptedSuccessFileExtensions = ".xlsx, .xlsm, .xltx, .xltm";
@@ -15,16 +19,47 @@ export const UploadData = () => {
 	const [successFile, setSuccessFile] = useState<dropzoneFileProp[]>([]);
 	const [interconnectednessFile, setInterconnectednessFile] = useState<dropzoneFileProp[]>([]);
 
+	const {countries: responseCountries} = useCountries("en");
+	const [countries, setCountries] = useState<{value: string, label: string}[]>([]);
+	const [selectedCountry, setSelectedCountry] = useState<string | undefined>();
+
+	const currencyOptions = currencies.map((currency) => { return {label: currency, value: currency} });
+	const [selectedCurrency, setSelectedCurrency] = useState<string | undefined>();
+
+	const {interconnectednessType} = useInterconnectednessType("en");
+	const [interconnectednessOptions, setInterconnectednessOptions] = useState<{value: number, label: string}[]>([]);
+	const [selectedInterconnectednessType, setSelectedInterconnectednessType] = useState<number | undefined>();
+
+	useEffect(() => {
+		setCountries(responseCountries.map((country) => { return {
+			value: country.code, label: `${country.name} (${country.code})`
+		}}));
+	}, [responseCountries]);
+
+	useEffect(() => {
+		setInterconnectednessOptions(interconnectednessType.map((interconnectednessType) => { return {
+			value: interconnectednessType.code, label: interconnectednessType.title
+		}}));
+	}, [interconnectednessType]);
+
 	const uploadMutation = useMutationWithNotifications(
-		"admin_upload", apiUploadFiles, "Uploading files..."
+		"admin_upload", apiUploadFiles, "Uploading files...", "en"
 	);
 
 	const handleUploadSubmit = () => {
 		if (fundingFile.length === 0 && successFile.length === 0 && interconnectednessFile.length === 0)
 			createSnackbar("Please upload at least one source.", SnackTypes.warn);
-		else
-			uploadMutation.mutate({fundingFile: fundingFile[0]?.file, successFile: successFile[0]?.file,
-																		 interconnectednessFile: interconnectednessFile[0]?.file, });
+		else if (fundingFile.length !== 0 && (selectedCountry === undefined || selectedCurrency === undefined))
+			createSnackbar("Select country and currency.", SnackTypes.warn);
+		else if (interconnectednessFile.length !== 0 && selectedInterconnectednessType === undefined)
+			createSnackbar("Select interconnectedness type.", SnackTypes.warn);
+		else {
+			uploadMutation.mutate({
+				fundingFile: fundingFile[0]?.file, successFile: successFile[0]?.file,
+				interconnectednessFile: interconnectednessFile[0]?.file, countryCode: selectedCountry,
+				currency: selectedCurrency, interconnectednessType: selectedInterconnectednessType
+			});
+		}
 	}
 
 	return (<>
@@ -34,6 +69,28 @@ export const UploadData = () => {
 		<section>
 			<CenteredRow as="header">
 				<h2>Upload funding data</h2>
+			</CenteredRow>
+			<CenteredRow className="mb-4">
+				<Row>
+					<Col>
+						<Form.Label>Countries</Form.Label>
+						<Select
+							id="country"
+							options={countries}
+							placeholder="Pick a country"
+							onChange={(selectedCountry) => setSelectedCountry(selectedCountry?.value)}
+						/>
+					</Col>
+					<Col>
+						<Form.Label>Currencies</Form.Label>
+						<Select
+							id="currency"
+							options={currencyOptions}
+							placeholder="Pick a currency"
+							onChange={(selectedCurrency) => setSelectedCurrency(selectedCurrency?.value)}
+						/>
+					</Col>
+				</Row>
 			</CenteredRow>
 			<CenteredRow as="section">
 				<Dropzone accept={acceptedFundingFileExtensions} files={fundingFile} setFiles={setFundingFile} lang="en"/>
@@ -78,6 +135,19 @@ export const UploadData = () => {
 		<section>
 			<CenteredRow as="header">
 				<h2>Upload interconnectedness data</h2>
+			</CenteredRow>
+			<CenteredRow className="mb-4">
+				<Row>
+					<Col lg={6}>
+						<Form.Label>Interconnectedness type</Form.Label>
+						<Select
+							id="interconnectedness"
+							options={interconnectednessOptions}
+							placeholder="Pick an interconnectedness type"
+							onChange={(selectedInterconnectednessType) => setSelectedInterconnectednessType(selectedInterconnectednessType?.value)}
+						/>
+					</Col>
+				</Row>
 			</CenteredRow>
 			<CenteredRow as="section">
 				<Dropzone accept={acceptedInterconnectednessFileExtensions} files={interconnectednessFile} setFiles={setInterconnectednessFile} lang="en"/>

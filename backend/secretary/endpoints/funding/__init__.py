@@ -3,6 +3,7 @@ from flasgger import SwaggerView
 import csv_parsers.csvParser as parser
 from verification.jwt import is_secretary
 import json
+from settings import DB
 
 class Funding(SwaggerView):
 
@@ -25,6 +26,8 @@ class Funding(SwaggerView):
 			return {"message": "Missing required parameter: `countryCode`.", "data": {}}, 400
 		if not currency:
 			return {"message": "Missing required parameter: `currency`.", "data": {}}, 400
+
+		DB.createDatabaseBackup()
 
 		lines = []
 		for line in file:
