@@ -5,6 +5,9 @@ import psycopg2.extensions
 from typing import Union, List, Dict, Any, Tuple
 import logging
 from os.path import join
+from os import system
+from os import environ as env
+from time import time
 
 
 class DataError(Exception):
@@ -12,6 +15,18 @@ class DataError(Exception):
 
 
 class Database:
+
+    @staticmethod
+    def createDatabaseBackup():
+        """ Create (save) backup of current version of the database.
+            Saved file names are in format sport_db_backup{timestamp_in_ms}.bak
+        """
+        DB_HOST = env.get("DB_HOST")
+        DB_NAME = env.get("DB_NAME")
+        DB_USER = env.get("DB_USER")
+        DB_PASS = env.get("DB_PASS")
+        system(f'pg_dump "host={DB_HOST} port=5432 dbname={DB_NAME} user={DB_USER} password={DB_PASS}" > '
+               f'db/backups/sport_db_backup{int(round(time() * 1000))}.bak')
 
     def __init__(self, dbPool: psycopg2.pool.ThreadedConnectionPool):
         """ Initialize DB pool and DB logger. """
