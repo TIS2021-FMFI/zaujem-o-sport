@@ -356,7 +356,7 @@ p = excelParser()
 # nieco = p.parseBGS(wb)
 # for item in nieco:
 #     print(item)
-#
+
 # DB.deleteBGS()
 # input("cakam")
 
