@@ -11,6 +11,7 @@ import {CenteredRow} from "components/basic/CenteredRow";
 import {RowToSuggestion, RowWithSuggestion, Suggestions} from "admin_secretary_shared/components/upload_funding_data/Suggestions";
 import {RootState} from "app/store";
 import {setCorrections} from "admin_secretary_shared/components/upload_funding_data/correctionsSlice";
+import config from "../../../config";
 
 const acceptedFileExtensions = ".csv";
 
@@ -112,6 +113,7 @@ export const UploadData = () => {
 			<header>
 				<h1>Nahranie dát</h1>
 				<h2>Váha financovania</h2>
+				<a href={`${config.API_URL}/static/funding.csv`}>stiahnuť príklad súboru</a>
 			</header>
 			<Row>
 				<Col xl={7} lg={9} md={9}>

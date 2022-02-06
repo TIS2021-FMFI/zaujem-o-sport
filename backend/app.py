@@ -23,8 +23,7 @@ import user.endpoints.show_countries
 import user.endpoints.interconnectness
 import user.endpoints.interconnectnesstype
 import user.endpoints.funding
-
-
+from flask import send_from_directory
 
 @app.errorhandler(400)
 def bad_request(e):
@@ -62,6 +61,10 @@ def revoked_token_callback(jwt_header, jwt_payload):
 @jwt.unauthorized_loader
 def unathorized_callback(callback):
 	return {"message": "Missing Authorization Header", "data": {}}, 401
+
+@app.route("/api/static/<path:path>")
+def serve_static(path):
+	return send_from_directory("static", path)
 
 # ----- general -----
 
