@@ -88,7 +88,8 @@ class Database:
             # print(error)
             self.logger.error(error)
         finally:
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return result
 
     def getAdmin(self, email: str) -> Union[None, dict]:
@@ -113,7 +114,8 @@ class Database:
             # print(error)
             self.logger.error(error)
         finally:
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return result
 
     def getAllCountries(self) -> List[Dict[str, Any]]:
@@ -139,7 +141,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return countries
 
     def getAllSports(self) -> List[Dict[str, Any]]:
@@ -164,7 +167,8 @@ class Database:
             # print(error)
             self.logger.error(error)
         finally:
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return sports
 
     def getInactiveCountries(self) -> Dict[str, List[Dict[str, Any]]]:
@@ -192,7 +196,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return result
 
     def getBranchesWithSports(self) -> List[Dict[str, Any]]:
@@ -219,7 +224,8 @@ class Database:
             # print(error)
             self.logger.error(error)
         finally:
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return results
 
     def getFundingData(self, country_code: str) -> Dict[str, List[Dict[str, Any]]]:
@@ -250,7 +256,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return result
 
     def getFundingDistinctCurrencies(self) -> List[str]:
@@ -273,7 +280,8 @@ class Database:
             # print(error)
             self.logger.error(error)
         finally:
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return results
 
     def getSuccessBySport(self, sport_code: str) -> Dict[str, List[Dict[str, Any]]]:
@@ -305,7 +313,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return result
 
     def getSuccessByCountry(self, country_code: str) -> Dict[str, List[Dict[str, Any]]]:
@@ -337,7 +346,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return result
 
     def getInterconnectnessData(self, type_id: int, country_code: str) -> Dict[str, List[Dict[str, Any]]]:
@@ -370,7 +380,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return result
 
     # inputs to DB
@@ -398,11 +409,13 @@ class Database:
                             "unable to insert, sport with entered code already exists, please select another code")
                     cursor.execute(sql, {"code": code, "title": title})
                     dbConn.commit()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -453,11 +466,13 @@ class Database:
                                    {"code": data['branchCode'], "title": data['branchTitle'], "is_combined": 'false',
                                     "sport_id": sport_id})
                     dbConn.commit()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -558,11 +573,13 @@ class Database:
 
                     dbConn.commit()
 
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -613,11 +630,13 @@ class Database:
                         cursor.execute(sql_activate, {"code": data["code"]})
                         dbConn.commit()
 
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -650,11 +669,13 @@ class Database:
                         raise DataError("unable to update sport, sport with entered code doesnt exist")
                     cursor.execute(sql, {"new_code": data['newCode'], "new_title": data['newTitle'], "id": tmp[0]})
                 dbConn.commit()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except (psycopg2.DatabaseError, DataError) as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -672,11 +693,13 @@ class Database:
                     cursor.execute(sql, {"country_id": country_id, "branch_id": branch_id, "amount": amount,
                                          "currency": currency})
                 dbConn.commit()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -688,10 +711,13 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql)
                 dbConn.commit()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -704,10 +730,13 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql, {"sport_id": sport_id,  "value": value})
                 dbConn.commit()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -723,11 +752,13 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql)
                 dbConn.commit()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -741,11 +772,13 @@ class Database:
                     cursor.execute(sql, {"sport_id": sport_id, "country_id": country_id, "points": points,
                                          "orders": orders})
                 dbConn.commit()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -757,11 +790,13 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql, {"sport_id": sport_id, "num_countries": num_countries})
                 dbConn.commit()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -773,11 +808,13 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql, {"sport_id": sport_id, "points": points})
                 dbConn.commit()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -789,11 +826,13 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql, {"country_id": country_id, "points": points})
                 dbConn.commit()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -805,11 +844,13 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql, {"country_id": country_id, "best": best})
                 dbConn.commit()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -823,11 +864,13 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql_del, {"type_id": type_id})
                 dbConn.commit()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -840,11 +883,13 @@ class Database:
                     cursor.execute(sql, {"type_id": type_id, "country_one_id": country_one_id,
                                          "country_two_id": country_two_id, "value": value})
                 dbConn.commit()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return True
         except psycopg2.DatabaseError as error:
             #print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -874,7 +919,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
 
             result = result["BGS"]
             final_result = {}
@@ -910,7 +956,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["order"]:
@@ -950,7 +997,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["points"]:
@@ -989,7 +1037,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["points"]:
@@ -1024,7 +1073,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["num"]:
@@ -1058,7 +1108,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["sum"]:
@@ -1093,7 +1144,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["order"]:
@@ -1128,7 +1180,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["inter"]:
@@ -1167,7 +1220,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["inter"]:
@@ -1208,7 +1262,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             final_result = {}
 
             for record in result["funding"]:
@@ -1247,7 +1302,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return result["countries"]
 
 
@@ -1268,7 +1324,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return result["countries"]
 
     def getSportIds(self) -> List[Dict[str, Any]]:
@@ -1293,7 +1350,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return result["sports"]
 
     def getCombiFunding(self) -> Dict[id, Dict[id, Dict[id, float]]]:
@@ -1324,7 +1382,9 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
+
             final_result = {}
 
             for record in result["funding"]:
@@ -1369,7 +1429,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return result["branches"]
 
     def getTotalBranchFunding(self) -> Dict[id, Dict[id, float]]:
@@ -1413,7 +1474,9 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
+
             final_result = {}
 
             for record in result["funding"]:
@@ -1449,9 +1512,10 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
-            final_result = {}
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
 
+            final_result = {}
             for record in result["branches"]:
                 sport_id, id = record["sport_id"], record["id"]
                 if sport_id not in final_result:
@@ -1480,7 +1544,8 @@ class Database:
             # print(error)
             self.logger.error(error)
         finally:
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
 
             final_result = {}
             for record in result["sports"]:
@@ -1509,11 +1574,13 @@ class Database:
                                    {"sport_code": sport_code, "branch_code": branch_code, "sport_title": sport_title,
                                     "branch_title": branch_title})
                     tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return tmp is not None
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return False
 
@@ -1533,11 +1600,13 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql, {"sport_code": sport_code})
                     tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return tmp[0] if tmp is not None else None
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return ""
 
@@ -1559,11 +1628,13 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql, {"sport_code": sport_code, "branch_code": branch_code})
                     tmp = cursor.fetchone()
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return tmp[0] if tmp is not None else None
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
             return ""
 
@@ -1596,7 +1667,8 @@ class Database:
 
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return result["branches"]
 
     def showCombiBranches(self) -> List[Dict[str, Any]]:
@@ -1628,7 +1700,8 @@ class Database:
             self.logger.error(error)
         finally:
             # print(result)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return results
 
     def checkCombi(self, branch_code: int, country_code: str) -> Tuple[int, str]:
@@ -1650,13 +1723,18 @@ class Database:
                     cursor.execute(sql, {"branch_code": branch_code, "country_code": country_code})
                     tmp = cursor.fetchone()
                     if tmp is None:
+                        if "dbConn" in locals():
+                            self._releaseConnection(dbConn)
                         return -1, ""
                     else:
+                        if "dbConn" in locals():
+                            self._releaseConnection(dbConn)
                         return tmp[0], tmp[1]
 
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
 
     def suggestNewSportCode(self) -> int:
@@ -1672,10 +1750,13 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql)
                     tmp = cursor.fetchone()
+                    if "dbConn" in locals():
+                        self._releaseConnection(dbConn)
                     return tmp[0] if tmp[0] is not None else 1
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
 
     def countryCodeToID(self, country_code: str) -> id:
@@ -1695,13 +1776,18 @@ class Database:
                     cursor.execute(sql, {"country_code": country_code})
                     tmp = cursor.fetchone()
                     if tmp is None:
+                        if "dbConn" in locals():
+                            self._releaseConnection(dbConn)
                         return -1
                     else:
+                        if "dbConn" in locals():
+                            self._releaseConnection(dbConn)
                         return tmp[0]
 
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
 
     def suggestNewBranchCode(self, sport_code: int) -> int:
@@ -1721,10 +1807,13 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql, {"sport_code": sport_code})
                     tmp = cursor.fetchone()
+                    if "dbConn" in locals():
+                        self._releaseConnection(dbConn)
                     return tmp[0] if tmp[0] is not None else 1
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
 
     def branchCodeToId(self, sport_code: int, branch_code: int) -> id:
@@ -1749,12 +1838,18 @@ class Database:
                     cursor.execute(sql, {"branch_code": branch_code, "sport_code": sport_code})
                     tmp = cursor.fetchone()
                     if tmp is None:
+                        if "dbConn" in locals():
+                            self._releaseConnection(dbConn)
                         return -1
                     else:
+                        if "dbConn" in locals():
+                            self._releaseConnection(dbConn)
                         return tmp[0]
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            #print(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
 
     def suggestNewCombiBranchCode(self) -> int:
@@ -1769,10 +1864,13 @@ class Database:
                 with dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(sql)
                     tmp = cursor.fetchone()
+                    if "dbConn" in locals():
+                        self._releaseConnection(dbConn)
                     return tmp[0] if tmp[0] is not None else 10000
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
 
     def getSportsWithExisitingBranch(self) -> List[Dict[str, Any]]:
@@ -1797,9 +1895,10 @@ class Database:
             # self._releaseConnection(dbConn)
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
             self.logger.error(error)
         finally:
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return sports
 
     def combiBranchCodeToId(self, branch_code: int) -> id:
@@ -1820,12 +1919,18 @@ class Database:
                     cursor.execute(sql, {"code": branch_code})
                     tmp = cursor.fetchone()
                     if tmp is None:
+                        if "dbConn" in locals():
+                            self._releaseConnection(dbConn)
                         return -1
                     else:
+                        if "dbConn" in locals():
+                            self._releaseConnection(dbConn)
                         return tmp[0]
         except psycopg2.DatabaseError as error:
             # print(error)
-            self._releaseConnection(dbConn)
+            #print(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             self.logger.error(error)
 
     def getInterconnTypes(self) -> Dict[str, list]:
@@ -1849,5 +1954,6 @@ class Database:
             # print(error)
             self.logger.error(error)
         finally:
-            self._releaseConnection(dbConn)
+            if "dbConn" in locals():
+                self._releaseConnection(dbConn)
             return results
