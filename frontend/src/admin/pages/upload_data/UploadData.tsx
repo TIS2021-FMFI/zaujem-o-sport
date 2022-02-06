@@ -10,6 +10,7 @@ import Select from "react-select";
 import {useInterconnectednessType} from "../../../user/hooks";
 import {RowToSuggestion, RowWithSuggestion, Suggestions} from "admin_secretary_shared/components/upload_funding_data/Suggestions";
 import {setCorrections} from "../../../admin_secretary_shared/components/upload_funding_data/correctionsSlice";
+import config from "../../../config";
 
 const acceptedFundingFileExtensions = ".csv";
 const acceptedSuccessFileExtensions = ".xlsx, .xlsm, .xltx, .xltm";
@@ -110,6 +111,7 @@ export const UploadData = () => {
 		<section>
 			<CenteredRow as="header">
 				<h2>Upload funding data</h2>
+				<a href={`${config.API_URL}/static/funding.csv`}>download sample file</a>
 			</CenteredRow>
 			<CenteredRow className="mb-4">
 				<Row>
@@ -159,6 +161,7 @@ export const UploadData = () => {
 		<section>
 			<CenteredRow as="header">
 				<h2>Upload success data</h2>
+				<a href={`${config.API_URL}/static/all_sports_ranking_2019.xlsx`}>download sample file</a>
 			</CenteredRow>
 			<CenteredRow as="section">
 				<Dropzone accept={acceptedSuccessFileExtensions} files={successFile} setFiles={setSuccessFile} lang="en"/>
@@ -181,6 +184,7 @@ export const UploadData = () => {
 		<section>
 			<CenteredRow as="header">
 				<h2>Upload interconnectedness data</h2>
+				<a href={`${config.API_URL}/static/interconnectedness.xlsx`}>download sample file</a>
 			</CenteredRow>
 			<CenteredRow className="mb-4">
 				<Row>
