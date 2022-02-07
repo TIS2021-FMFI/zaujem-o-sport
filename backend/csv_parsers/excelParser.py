@@ -146,11 +146,14 @@ class ParseError(Exception):
 
 
 class excelParser:
+    """ class for parsing excel files
+    """
 
     def __init__(self):
         ...
 
     def parseSuccess(self , wb ) -> List:
+
 
         sports = DB.getAllSports()
         countries = DB.getActiveCountryIds()

@@ -679,8 +679,19 @@ class Database:
             self.logger.error(error)
             return False
 
-    def importFundingData(self, country_id: id, branch_id: id, amount: float, currency: str):
 
+    def importFundingData(self, country_id: id, branch_id: id, amount: float, currency: str):
+        """Adds 1 fund into database.
+
+                   Args:
+                       country_id: id representation of country
+                       branch_id: id representation of branch
+                       amount: how much money was funded
+                       currency: ISO 4217 of fund currency
+
+                   Returns:
+                       bool: true/false whether importing was successfull
+        """
         sql_del = "delete from funding where country_id=%(country_id)s and branch_id=%(branch_id)s"
 
         sql = "insert into funding(country_id, branch_id, absolute_funding, currency) " \
@@ -703,7 +714,15 @@ class Database:
             self.logger.error(error)
             return False
 
+
     def deleteBGS(self):
+        """deletes BGS table, restarts serial identity
+
+                   Args:
+
+                   Returns:
+                       bool: true/false whether deleting was successfull
+           """
         sql = "TRUNCATE BGS RESTART IDENTITY "
 
         try:
@@ -722,6 +741,13 @@ class Database:
             return False
 
     def importBGSdata(self, sport_id: id, value: int):
+        """add BGS record into database
+                   Args:
+                        sport_id: id representation of sport
+                        value: int value of BGS
+                   Returns:
+                        bool: true/false whether import was successfull
+        """
         sql = "insert into BGS(sport_id, value) " \
                 "values (%(sport_id)s, %(value)s)"
 
@@ -743,7 +769,12 @@ class Database:
 
 
     def deleteSuccesTables(self):
+        """deletes all tables that are used with success data
+                   Args:
 
+                   Returns:
+                        bool: true/false whether deleting was successfull
+        """
         sql = "TRUNCATE  COUNTRY_BEST_ORDER, TOTAL_COUNTRY_POINTS," \
               " MAX_POINTS_IN_SPORT, NUM_IN_SPORT, success RESTART IDENTITY "
 
@@ -763,6 +794,15 @@ class Database:
             return False
 
     def importSuccessdata(self, sport_id: id, country_id: id, points: float, orders: int):
+        """add success record into DB
+                   Args:
+                        sport_id: id representation of sport
+                        country_id: id representation of country
+                        points: float, how many points did country get in sport
+                        orders: int, in which place did the country ended up
+                   Returns:
+                        bool: true/false whether importing was successfull
+        """
         sql = "insert into success(sport_id, country_id, points, orders) " \
               "values (%(sport_id)s, %(country_id)s, %(points)s, %(orders)s)"
 
@@ -783,6 +823,13 @@ class Database:
             return False
 
     def importNumberInSports(self, sport_id: id, num_countries: int):
+        """add how many sports were ranked in specific sport
+                   Args:
+                        sport_id: id represenation of sport,
+                        num_countries: how many countries are in the success ranking
+                   Returns:
+                        bool: true/false whether importing was successfull
+        """
         sql = "insert into NUM_IN_SPORT(sport_id, num_countries) " \
               "values (%(sport_id)s, %(num_countries)s)"
         try:
@@ -801,6 +848,13 @@ class Database:
             return False
 
     def importMaxPointsInSport(self, sport_id: id, points: float):
+        """add highest points in specific sport
+                         Args:
+                              sport_id: id represenation of sport,
+                              points: maximum of the points in sport
+                         Returns:
+                              bool: true/false whether importing was successfull
+        """
         sql = "insert into MAX_POINTS_IN_SPORT(sport_id, points) " \
               "values (%(sport_id)s, %(points)s)"
         try:
@@ -819,6 +873,13 @@ class Database:
             return False
 
     def importTotalCountryPoints(self, country_id: id, points: float):
+        """add sum of points above all sports for specific country
+                         Args:
+                              country_id: id represenation of country,
+                              points: sum of points from all sports
+                         Returns:
+                              bool: true/false whether importing was successfull
+        """
         sql = "insert into TOTAL_COUNTRY_POINTS(country_id, points) " \
               "values (%(country_id)s, %(points)s)"
         try:
@@ -837,6 +898,13 @@ class Database:
             return False
 
     def importCountryBestOrder(self, country_id: id, best: int):
+        """add best placement of specific country
+                         Args:
+                              country_id: id represenation of country,
+                              points: best placement of country
+                         Returns:
+                              bool: true/false whether importing was successfull
+        """
         sql = "insert into COUNTRY_BEST_ORDER(country_id, best) " \
               "values (%(country_id)s, %(best)s)"
         try:
@@ -856,7 +924,13 @@ class Database:
 
 
     def deleteInterconnectednessTables(self, type_id: id):
+        """deletes data from interconnectedness table, with specific type_id
+                         Args:
+                              type_id: type of interconnectedness ( 1 economic, 2 non-economic )
 
+                         Returns:
+                              bool: true/false whether deleting was successfull
+        """
         sql_del = "DELETE FROM interconnectness WHERE type_id =%(type_id)s   "
 
         try:
@@ -875,6 +949,16 @@ class Database:
             return False
 
     def importInterconnectednessData(self, type_id: id, country_one_id: id, country_two_id: id, value: float):
+        """imports interconnectedness record
+                              Args:
+                                   type_id: type of interconnectedness ( 1 economic, 2 non-economic )
+                                   country_one_id: id representation of country
+                                   country_two_id: id representation of country ( they can not match )
+                                   value: value of interconnectedness between country1 and country2
+
+                              Returns:
+                                   bool: true/false whether deleting was successfull
+        """
         sql = "insert into interconnectness(type_id, country_one_id, country_two_id, value ) " \
               "values (%(type_id)s, %(country_one_id)s, %(country_two_id)s , %(value)s)"
         try:
@@ -1308,6 +1392,11 @@ class Database:
 
 
     def getActiveCountryTranslations(self) -> list:
+        """ Returns active country data with translations.
+
+              Returns:
+                  List[Dict[str, Any]]: list of dicts, each dict contain keyd id, translation = translation of country
+              """
         sql = "select id, translation from country where is_active = true"
         result = {"countries": []}
         try:
