@@ -36,7 +36,7 @@ export const Ranking = () => {
 		{
 			onSuccess: (response) => {
 				const serverData = response.data.data;
-				setRowChart(serverData.chart.map((ch) => [ch.order,ch.title, ch.value, ch.code]))
+				setRowChart(serverData.chart.map((ch) => [ch.order, ch.title, ch.value.toFixed(3), ch.code]))
 			},
 			onError: (error) => {
 				console.log(error);
@@ -67,11 +67,11 @@ export const Ranking = () => {
 				<Button variant="outline-primary mt-md-2 mb-md-2"><CSVLink className='button' filename={"ranking"+option[1]} data={rowChart}><Download size={25} /> Export data</CSVLink></Button>{' '}
 			</div>
 			<div>
-				<Table columnNames={[{name: "Order", sortable: true},{name: "Sport", sortable: true}, {name: "Points", sortable: true}, {
-					name: "Code",
-					sortable: true
-				}]}
-				       rows={rowChart}/>
+				<Table columnNames={[{name: "Order", sortable: true}, {name: "Sport", sortable: true},
+														 {name: "Points", sortable: true}, {name: "Code", sortable: true}
+				]}
+				       rows={rowChart}
+				/>
 			</div>
 		</>
 	)

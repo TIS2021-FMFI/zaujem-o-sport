@@ -9,6 +9,7 @@ import {Download} from "react-bootstrap-icons";
 import {useCountries} from "../../../app/hooks";
 import {Info} from "../../components/info/Info";
 import {ChoiceState} from "../../components/choicestate/ChoiceState";
+import {formatLongNumber} from "../../../helpers/format";
 
 export const Fundings = () => {
     
@@ -34,7 +35,7 @@ export const Fundings = () => {
         {
             onSuccess: (response) => {
                 const serverData = response.data.data;
-                setRowFunding((serverData.funding.map((f) => [f.branch_id, f.absolute_funding, f.currency])));
+                setRowFunding((serverData.funding.map((f) => [f.branch_id, formatLongNumber(f.absolute_funding), f.currency])));
             },
             onError: (error) => {
                 console.log(error);
@@ -72,7 +73,7 @@ export const Fundings = () => {
                 <Button variant="outline-primary mt-md-2 mb-md-2"><CSVLink className='button' filename={"funding"+option[1]} data={rowFundings}><Download size={25} /> Export data</CSVLink></Button>{' '}
             </div>
             <div>
-                <Table columnNames={[{name: "Sport", sortable: true}, {name: "Amount", sortable: true}, {
+                <Table columnNames={[{name: "Sport", sortable: true}, {name: "Amount", sortable: false, alignRight: true}, {
                     name: "Currency", sortable: true
                 }]}
                        rows={rowFundings}/>

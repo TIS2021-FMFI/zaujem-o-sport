@@ -1,4 +1,4 @@
-Get interconnectness data.
+Get Interconnectedness data.
 ---
 parameters:
   - name: countryCode

@@ -4,7 +4,8 @@ import React, {useEffect, useState} from "react";
 
 export type TableColumnNameType = {
   name: string,
-  sortable?: boolean
+  sortable?: boolean,
+  alignRight?: boolean
 };
 export type TableCellValueOnly = string | number;
 export type TableCellComponent = {
@@ -48,7 +49,7 @@ export const Table = ({columnNames, rows}: TableProps) => {
   return (
   	<BootstrapTable striped bordered responsive="xl">
       <TableHead columnNames={columnNames} sort={sortColumn} />
-      <TableBody rows={sortedRows} />
+      <TableBody columnNames={columnNames} rows={sortedRows} />
     </BootstrapTable>
   )
 }
@@ -108,16 +109,25 @@ const TableHead = ({columnNames, sort}: TableHeadProps) => {
 }
 
 interface TableBodyProps {
+  columnNames: TableColumnNameType[],
   rows: TableRowsType
 }
 
-const TableBody = ({rows}: TableBodyProps) => {
+const TableBody = ({columnNames, rows}: TableBodyProps) => {
+
+  /** Indexes of columns that should be aligned horizontally to the right. */
+  const [alignRightColumns, setAlignRightColumns] = useState<number[]>([]);
+
+  useEffect(() => {
+    setAlignRightColumns(columnNames.filter(c => c.alignRight).map((c, i) => i + 1));
+  }, [columnNames]);
+
   return (
     <tbody>
     { rows.map((row, i) =>
       <tr key={`row-${i}`}>
         { row.map((cellValue, j) =>
-          <td key={`cell-${i}-${j}`} className={`align-middle`}>
+          <td key={`cell-${i}-${j}`} className={`align-middle ${alignRightColumns.includes(j) ? "text-end" : ""}`}>
             { typeof cellValue === "object" ? (cellValue.element || cellValue.value) : cellValue }
           </td>
         )}
