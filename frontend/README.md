@@ -1,9 +1,5 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
 
-## Update
-Use chrome to test your code.
-We found error on firefox and  we will solve it later.
-
 ## First time running
 You'll need node and install all dependencies using<br>
 <code>npm install</code>, which will automatically download all 

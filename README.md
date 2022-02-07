@@ -3,21 +3,21 @@
 ## Deployment to production
 
 ### Linux server dependencies (recommended)
-1. Python3
+1. Python3 (3.7+)
 2. PostgreSQL
 3. Nginx
 4. Gunicorn3
 
 ### Frontend
-Clone the repository and install all dependencies (described in frontend/README.md).<br>
+Clone locally the repository and install all dependencies (described in frontend/README.md).<br>
 Run `npm run build` and move build directory to a server e.g. using <br>
 `scp -r frontend/build/* SERVER_USERNAME@SERVER_ADDRESS:SERVER_PATH_TO_FRONTEND`
 
 ### Backend
 1. Create Python virtual environment (described in backend/README.md).
-2. Clone the repository on the server
-3. Start the environment
-4. Install python dependencies
+2. Clone the repository on the server.
+3. Start the environment.
+4. Install python dependencies (described in backend/README.md).
 5. Create and generate a PostgreSQL database:
     1. `psql -U DB_USER -d DB_NAME`
     2. `\i backend/db/create_script.txt`
@@ -25,7 +25,7 @@ Run `npm run build` and move build directory to a server e.g. using <br>
 
 ### Linux server configuration
 #### Nginx
-1. Make sure that nginx is installed and running.
+1. Make sure that nginx is installed, up and running.
 2. Add nginx configuration to /etc/nginx/sites-available and link the file into
    /etc/nginx/sites-enabled.
 <pre>
@@ -59,7 +59,7 @@ server {
 
 #### Gunicorn3
 1. Create environmental variables: DB_HOST, DB_NAME, DB_USER and DB_PASS.
-2. From the backend directory run
+2. From the backend directory run <br>
    `gunicorn3 -b 0.0.0.0:API_PORT_NUMBER app:app` to safely start the backend code.
 
 Ideally, run the gunicorn3 WSGI server automatically in the background e.g. using sh script:
@@ -83,8 +83,3 @@ Reload the nginx service `nginx reload` and test if the web app is publicly avai
 ### Tips
 * letsencrypt certificates are easy to generate in nginx configuration with a `certbot --nginx` util.
 * Supervisor might be used to control automatically gunicorn and flask backend.
-
-## General rules
-Don't include installed dependencies in this git repository. Instead, write
-them down in the .gitignore and others will install them from config files
-(e.g. package.json).
