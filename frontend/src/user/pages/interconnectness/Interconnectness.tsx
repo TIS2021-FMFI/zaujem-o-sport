@@ -16,7 +16,7 @@ import {MapShow} from "../../components/map/Map";
 
 export const Interconnectness = () => {
 	const history = useHistory()
-	const options = [
+	const dataDisplayingSelectedOptions = [
 		{
 			label: "Table",
 			value: "/interconnectness/table",
@@ -26,6 +26,14 @@ export const Interconnectness = () => {
 			value: "/interconnectness/map",
 		}
 	];
+
+	const [dataDisplayingSelectedOption, setDataDisplayingSelectedOption] = useState<{value: string, label: string}>(
+		dataDisplayingSelectedOptions[1]
+	);
+
+	useEffect(() => {
+		history.push(dataDisplayingSelectedOption.value);
+	}, [dataDisplayingSelectedOption]);
 
 	const {countries} = useCountries("en");
 	const {interconnectednessType} = useInterconnectednessType("en");
@@ -78,7 +86,7 @@ export const Interconnectness = () => {
 
 	return (<>
 		<header>
-			<h1 className="mt-3 mb-4"> Interconnectedness <Info label="What is Interconnectedness" input="The user has the option to choose the country and type of connection (economic, non-economic).
+			<h1 className="mt-3 mb-4"> Interconnectedness <Info label="What is Ranking" input="The user has the option to choose the country and type of connection (economic, non-economic).
              Depending on the user's choice, the page displays either a map with countries and numeric values
               or a list of countries with weights that indicate how high the country according to the selected country and connection type."/></h1>
 		</header>
@@ -86,12 +94,14 @@ export const Interconnectness = () => {
 			<h4> Data displaying</h4>
 
 			<Select className="mb-3"
-			        id="setview"
-			        options={options}
-			        placeholder="Choose how data will be displayed"
-			        onChange={ (selectedOption) => {
-				        if (selectedOption !== null)
-					        history.push(selectedOption.value) }}
+					id="setview"
+					value={dataDisplayingSelectedOption}
+					options={dataDisplayingSelectedOptions}
+					placeholder="Choose how data will be displayed"
+					onChange={ (selectedOption) => {
+						if (selectedOption !== null)
+							setDataDisplayingSelectedOption(selectedOption);
+					}}
 			/>
 
 			<div>
@@ -116,10 +126,9 @@ export const Interconnectness = () => {
 				/>
 				<ChoiceState state={countryOption[1]} alert={"Please select country and type "}
 							 message={"You can see results for country and type"} />
-
 				<Button variant="outline-primary mt-md-2 mb-md-2">
 					<CSVLink className='button' filename={"interconnectedness" + countryOption}
-					         data={rowInterconnectness}>
+							 data={rowInterconnectness}>
 						<Download size={25} />Export data
 					</CSVLink>
 				</Button>{' '}
@@ -130,12 +139,12 @@ export const Interconnectness = () => {
 					<Route path="/interconnectness/table">
 						<Table columnNames={[{name: "Code", sortable: true}, {name: "Country", sortable: true}, {
 							name: "Value", sortable: true}, {name: "Type", sortable: true }]}
-						       rows={rowInterconnectness}/>
+							   rows={rowInterconnectness}/>
 					</Route>
 					<Route path="/interconnectness/map">
 						<>
 							{interconnectnesses !== undefined &&
-	              <MapShow input={interconnectnesses.map((interconnectness) => {
+								<MapShow input={interconnectnesses.map((interconnectness) => {
 									return (
 										{name: interconnectness.country, code: interconnectness.code, value: interconnectness.value}
 									)
