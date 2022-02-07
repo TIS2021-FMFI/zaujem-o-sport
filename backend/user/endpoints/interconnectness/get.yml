@@ -9,7 +9,7 @@ parameters:
     type: integer
 responses:
   200:
-    description: Interconnectness data.
+    description: Interconnectedness data.
     schema:
       type: "object"
       properties:
