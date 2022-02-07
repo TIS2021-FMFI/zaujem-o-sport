@@ -177,9 +177,9 @@ app.add_url_rule(
 )
 
 app.add_url_rule(
-	"/api/user/chart",
+	"/api/user/<countryCode>/chart",
 	view_func=user.endpoints.chart.ShowChartView.as_view("list_chart"),
-	methods=["GET", "POST"]
+	methods=["GET"]
 )
 
 app.add_url_rule(

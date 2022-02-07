@@ -41,14 +41,12 @@ export const Interconnectness = () => {
                         history.push(selectedOption.value) }}
             />
 
-
-
-            <Switch>
-                <div className="inter">
+            <div className="inter">
+                <Switch>
                     <Route path="/interconnectness/table"><InterconnectnessTable/></Route>
                     <Route path="/interconnectness/map"><InterconnectnessMap/></Route>
-                </div>
-            </Switch>
+                </Switch>
+            </div>
         </div>
 
     </>)

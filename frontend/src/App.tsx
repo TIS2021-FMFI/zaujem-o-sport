@@ -63,22 +63,18 @@ const UserRouters = () => {
     return (
         <Router>
             <Navbar />
-            <Switch>
-                <div className="site">
-	                  <Route path="/"><Redirect to="/home" /></Route>
-                    <Route path="/home"><HomeUser /></Route>
-                    <Route path="/ranking"><Ranking /></Route>
-                    <Route path="/export"><Export /></Route>
-                    <Route path="/funding"><Fundings /></Route>
-                    <Route path="/success"><Success /></Route>
-                    <Route path="/interconnectness"><Interconnectness /></Route>
-                </div>
-            </Switch>
-
-
-
+	          <div className="site">
+	            <Switch>
+	                <Route exact path="/"><Redirect to="/home" /></Route>
+	                <Route path="/home"><HomeUser /></Route>
+	                <Route path="/ranking"><Ranking /></Route>
+	                <Route path="/export"><Export /></Route>
+	                <Route path="/funding"><Fundings /></Route>
+	                <Route path="/success"><Success /></Route>
+	                <Route path="/interconnectness"><Interconnectness /></Route>
+	            </Switch>
+	          </div>
             <Footer />
-
         </Router>
 
     );

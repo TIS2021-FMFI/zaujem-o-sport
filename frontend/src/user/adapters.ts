@@ -3,7 +3,7 @@
 import {generalAxiosProvider as axios} from "app/axios_provider";
 import {AxiosResponse} from "axios";
 
-//------------- Pre success ---------
+//------------- For the success ---------
 
 export type successType = {
     sport_name: string,
@@ -39,7 +39,7 @@ export const apiSuccess = (code: string)
 }
 
 
-//----------Pre chart ----------
+//---------- For the chart ----------
 export type chartType = {
     code: number,
     title: string,
@@ -68,14 +68,12 @@ export interface ApiChartType {
 }
 
 
-export const apiChart = (code: string)
-    : Promise<AxiosResponse<ApiListChart>> =>
-{
-    return axios.post("/user/chart",{ code:code });
+export const apiChart = (code?: string): Promise<AxiosResponse<ApiListChart>> => {
+    return axios.get(`/user/${code}/chart`);
 }
 
 
-//----------Pre countries ----------
+//---------- For the countries ----------
 
 
 export type countryType = {
@@ -95,7 +93,7 @@ export const apiListCountry = ()
     return axios.get("/user/countries");
 }
 
-//----------Pre interconnectness type ----------
+//---------- For the interconnectness type ----------
 
 
 export type interconnectnessTypeType = {
@@ -119,7 +117,7 @@ export const apiListInterconnectnessType = ()
 
 
 
-//----------Pre interconnectness ----------
+//---------- For the interconnectness ----------
 
 export type interconnectnessType = {
     code: string,
@@ -156,7 +154,7 @@ export const apiInterconnectness = (typeid: number, code: string)
     return axios.post("/user/interconnectness",{ typeid: typeid , code:code });
 }
 
-//-------------Pre Funding---------
+//------------- For the Funding---------
 
 
 export type fundingType = {

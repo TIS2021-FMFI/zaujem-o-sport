@@ -1,0 +1,25 @@
+Get ranking data.
+---
+responses:
+  200:
+    description: Ranking.
+    schema:
+      type: "object"
+      properties:
+        message:
+          type: string
+        countries:
+          type: array
+          items:
+            type: "object"
+            properties:
+              name:
+                type: string
+              code:
+                type: string
+  400:
+    description: Missing JSON header, missing required parameter or invalid value of some parameter.
+  401:
+    description: Authorization error.
+  500:
+    description: Internal server error or database error.
