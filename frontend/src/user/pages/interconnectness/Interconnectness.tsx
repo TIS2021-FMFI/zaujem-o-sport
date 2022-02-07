@@ -78,7 +78,7 @@ export const Interconnectness = () => {
 
 	return (<>
 		<header>
-			<h1 className="mt-3 mb-4"> Interconnectedness <Info label="What is Ranking" input="The user has the option to choose the country and type of connection (economic, non-economic).
+			<h1 className="mt-3 mb-4"> Interconnectedness <Info label="What is Interconnectedness" input="The user has the option to choose the country and type of connection (economic, non-economic).
              Depending on the user's choice, the page displays either a map with countries and numeric values
               or a list of countries with weights that indicate how high the country according to the selected country and connection type."/></h1>
 		</header>
@@ -114,7 +114,8 @@ export const Interconnectness = () => {
 						if (selectedOption !== null)
 							setInterconnectednessOption(selectedOption.value) }}
 				/>
-				<ChoiceState state={countryOption[1]} interconnectness={true} />
+				<ChoiceState state={countryOption[1]} alert={"Please select country and type "}
+							 message={"You can see results for chosen country and type"} />
 
 				<Button variant="outline-primary mt-md-2 mb-md-2">
 					<CSVLink className='button' filename={"interconnectedness" + countryOption}

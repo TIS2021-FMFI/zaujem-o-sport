@@ -50,7 +50,7 @@ export const Fundings = () => {
 
     return (
         <>
-            <header><h1 className="mt-3 mb-4"> Fundings <Info label="What is Ranking" input="
+            <header><h1 className="mt-3 mb-4"> Fundings <Info label="What is Funding" input="
             On this page, after selecting a country, it is displayed as a given funding between individual sports.
             The branches the columns will be: name of the sport,  amount (money) in the local currency of the given country and currency"/></h1></header>
 

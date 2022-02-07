@@ -4,32 +4,24 @@ import React from "react";
 
 interface ChoiceStateProps {
     state: string,
-    interconnectness?: boolean
+    alert?: string,
+    message?: string
 }
 
-export const ChoiceState = ({state, interconnectness = false}:ChoiceStateProps) => {
+export const ChoiceState = ({state, alert = "Please select country",message = "You can see results for chosen country" }:ChoiceStateProps) => {
 
-        if (!state) {
-            if (interconnectness){
-                return(
-                    <div className="alert alert-warning col-md-6 mt-md-4" role="alert">
-                        <h4>  Please select country and interconnectedness</h4>
-                    </div>
-                )
-
-            }
-            return(
+    if (!state) {
+        return(
             <div className="alert alert-warning col-md-6 mt-md-4" role="alert">
-                <h4>  Please select country  </h4>
+                <h4>  {alert}  </h4>
             </div>
-            )
-        }
+        )
+    }
 
 
-        return (
-            <div className="alert alert-success col-md-6 mt-md-4" role="alert">
-                <h4>  You can see results for chosen country <b>{state} :</b>  </h4>
-            </div>
-        );
+    return (
+        <div className="alert alert-success col-md-6 mt-md-4" role="alert">
+            <h4>  {message} <b>{state} :</b>  </h4>
+        </div>
+    );
 }
-

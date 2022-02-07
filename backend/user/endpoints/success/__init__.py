@@ -1,9 +1,13 @@
-from flasgger import SwaggerView, swag_from
+from flasgger import SwaggerView
+from verification.jwt import is_secretary
 from settings import DB
+from flask import request
+
 
 class ShowSuccessView(SwaggerView):
 
-    @swag_from("get.yml")
-    def get(self, countryCode: str):
-        res = {"message": "ok", "data": DB.getSuccessByCountry(countryCode)}
+
+    def post(self):
+        code = request.json.get("code")
+        res = {"message": "ok", "data": DB.getSuccessBySport(code)}
         return res

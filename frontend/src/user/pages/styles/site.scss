@@ -53,8 +53,18 @@ li{
   .navItem {
     padding: 10px 10px 10px 10px;
   }
+
+
 }
 
 .mainNavbar a:hover {
+  background-color: #62b8ff;
+}
+
+.mainNavbar a:active {
+  background-color: #0092ff;
+}
+
+.active a{
   background-color: #0092ff;
 }

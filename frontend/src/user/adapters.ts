@@ -6,7 +6,7 @@ import {AxiosResponse} from "axios";
 //------------- For the success ---------
 
 export type successType = {
-    sport_name: string,
+    country_name: string,
     points: number,
     order: number
 }
@@ -14,14 +14,29 @@ export type successType = {
 export interface ApiListSuccess {
     message: string,
     data: {
-       success: successType[]
+        success: successType[]
     }
 }
 
-export const apiSuccess = (code: string): Promise<AxiosResponse<ApiListSuccess>> => {
-    return axios.get(`/user/${code}/success`);
+export const apiListSuccess = ()
+    : Promise<AxiosResponse<ApiListSuccess>> =>
+{
+    return axios.get("/user/success");
+
 }
 
+export interface ApiSuccessType {
+    data: {
+        code: string
+    }
+}
+
+
+export const apiSuccess = (code: string)
+    : Promise<AxiosResponse<ApiListSuccess>> =>
+{
+    return axios.post("/user/success",{ code:code });
+}
 
 //---------- For the chart ----------
 export type chartType = {
@@ -133,4 +148,23 @@ export const apiListFunding = ()
 
 export const apiFunding = (code: string): Promise<AxiosResponse<ApiListFunding>> => {
     return axios.get(`/user/${code}/funding`);
+}
+
+//For the sports
+
+export type sportType = {
+    code: string,
+    title: string
+}
+
+export interface ApiListSportType {
+    message: string,
+    sports: sportType[]
+}
+
+export const apiListSport = ()
+    : Promise<AxiosResponse<ApiListSportType>> =>
+{
+
+    return axios.get("/user/sports");
 }
