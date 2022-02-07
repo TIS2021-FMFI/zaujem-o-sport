@@ -11,12 +11,10 @@ import admin_secretary.endpoints.branches.new_code
 import admin_secretary.endpoints.branches_with_sports
 import secretary.endpoints.login
 import secretary.endpoints.funding
-import secretary.endpoints.funding_currencies
 import admin.endpoints.login
 import admin.endpoints.upload
 import admin.endpoints.countries
 import admin.endpoints.sports
-import secretary.endpoints.show_countries
 import user.endpoints.success
 import user.endpoints.chart
 import user.endpoints.show_countries
@@ -145,12 +143,6 @@ app.add_url_rule(
 	methods=["POST"]
 )
 
-app.add_url_rule(
-	"/api/secretary/funding/currencies",
-	view_func=secretary.endpoints.funding_currencies.Funding.as_view("secretary_funding_currencies"),
-	methods=["GET"]
-)
-
 # ----- admin rules -----
 
 app.add_url_rule(
@@ -201,7 +193,6 @@ app.add_url_rule(
 	view_func=user.endpoints.interconnectnesstype.ShowInterconnectnessTypeView.as_view("list_interconnectnesstype"),
 	methods=["GET"]
 )
-
 
 app.add_url_rule(
 	"/api/user/interconnectness",

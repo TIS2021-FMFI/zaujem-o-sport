@@ -13,6 +13,7 @@ from datetime import timedelta
 import psycopg2
 from psycopg2 import pool
 from db import Database
+from flasgger import Swagger
 
 DEVELOPMENT_IP = "localhost"
 DEVELOPMENT_PORT = 3001
@@ -44,3 +45,45 @@ dbPool = psycopg2.pool.ThreadedConnectionPool(
     password=env.get("DB_PASS")
 )
 DB = Database(dbPool)
+
+""" Swagger (OpenAPI) docs """
+swagger = Swagger(
+    app,
+    config = {
+        "headers": [
+
+        ],
+        "specs": [
+            {
+                "endpoint": 'apispec',
+                "route": '/apispec.json',
+                "rule_filter": lambda rule: True,
+                "model_filter": lambda tag: True,
+            }
+        ],
+        "static_url_path": "/flasgger_static",
+        "swagger_ui": True,
+        "specs_route": "/apidocs/"
+    },
+    template = {
+        "info": {
+            "title": "Sport API Documentation",
+            "version": "1.0"
+        },
+        "host": "localhost:3001",  # "kempelen.dai.fmph.uniba.sk:8765", TODO
+        "basePath": "/api",
+        "securityDefinitions": {
+            "Bearer": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
+            }
+        },
+        "consumes": [
+            "application/json",
+        ],
+        "produces": [
+            "application/json",
+        ],
+    },
+)

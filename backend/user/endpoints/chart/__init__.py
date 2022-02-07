@@ -1,9 +1,6 @@
 from flasgger import SwaggerView
-from verification.jwt import is_secretary
-from settings import DB
 from flask import request
-
-import importlib #da sa vyriesit odstranenim pomlcky z data-computation
+import importlib  # can be resolved by removing '-' from the data-computation name
 datacomputation = importlib.import_module("data-computation")
 
 class ShowChartView(SwaggerView):

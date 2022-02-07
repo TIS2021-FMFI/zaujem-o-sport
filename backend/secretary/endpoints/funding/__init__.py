@@ -1,5 +1,5 @@
 from flask import request
-from flasgger import SwaggerView
+from flasgger import SwaggerView, swag_from
 import csv_parsers.csvParser as parser
 from verification.jwt import is_secretary
 import json
@@ -8,6 +8,7 @@ from settings import DB
 class Funding(SwaggerView):
 
 	@is_secretary
+	@swag_from("post.yml")
 	def post(self):
 		if len(request.files) == 0:
 			return {"message": "Missing uploaded file."}, 400
