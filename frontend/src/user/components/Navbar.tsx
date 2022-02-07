@@ -3,10 +3,10 @@ import {Link, useLocation} from "react-router-dom";
 import {HouseDoor, BarChart, Wallet,  List, Easel} from "react-bootstrap-icons";
 
 import {  Nav } from "react-bootstrap";
-
+/** This is the navbar that shows which page is active.*/
 function Navbar() {
     const location = useLocation();
-    const { pathname } = location;
+    const {pathname} = location;
     return (
         <div className="mainNavbar">
             <Nav>

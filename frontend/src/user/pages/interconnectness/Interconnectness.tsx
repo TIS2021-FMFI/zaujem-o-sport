@@ -14,6 +14,7 @@ import {Download} from "react-bootstrap-icons";
 import {Table} from "../../../components/table/Table";
 import {MapShow} from "../../components/map/Map";
 
+/** This page is used to show the interconnectedness of individual countries */
 export const Interconnectness = () => {
 	const history = useHistory()
 	const dataDisplayingSelectedOptions = [
@@ -30,7 +31,7 @@ export const Interconnectness = () => {
 	const [dataDisplayingSelectedOption, setDataDisplayingSelectedOption] = useState<{value: string, label: string}>(
 		dataDisplayingSelectedOptions[1]
 	);
-
+    /** useEffect for storing selected option */
 	useEffect(() => {
 		history.push(dataDisplayingSelectedOption.value);
 	}, [dataDisplayingSelectedOption]);
@@ -43,7 +44,7 @@ export const Interconnectness = () => {
 	const [interconnectednessOption, setInterconnectednessOption] = useState<number>(1);
 	const [interconnectnesses, setInterconnectness] = useState<interconnectnessType[]>();
 	const [rowInterconnectness, setRowInterconnectness] = useState<(number | string)[][]>([]);
-
+	/** useEffect for loading interconnectedness types */
 	useEffect(() => {
 		if (interconnectednessType !== undefined) {
 			setInterconnectednessTypeOptions(interconnectednessType.map(d => ({
@@ -53,6 +54,7 @@ export const Interconnectness = () => {
 		}
 	}, [interconnectednessType]);
 
+	/** useEffect for loading countries */
 	useEffect(() => {
 		if (countries !== undefined) {
 			setCountryOptions(countries.map(d => ({
@@ -64,7 +66,7 @@ export const Interconnectness = () => {
 				setCountryOption([svkCountry.code, svkCountry.name]);
 		}
 	}, [countries]);
-
+	/** Async query for displaying interconnectedness data. */
 	const { mutateAsync: asyncInterconnectness } = useMutation(["setInterconnectedness", countryOption, interconnectednessOption],
 		() => apiInterconnectness(interconnectednessOption, countryOption[0]),
 		{
@@ -78,7 +80,7 @@ export const Interconnectness = () => {
 			}
 		}
 	);
-
+	/** useEffect for displaying interconnectedness data. */
 	useEffect(() => {
 		if (countryOption[0].length !== 0)
 			asyncInterconnectness();

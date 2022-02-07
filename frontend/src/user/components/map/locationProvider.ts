@@ -1,4 +1,4 @@
-
+/** This is the country center provider used in the map module*/
 
 export const locations = new Map([
 	["AFG" , [33, 65]],

@@ -9,18 +9,17 @@ import {Download} from "react-bootstrap-icons";
 import {Info} from "../../components/info/Info";
 import {ChoiceState} from "../../components/choicestate/ChoiceState";
 
+/** This page is used to show the success of individual sports */
 export const Success = () => {
-
     const [sports, setSport] = useState<sportType[]>();
     const [rowSuccess, setRowSuccess] = useState<(number | string)[][]>([]);
+    const [option, setOption] = useState<string[]>(["",""]);
 
+    /** Query for displaying sports. */
     const {isLoading} = useQuery("list_sports2", apiListSport, {
-
         onSuccess: (response) => {
             const serverData = response.data;
             setSport(serverData.sports);
-
-
         },
         onError: (error) => {
             alert(error);
@@ -36,10 +35,7 @@ export const Success = () => {
     }))
 
 
-
-    const [option, setOption] = useState<string[]>(["",""]);
-
-
+    /** Async query for displaying success data. */
     const { mutateAsync: asyncSuccess } = useMutation(["setSport", option],
         () => apiSuccess(option[0]),
         {
@@ -53,7 +49,7 @@ export const Success = () => {
         }
     );
 
-
+    /** useEffect for displaying success data. */
     useEffect(() => {
         asyncSuccess();
 

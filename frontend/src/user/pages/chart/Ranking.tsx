@@ -18,7 +18,7 @@ export const Ranking = () => {
 	const [rowChart, setRowChart] = useState<(number | string)[][]>([]);
 	const [options, setOptions] = useState<{value: string, label: string}[]>([]);
 	const [option, setOption] = useState<string[]>(["",""]);
-
+	/** useEffect for loading ranking types */
 	useEffect(() => {
 		if (countries !== undefined) {
 			setOptions(countries.map(d => ({
@@ -30,7 +30,7 @@ export const Ranking = () => {
 				setOption([svkCountry.code, svkCountry.name]);
 		}
 	}, [countries]);
-
+	/** Async query for displaying ranking data. */
 	const { mutateAsync: asyncChart } = useMutation(["setRanking", option],
 		() => apiChart(option[0]),
 		{
@@ -43,7 +43,7 @@ export const Ranking = () => {
 			}
 		}
 	);
-
+	/** useEffect for displaying interconnectedness data. */
 	useEffect(() => {
 		if (option[0].length !== 0)
 			asyncChart();

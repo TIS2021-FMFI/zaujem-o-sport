@@ -1,5 +1,5 @@
 import React from "react";
-
+/** This is the footer for the user site */
 export const Footer = () => {
   return (
     <div className="main-footer">
