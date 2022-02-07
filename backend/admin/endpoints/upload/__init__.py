@@ -1,5 +1,5 @@
 from flask import request
-from flasgger import SwaggerView
+from flasgger import SwaggerView, swag_from
 from verification.jwt import is_admin
 from openpyxl import load_workbook
 from io import BytesIO
@@ -11,12 +11,11 @@ import json
 class UploadView(SwaggerView):
 
 	@is_admin
+	@swag_from("post.yml")
 	def post(self):
 
 		if len(request.files) == 0:
 			return {"message": "Missing uploaded file."}, 400
-
-
 
 		DB.createDatabaseBackup()
 

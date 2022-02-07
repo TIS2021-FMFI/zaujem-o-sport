@@ -11,15 +11,12 @@ import admin_secretary.endpoints.branches.new_code
 import admin_secretary.endpoints.branches_with_sports
 import secretary.endpoints.login
 import secretary.endpoints.funding
-import secretary.endpoints.funding_currencies
 import admin.endpoints.login
 import admin.endpoints.upload
 import admin.endpoints.countries
 import admin.endpoints.sports
-import secretary.endpoints.show_countries
 import user.endpoints.success
 import user.endpoints.chart
-import user.endpoints.show_countries
 import user.endpoints.interconnectness
 import user.endpoints.interconnectnesstype
 import user.endpoints.funding
@@ -145,12 +142,6 @@ app.add_url_rule(
 	methods=["POST"]
 )
 
-app.add_url_rule(
-	"/api/secretary/funding/currencies",
-	view_func=secretary.endpoints.funding_currencies.Funding.as_view("secretary_funding_currencies"),
-	methods=["GET"]
-)
-
 # ----- admin rules -----
 
 app.add_url_rule(
@@ -179,20 +170,20 @@ app.add_url_rule(
 
 # ----- user rules -----
 app.add_url_rule(
-	"/api/user/success",
-	view_func=user.endpoints.success.ShowSuccessView.as_view("list_success"),
-	methods=["GET", "POST"]
-)
-
-app.add_url_rule(
-	"/api/user/chart",
+	"/api/user/<countryCode>/chart",
 	view_func=user.endpoints.chart.ShowChartView.as_view("list_chart"),
-	methods=["GET", "POST"]
+	methods=["GET"]
 )
 
 app.add_url_rule(
-	"/api/user/countries",
-	view_func=user.endpoints.show_countries.ShowCountriesView.as_view("list_countries2"),
+	"/api/user/<countryCode>/funding",
+	view_func=user.endpoints.funding.ShowFundingView.as_view("list_funding"),
+	methods=["GET"]
+)
+
+app.add_url_rule(
+	"/api/user/<countryCode>/success",
+	view_func=user.endpoints.success.ShowSuccessView.as_view("list_success"),
 	methods=["GET"]
 )
 
@@ -202,17 +193,10 @@ app.add_url_rule(
 	methods=["GET"]
 )
 
-
 app.add_url_rule(
-	"/api/user/interconnectness",
+	"/api/user/<countryCode>/<interconnectednessType>/interconnectedness",
 	view_func=user.endpoints.interconnectness.ShowInterconnectnessView.as_view("list_interconnectness"),
-	methods=["GET","POST"]
-)
-
-app.add_url_rule(
-	"/api/user/funding",
-	view_func=user.endpoints.funding.ShowFundingView.as_view("list_funding"),
-	methods=["GET", "POST"]
+	methods=["GET"]
 )
 
 

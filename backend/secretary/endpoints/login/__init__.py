@@ -1,5 +1,5 @@
 from flask import request
-from flasgger import SwaggerView
+from flasgger import SwaggerView, swag_from
 from flask_jwt_extended import create_access_token
 from helpers import hashPassword
 from app_types import UserTypes
@@ -7,6 +7,7 @@ from settings import DB
 
 class LoginView(SwaggerView):
 
+	@swag_from("post.yml")
 	def post(self):
 		if not request.json:
 			return {"message": "Missing JSON body.", "data": {}}, 400
