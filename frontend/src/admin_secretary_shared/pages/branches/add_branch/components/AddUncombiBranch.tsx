@@ -14,6 +14,7 @@ interface SelectedOption {
 	label: string
 }
 
+/** Add new uncombined branch. */
 export const AddUncombiBranch = () => {
 
 	const language = useContext<Language>(LanguageContext);

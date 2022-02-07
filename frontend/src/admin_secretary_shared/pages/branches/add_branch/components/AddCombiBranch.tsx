@@ -8,6 +8,7 @@ import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
 import textLang, {Language} from "app/string";
 import {LanguageContext} from "App";
 
+/** Add new combined branch. */
 export const AddCombiBranch = () => {
 
 	const language = useContext<Language>(LanguageContext);

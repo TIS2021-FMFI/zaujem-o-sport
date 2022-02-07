@@ -6,6 +6,7 @@ import {useContext, useEffect, useState} from "react";
 import textLang, {Language} from "app/string";
 import {LanguageContext} from "App";
 
+/** Table of countries. */
 export const Countries = () => {
 
 	const language = useContext<Language>(LanguageContext);

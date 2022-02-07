@@ -8,6 +8,7 @@ import textLang, {Language} from "app/string";
 import {LanguageContext} from "App";
 import {useQueryClient} from "react-query";
 
+/** Add new sport. */
 export const AddSport = () => {
 
   const language = useContext<Language>(LanguageContext);

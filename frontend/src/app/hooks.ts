@@ -11,6 +11,12 @@ import textLang, {Language} from "app/string";
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
+/** Custom hook that wraps:
+ *    - snackbar (from initial message and loading to success/error response) with default messages in language `language`
+ *    - making API call with provided `apiFetchFunction`
+ *    - caching (by unique values of `queryKey` and `apiFetchFunction`
+ *  @returns loading and response states
+ * */
 export const useQueryWithNotifications = (
 	toastId: string,
 	queryKey: string,
@@ -42,6 +48,10 @@ export const useQueryWithNotifications = (
 	return { isLoading, response };
 }
 
+/**
+ * Same logic as for `useQueryWithNotifications`, except this custom hook returns react-query' mutation that can be
+ * further more used to make API calls anytime.
+ * */
 export const useMutationWithNotifications = (
 	toastId: string,
 	apiFetchFunction: (...args: any[]) => Promise<AxiosResponse<any>>,

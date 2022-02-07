@@ -1,6 +1,6 @@
 /**
- * API adapters, which can be used by anyone anywhere.
- * All API urls should start with "/".
+ * API adapters to be used by anyone anywhere.
+ * All API here urls should start with "/".
  */
 
 import {AxiosResponse} from "axios";

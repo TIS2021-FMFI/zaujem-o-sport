@@ -15,6 +15,7 @@ interface SuggestionsTableProps {
 	editing?: boolean
 }
 
+/** Table of suggestions with options to make corrections. */
 export const SuggestionsTable = ({suggestions, editing = true}: SuggestionsTableProps) => {
 
 	const dispatch = useAppDispatch();
@@ -34,7 +35,6 @@ export const SuggestionsTable = ({suggestions, editing = true}: SuggestionsTable
 	];
 
 	const [rows, setRows] = useState<TableCellComponent[][]>([]);
-
 
 	/** Create table rows with suggestions. */
 	useEffect(() => {

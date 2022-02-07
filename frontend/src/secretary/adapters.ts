@@ -1,6 +1,6 @@
 /**
  * API adapters for a secretary.
- * All API urls here should start with "/secretary".
+ * All API here urls here should start with "/secretary".
  */
 
 import {secretaryAxiosProvider as axios} from "secretary/axios_provider";
@@ -15,7 +15,7 @@ export interface ApiListSportsType {
 	}
 }
 
-export const apiListSports = ()  // TODO: find usage => remove
+export const apiListSports = ()
 	: Promise<AxiosResponse<ApiListSportsType>> =>
 {
 	return axios.get("/secretary/sports");
@@ -28,7 +28,6 @@ export interface ApiUploadFundingProps {
 	corrections: Correction[]
 }
 
-// TODO: return type
 export const apiUploadFunding = ({csvFile, countryCode, currency, corrections}: ApiUploadFundingProps): Promise<AxiosResponse<{}>> => {
 	const _corrections: any = {};
 	for (const correction of corrections) {
