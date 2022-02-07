@@ -1,4 +1,4 @@
-Get ranking data.
+Get interconnectedness types.
 ---
 parameters:
   - name: countryCode
@@ -6,7 +6,7 @@ parameters:
     type: string
 responses:
   200:
-    description: Ranking data.
+    description: Interconnectedness types.
     schema:
       type: "object"
       properties:
@@ -15,7 +15,7 @@ responses:
         data:
           type: "object"
           properties:
-            chart:
+            interconnectednesstype:
               type: array
               items:
                 type: "object"
@@ -24,10 +24,6 @@ responses:
                     type: integer
                   title:
                     type: string
-                  value:
-                    type: integer
-                  order:
-                    type: integer
   400:
     description: Missing JSON header, missing required parameter or invalid value of some parameter.
   401:

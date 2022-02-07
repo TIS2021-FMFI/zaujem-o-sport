@@ -67,7 +67,7 @@ swagger = Swagger(
     },
     template = {
         "info": {
-            "title": "Sport API Documentation",
+            "title": "International interest in sport API Documentation",
             "version": "1.0"
         },
         "host": "localhost:3001",  # "kempelen.dai.fmph.uniba.sk:8765", TODO

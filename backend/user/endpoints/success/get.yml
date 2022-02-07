@@ -1,4 +1,4 @@
-Get ranking data.
+Get success data.
 ---
 parameters:
   - name: countryCode
@@ -6,7 +6,7 @@ parameters:
     type: string
 responses:
   200:
-    description: Ranking data.
+    description: Success data.
     schema:
       type: "object"
       properties:
@@ -15,16 +15,14 @@ responses:
         data:
           type: "object"
           properties:
-            chart:
+            success:
               type: array
               items:
                 type: "object"
                 properties:
-                  code:
-                    type: integer
-                  title:
+                  sport_name:
                     type: string
-                  value:
+                  points:
                     type: integer
                   order:
                     type: integer

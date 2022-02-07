@@ -21,3 +21,4 @@ export const useInterconnectednessType = (language: Language = "sk"): { isLoadin
 
 	return { isLoading, interconnectednessType };
 }
+

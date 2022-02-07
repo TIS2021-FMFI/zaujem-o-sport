@@ -28,7 +28,7 @@ export const Interconnectness = () => {
 	];
 
 	const {countries} = useCountries("en");
-	const {isLoading, interconnectednessType} = useInterconnectednessType("en");
+	const {interconnectednessType} = useInterconnectednessType("en");
 	const [countryOptions, setCountryOptions] = useState<{value: string, label: string}[]>([]);
 	const [countryOption, setCountryOption] = useState<string[]>(["",""]);
 	const [interconnectednessTypeOptions, setInterconnectednessTypeOptions] = useState<{value: number, label: string}[]>([]);

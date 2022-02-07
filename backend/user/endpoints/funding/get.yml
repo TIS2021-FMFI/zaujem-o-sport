@@ -1,4 +1,4 @@
-Get ranking data.
+Get funding data.
 ---
 parameters:
   - name: countryCode
@@ -6,7 +6,7 @@ parameters:
     type: string
 responses:
   200:
-    description: Ranking data.
+    description: Funding data.
     schema:
       type: "object"
       properties:
@@ -15,19 +15,17 @@ responses:
         data:
           type: "object"
           properties:
-            chart:
+            funding:
               type: array
               items:
                 type: "object"
                 properties:
-                  code:
+                  branch_id:
                     type: integer
-                  title:
+                  absolute_funding:
+                    type: integer
+                  currency:
                     type: string
-                  value:
-                    type: integer
-                  order:
-                    type: integer
   400:
     description: Missing JSON header, missing required parameter or invalid value of some parameter.
   401:
