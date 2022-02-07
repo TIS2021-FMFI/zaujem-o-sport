@@ -9,7 +9,6 @@ import {Col, Form, Row} from "react-bootstrap";
 import Select from "react-select";
 import {useInterconnectednessType} from "../../../user/hooks";
 import {RowToSuggestion, RowWithSuggestion, Suggestions} from "admin_secretary_shared/components/upload_funding_data/Suggestions";
-import {setCorrections} from "../../../admin_secretary_shared/components/upload_funding_data/correctionsSlice";
 import config from "../../../config";
 
 const acceptedFundingFileExtensions = ".csv";
@@ -21,6 +20,11 @@ interface UploadFundingError {
 	suggestions: RowToSuggestion
 }
 
+/** Upload funding data.
+ *  If there are any mistakes in the uploaded file, errors or suggestions will show up with option to re-upload
+ *  the same file and corrections. This process might be repeated until all mistakes are resolved and successfully
+ *  saved on the backend.
+ * */
 export const UploadData = () => {
 
 	const [fundingFile, setFundingFile] = useState<dropzoneFileProp[]>([]);
@@ -141,7 +145,7 @@ export const UploadData = () => {
         <div className={`w-100 mt-2`}>
           <span>Uploaded files: </span>
           <span>
-								{ fundingFile.map((file, i) => file.file.name).join(", ") }
+								{ fundingFile.map((file) => file.file.name).join(", ") }
 							</span>
           <a href="#"
              className={`float-end`}
@@ -169,7 +173,7 @@ export const UploadData = () => {
         <div className={`w-100 mt-2`}>
           <span>Uploaded files: </span>
           <span>
-								{ successFile.map((file, i) => file.file.name).join(", ") }
+								{ successFile.map((file) => file.file.name).join(", ") }
 							</span>
           <a href="#"
              className={`float-end`}
@@ -205,7 +209,7 @@ export const UploadData = () => {
         <div className={`w-100 mt-2`}>
           <span>Uploaded files: </span>
           <span>
-								{ interconnectednessFile.map((file, i) => file.file.name).join(", ") }
+								{ interconnectednessFile.map((file) => file.file.name).join(", ") }
 							</span>
           <a href="#"
              className={`float-end`}

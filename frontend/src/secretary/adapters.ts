@@ -1,6 +1,6 @@
 /**
  * API adapters for a secretary.
- * All API urls should start with "/secretary".
+ * All API urls here should start with "/secretary".
  */
 
 import {secretaryAxiosProvider as axios} from "secretary/axios_provider";

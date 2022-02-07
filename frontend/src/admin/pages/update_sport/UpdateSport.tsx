@@ -12,6 +12,7 @@ interface SelectedOption {
 	label: string
 }
 
+/** Form to update existing sport.  */
 export const UpdateSport = () => {
 
 	const {sports} = useSports();

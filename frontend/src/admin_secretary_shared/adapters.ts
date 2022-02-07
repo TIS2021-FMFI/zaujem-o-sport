@@ -1,6 +1,6 @@
 /**
  * API adapters for shared routes for an admin and secretary.
- * All API urls should start with "/adminsecretary".
+ * All API urls here should start with "/adminsecretary".
  */
 
 import {adminsecretaryAxiosProvider as axios} from "admin_secretary_shared/axios_provider";
