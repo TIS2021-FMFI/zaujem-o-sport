@@ -115,7 +115,7 @@ export const Interconnectness = () => {
 							setInterconnectednessOption(selectedOption.value) }}
 				/>
 				<ChoiceState state={countryOption[1]} alert={"Please select country and type "}
-							 message={"You can see results for chosen country and type"} />
+							 message={"You can see results for country and type"} />
 
 				<Button variant="outline-primary mt-md-2 mb-md-2">
 					<CSVLink className='button' filename={"interconnectedness" + countryOption}

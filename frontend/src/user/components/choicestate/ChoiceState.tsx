@@ -8,7 +8,7 @@ interface ChoiceStateProps {
     message?: string
 }
 
-export const ChoiceState = ({state, alert = "Please select country",message = "You can see results for chosen country" }:ChoiceStateProps) => {
+export const ChoiceState = ({state, alert = "Please select country",message = "You can see results for country" }:ChoiceStateProps) => {
 
     if (!state) {
         return(
