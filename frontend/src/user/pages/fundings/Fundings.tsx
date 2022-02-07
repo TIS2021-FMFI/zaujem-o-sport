@@ -1,12 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {useMutation, useQuery} from "react-query";
-import {
-    apiFunding,
-    apiListFunding,
-    fundingType
-
-} from "../../adapters";
-import {Button, Form, Spinner} from "react-bootstrap";
+import {useMutation} from "react-query";
+import {apiFunding} from "../../adapters";
+import {Button, Form} from "react-bootstrap";
 import Select from "react-select";
 import {Table} from "../../../components/table/Table";
 import {CSVLink} from "react-csv";
@@ -18,37 +13,27 @@ import {ChoiceState} from "../../components/choicestate/ChoiceState";
 export const Fundings = () => {
     
     const {countries} = useCountries("en");
-
-    const [fundings, setFunding] = useState<fundingType[]>();
     const [rowFundings, setRowFunding] = useState<(number | string)[][]>([]);
-    const {isLoading} = useQuery("list_funding", apiListFunding, {
-        onSuccess: (response) => {
-            const serverData = response.data.data;
-            setFunding(serverData.funding);
-
-
-        },
-        onError: (error) => {
-            alert(error);
-        }
-    })
-
-    let options = countries?.map(d => ({
-        "value": d.code,
-        "label" : d.name
-    }))
-
-
-
+    const [options, setOptions] = useState<{value: string, label: string}[]>([]);
     const [option, setOption] = useState<string[]>(["",""]);
 
+    useEffect(() => {
+        if (countries !== undefined) {
+            setOptions(countries.map(d => ({
+                "value": d.code,
+                "label": d.name
+            })));
+            const svkCountry = countries.find(c => c.code === "SVK");
+            if (svkCountry !== undefined)
+                setOption([svkCountry.code, svkCountry.name]);
+        }
+    }, [countries]);
 
-    const { mutateAsync: asyncFunding } = useMutation(["setCountry", option],
+    const { mutateAsync: asyncFunding } = useMutation(["setFunding", option],
         () => apiFunding(option[0]),
         {
             onSuccess: (response) => {
                 const serverData = response.data.data;
-                setFunding(serverData.funding);
                 setRowFunding((serverData.funding.map((f) => [f.branch_id, f.absolute_funding, f.currency])));
             },
             onError: (error) => {
@@ -57,12 +42,10 @@ export const Fundings = () => {
         }
     );
 
-
     useEffect(() => {
-        asyncFunding();
-
+        if (option[0].length !== 0)
+            asyncFunding();
     }, [option]);
-
 
     return (
         <>
@@ -87,27 +70,13 @@ export const Fundings = () => {
                 <ChoiceState state={option[1]} />
 
                 <Button variant="outline-primary mt-md-2 mb-md-2"><CSVLink className='button' filename={"funding"+option[1]} data={rowFundings}><Download size={25} /> Export data</CSVLink></Button>{' '}
-
-
-
-
             </div>
-            {isLoading
-                ? <Spinner animation="border" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </Spinner>
-
-                :
-                <div>
-                    <Table columnNames={[{name: "Sport", sortable: true}, {name: "Amount", sortable: true}, {
-                        name: "Currency", sortable: true
-                    }]}
-                           rows={rowFundings}/>
-
-                </div>
-
-            }
-
+            <div>
+                <Table columnNames={[{name: "Sport", sortable: true}, {name: "Amount", sortable: true}, {
+                    name: "Currency", sortable: true
+                }]}
+                       rows={rowFundings}/>
+            </div>
         </>
     )
 }

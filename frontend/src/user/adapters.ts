@@ -18,24 +18,8 @@ export interface ApiListSuccess {
     }
 }
 
-export const apiListSuccess = ()
-    : Promise<AxiosResponse<ApiListSuccess>> =>
-{
-    return axios.get("/user/success");
-
-}
-
-export interface ApiSuccessType {
-    data: {
-        code: string
-    }
-}
-
-
-export const apiSuccess = (code: string)
-    : Promise<AxiosResponse<ApiListSuccess>> =>
-{
-    return axios.post("/user/success",{ code:code });
+export const apiSuccess = (code: string): Promise<AxiosResponse<ApiListSuccess>> => {
+    return axios.get(`/user/${code}/success`);
 }
 
 
@@ -68,29 +52,8 @@ export interface ApiChartType {
 }
 
 
-export const apiChart = (code?: string): Promise<AxiosResponse<ApiListChart>> => {
+export const apiChart = (code: string): Promise<AxiosResponse<ApiListChart>> => {
     return axios.get(`/user/${code}/chart`);
-}
-
-
-//---------- For the countries ----------
-
-
-export type countryType = {
-    code: string,
-    name: string
-}
-
-export interface ApiListCountryType {
-    message: string,
-    countries: countryType[]
-}
-
-export const apiListCountry = ()
-    : Promise<AxiosResponse<ApiListCountryType>> =>
-{
-
-    return axios.get("/user/countries");
 }
 
 //---------- For the interconnectness type ----------
@@ -133,12 +96,6 @@ export interface ApiListInterconnectness {
     }
 }
 
-export const apiListInterconnectness = ()
-    : Promise<AxiosResponse<ApiListInterconnectness>> =>
-{
-    return axios.get("/user/interconnectness");
-
-}
 
 export interface ApiInterconnectnessType {
     data: {
@@ -147,11 +104,8 @@ export interface ApiInterconnectnessType {
     }
 }
 
-
-export const apiInterconnectness = (typeid: number, code: string)
-    : Promise<AxiosResponse<ApiListInterconnectness>> =>
-{
-    return axios.post("/user/interconnectness",{ typeid: typeid , code:code });
+export const apiInterconnectness = (typeid: number, code: string): Promise<AxiosResponse<ApiListInterconnectness>> => {
+    return axios.get(`/user/${code}/${typeid}/interconnectedness`);
 }
 
 //------------- For the Funding---------
@@ -177,15 +131,6 @@ export const apiListFunding = ()
 
 }
 
-export interface ApiFundingType {
-    data: {
-        code: string
-    }
-}
-
-
-export const apiFunding = (code: string)
-    : Promise<AxiosResponse<ApiListFunding>> =>
-{
-    return axios.post("/user/funding",{ code:code });
+export const apiFunding = (code: string): Promise<AxiosResponse<ApiListFunding>> => {
+    return axios.get(`/user/${code}/funding`);
 }

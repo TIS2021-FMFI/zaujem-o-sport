@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {useMutation, useQuery} from "react-query";
-import { apiListSuccess, apiSuccess,  successType} from "../../adapters";
+import {useMutation} from "react-query";
+import {apiSuccess} from "../../adapters";
 import {Button, Form, Spinner} from "react-bootstrap";
 import Select from "react-select";
 import {Table} from "../../../components/table/Table";
@@ -12,95 +12,75 @@ import {ChoiceState} from "../../components/choicestate/ChoiceState";
 
 export const Success = () => {
 
-    const {countries} = useCountries("en");
+	const {countries} = useCountries("en");
 
-    const [successes, setSuccess] = useState<successType[]>();
-    const [rowSuccess, setRowSuccess] = useState<(number | string)[][]>([]);
+	const [rowSuccess, setRowSuccess] = useState<(number | string)[][]>([]);
 
-    const {isLoading} = useQuery("list_success", apiListSuccess, {
-        onSuccess: (response) => {
-            const serverData = response.data.data;
-            setSuccess(serverData.success);
+	const [options, setOptions] = useState<{value: string, label: string}[]>([]);
+	const [option, setOption] = useState<string[]>(["",""]);
 
+	useEffect(() => {
+		if (countries !== undefined) {
+			setOptions(countries.map(d => ({
+				"value": d.code,
+				"label": d.name
+			})));
+			const svkCountry = countries.find(c => c.code === "SVK");
+			if (svkCountry !== undefined)
+				setOption([svkCountry.code, svkCountry.name]);
+		}
+	}, [countries]);
 
-        },
-        onError: (error) => {
-            alert(error);
-        }
-    })
+	const { mutateAsync: asyncSuccess } = useMutation(["setSuccess", option],
+		() => apiSuccess(option[0]),
+		{
+			onSuccess: (response) => {
+				const serverData = response.data.data;
+				setRowSuccess(serverData.success.map((s) => [s.sport_name, s.points, s.order]))
+			},
+			onError: (error) => {
+				console.log(error);
+			}
+		}
+	);
 
-    let options = countries?.map(d => ({
-        "value": d.code,
-        "label" : d.name
-    }))
+	useEffect(() => {
+		if (option[0].length !== 0)
+			asyncSuccess();
+	}, [option]);
 
-
-
-    const [option, setOption] = useState<string[]>(["",""]);
-
-
-    const { mutateAsync: asyncSuccess } = useMutation(["setCountry", option],
-        () => apiSuccess(option[0]),
-        {
-            onSuccess: (response) => {
-                const serverData = response.data.data;
-                setSuccess(serverData.success);
-                setRowSuccess(serverData.success.map((s) => [s.sport_name, s.points, s.order]))
-            },
-            onError: (error) => {
-                console.log(error);
-            }
-        }
-    );
-
-
-    useEffect(() => {
-        asyncSuccess();
-
-    }, [option]);
-
-
-    return (
-        <>
-            <header>
-            <h1 className="mt-3 mb-4"> Success <Info label="What is Ranking" input="After selecting a sport, this page displays a table showing
+	return (
+		<>
+			<header>
+				<h1 className="mt-3 mb-4"> Success <Info label="What is Ranking" input="After selecting a sport, this page displays a table showing
             the ranking of countries according to the number of points earned in the sport."/></h1>
-            </header>
+			</header>
 
-            <div>
+			<div>
 
-                <Form.Label><h4>Country</h4></Form.Label>
-                <Select
-                    id="country"
-                    options={options}
-                    placeholder="Choose country"
-                    onChange={ (selectedOption) => {
-                        if (selectedOption !== null)
-                            setOption([selectedOption.value, selectedOption.label]) }}
-                />
-                <ChoiceState state={option[1]} />
-                <Button variant="outline-primary mt-md-2 mb-md-2"><CSVLink className='button' filename={"success"+option[1]} data={rowSuccess}><Download size={25} /> Export data</CSVLink></Button>{' '}
-
-
-            </div>
-            {isLoading
-                ? <Spinner animation="border" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </Spinner>
+				<Form.Label><h4>Country</h4></Form.Label>
+				<Select
+					id="country"
+					options={options}
+					placeholder="Choose country"
+					onChange={ (selectedOption) => {
+						if (selectedOption !== null)
+							setOption([selectedOption.value, selectedOption.label]) }}
+				/>
+				<ChoiceState state={option[1]} />
+				<Button variant="outline-primary mt-md-2 mb-md-2"><CSVLink className='button' filename={"success"+option[1]} data={rowSuccess}><Download size={25} /> Export data</CSVLink></Button>{' '}
 
 
-                :
-                <div>
-                    <Table columnNames={[{name: "Sport", sortable: true}, {name: "Points", sortable: true}, {
-                        name: "Order",
-                        sortable: true
-                    }]}
-                           rows={rowSuccess}/>
+			</div>
+			<div>
+				<Table columnNames={[{name: "Sport", sortable: true}, {name: "Points", sortable: true}, {
+					name: "Order",
+					sortable: true
+				}]}
+				       rows={rowSuccess}/>
 
-                </div>
+			</div>
 
-            }
-
-        </>
-    )
+		</>
+	)
 }

@@ -1,5 +1,4 @@
 import React from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 export const Footer = () => {
   return (
@@ -20,7 +19,7 @@ export const Footer = () => {
               <li>Sabína Samporová</li>
               <li>Martin Gergel</li>
               <li>Jakub Mišovský</li>
-			  <li>Slavomír Holenda</li>
+			        <li>Slavomír Holenda</li>
             </ul>
           </div>
           {/* Column3 */}
@@ -35,7 +34,7 @@ export const Footer = () => {
         <div className="row">
           <p className="col-sm">
             &copy;{new Date().getFullYear()} MATFYZ | Applied informatics |
-            TIS
+            Tvorba informačných systémov
           </p>
         </div>
       </div>

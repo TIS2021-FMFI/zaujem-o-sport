@@ -17,7 +17,6 @@ import admin.endpoints.countries
 import admin.endpoints.sports
 import user.endpoints.success
 import user.endpoints.chart
-import user.endpoints.show_countries
 import user.endpoints.interconnectness
 import user.endpoints.interconnectnesstype
 import user.endpoints.funding
@@ -171,20 +170,20 @@ app.add_url_rule(
 
 # ----- user rules -----
 app.add_url_rule(
-	"/api/user/success",
-	view_func=user.endpoints.success.ShowSuccessView.as_view("list_success"),
-	methods=["GET", "POST"]
-)
-
-app.add_url_rule(
 	"/api/user/<countryCode>/chart",
 	view_func=user.endpoints.chart.ShowChartView.as_view("list_chart"),
 	methods=["GET"]
 )
 
 app.add_url_rule(
-	"/api/user/countries",
-	view_func=user.endpoints.show_countries.ShowCountriesView.as_view("list_countries2"),
+	"/api/user/<countryCode>/funding",
+	view_func=user.endpoints.funding.ShowFundingView.as_view("list_funding"),
+	methods=["GET"]
+)
+
+app.add_url_rule(
+	"/api/user/<countryCode>/success",
+	view_func=user.endpoints.success.ShowSuccessView.as_view("list_success"),
 	methods=["GET"]
 )
 
@@ -195,15 +194,9 @@ app.add_url_rule(
 )
 
 app.add_url_rule(
-	"/api/user/interconnectness",
+	"/api/user/<countryCode>/<interconnectednessType>/interconnectedness",
 	view_func=user.endpoints.interconnectness.ShowInterconnectnessView.as_view("list_interconnectness"),
-	methods=["GET","POST"]
-)
-
-app.add_url_rule(
-	"/api/user/funding",
-	view_func=user.endpoints.funding.ShowFundingView.as_view("list_funding"),
-	methods=["GET", "POST"]
+	methods=["GET"]
 )
 
 

@@ -31,7 +31,7 @@ export const Ranking = () => {
 		}
 	}, [countries]);
 
-	const { mutateAsync: asyncChart } = useMutation(["setCountry", option],
+	const { mutateAsync: asyncChart } = useMutation(["setRanking", option],
 		() => apiChart(option[0]),
 		{
 			onSuccess: (response) => {
