@@ -6,6 +6,9 @@ import {AddCombiBranch} from "./components/AddCombiBranch";
 import textLang, {Language} from "app/string";
 import {LanguageContext} from "App";
 
+/** Wrapper component to add new branch.
+ *  Switching between creating combined and uncombined branch.
+ *  */
 export const AddBranch = () => {
 
 	const language = useContext<Language>(LanguageContext);

@@ -14,6 +14,7 @@ interface SelectedOption {
 	label: string
 }
 
+/** Add new uncombined branch. */
 export const AddUncombiBranch = () => {
 
 	const language = useContext<Language>(LanguageContext);
@@ -35,7 +36,6 @@ export const AddUncombiBranch = () => {
 
 	const [selectedSport, setSelectedSport] = useState<SelectedOption>();
 
-	// TODO: abstract with notification in hooks
 	const { data: newBranchCodeData, refetch } = useQuery(
 		["fetching_new_branch_code", selectedSport?.value],
 		() => {

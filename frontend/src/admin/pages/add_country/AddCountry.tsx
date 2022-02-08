@@ -5,6 +5,7 @@ import {CenteredRow} from "components/basic/CenteredRow";
 import createSnackbar, {SnackTypes} from "components/snackbar/Snackbar";
 import {apiAddNewCountry} from "admin/adapters";
 
+/** Add new country form. */
 export const AddCountry = () => {
 
 	const {countries} = useCountries();

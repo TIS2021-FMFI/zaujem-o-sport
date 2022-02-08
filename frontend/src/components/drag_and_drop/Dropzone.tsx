@@ -17,6 +17,7 @@ type DropzoneProps = {
 	lang?: Language
 };
 
+/** Wrapper to dropzone library. */
 export const Dropzone = ({accept, files, setFiles, multipleFiles=false, lang = "sk"}: DropzoneProps) => {
 
 	const text = textLang[lang];

@@ -7,6 +7,7 @@ import {useBranchesWithSports, useCombiBranches} from "admin_secretary_shared/ho
 import textLang, {Language} from "app/string";
 import {LanguageContext} from "App";
 
+/** Table of sports with their branches. */
 export const SportsWithBranches = () => {
 
 	const language = useContext<Language>(LanguageContext);

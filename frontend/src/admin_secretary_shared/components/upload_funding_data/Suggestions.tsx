@@ -29,6 +29,7 @@ interface SuggestionsProps {
 	editing?: boolean
 }
 
+/** Errors and options to make corrections / leave suggestions after uploading a funding file. */
 export const Suggestions = ({suggestions, rowErrors, numOfRealSuggestions, editing}: SuggestionsProps) => {
 
 	const language = useContext<Language>(LanguageContext);

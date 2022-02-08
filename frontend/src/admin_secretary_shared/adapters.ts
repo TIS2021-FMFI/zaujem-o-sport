@@ -1,6 +1,6 @@
 /**
  * API adapters for shared routes for an admin and secretary.
- * All API urls should start with "/adminsecretary".
+ * All API urls here should start with "/adminsecretary".
  */
 
 import {adminsecretaryAxiosProvider as axios} from "admin_secretary_shared/axios_provider";
@@ -38,7 +38,6 @@ export interface ApiAddNewSportProps {
 	sportTitle: string
 }
 
-// TODO: return type
 export const apiAddNewSport = ({sportCode, sportTitle}: ApiAddNewSportProps): Promise<AxiosResponse<{}>> => {
 	return axios.post("/adminsecretary/sports/add", {code: sportCode, title: sportTitle});
 }
@@ -49,7 +48,6 @@ export interface ApiAddNewUncombiBranchProps {
 	branchTitle: string
 }
 
-// TODO: return type
 export const apiAddNewUncombiBranch = ({sportCode, branchCode, branchTitle}: ApiAddNewUncombiBranchProps): Promise<AxiosResponse<{}>> => {
 	return axios.post("/adminsecretary/branches/add", {sportCode: sportCode, branchCode: branchCode, branchTitle: branchTitle});
 }
@@ -67,7 +65,6 @@ export interface ApiAddNewCombiBranchProps {
 	subBranches: SubBranch[]
 }
 
-// TODO: return type
 export const apiAddNewCombiBranch = ({branchCode, branchTitle, countryCode, subBranches}: ApiAddNewCombiBranchProps): Promise<AxiosResponse<{}>> => {
 	return axios.post("/adminsecretary/combi-branches/add", {
 		branchCode: branchCode,

@@ -20,6 +20,9 @@ interface UploadFundingError {
 	suggestions: RowToSuggestion
 }
 
+/** Upload funding, success and interconnectedness data.
+ *  If there are any mistakes in the uploaded file, errors or suggestions will show up.
+ * */
 export const UploadData = () => {
 
 	const dispatch = useAppDispatch();

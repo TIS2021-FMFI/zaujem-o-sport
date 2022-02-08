@@ -1,3 +1,8 @@
+/**
+ * API adapters available only for an admin.
+ * All API urls here should start with "/admin".
+ */
+
 import {AxiosResponse} from "axios";
 import {adminAxiosProvider as axios} from "admin/axios_provider";
 

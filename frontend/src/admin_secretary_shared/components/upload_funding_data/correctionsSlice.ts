@@ -1,3 +1,5 @@
+/** Redux states to simplify process for possible corrections after uploading funding file. */
+
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface Correction {
