@@ -5,6 +5,8 @@ from settings import DB
 
 
 class NumberInSports:
+    """ custom dict like class that holds NumberInSports data
+    """
     def __init__(self):
         self.values = {}
 
@@ -23,6 +25,8 @@ class NumberInSports:
 
 
 class MaxPointsInSport:
+    """ custom dict like class that holds MaxPointsInSport data
+    """
     def __init__(self):
         self.values = {}
 
@@ -42,6 +46,8 @@ class MaxPointsInSport:
 
 
 class TotalCountryPoints:
+    """ custom dict like class that holds TotalCountryPoints data
+    """
     def __init__(self):
         self.values = {}
 
@@ -60,6 +66,8 @@ class TotalCountryPoints:
 
 
 class CountryBestOrder:
+    """ custom dict like class that holds CountryBestOrder data
+    """
     def __init__(self):
         self.values = {}
 
@@ -78,6 +86,8 @@ class CountryBestOrder:
 
 
 class SuccessRecord:
+    """ record of success
+    """
     def __init__(self, rank : int, country_id : int, points:float):
         self.rank = rank
         self.country_id = country_id
@@ -88,7 +98,8 @@ class SuccessRecord:
 
 
 class SportSuccess:
-
+    """ data format that holds all records of success for specific sport
+    """
     def __init__(self, sport_id : str):
         self.sport_id = sport_id
         self.records = []
@@ -114,7 +125,8 @@ class SportSuccess:
 
 
 class InterconnectnessRecord:
-
+    """ record for interconnectedness
+    """
     def __init__(self, countryA: str, countryB: str, type: str, value: float):
         self.countryA = countryA
         self.countryB = countryB
@@ -129,7 +141,8 @@ class InterconnectnessRecord:
 
 
 class BGSRecord:
-
+    """ record for BGS
+    """
     def __init__(self, sport_id : int, value : int):
         self.sport_id = sport_id
         self.value = value
@@ -153,7 +166,14 @@ class excelParser:
         ...
 
     def parseSuccess(self , wb ) -> List:
+        """ parses success data file
 
+        Args:
+            wb : opened data file
+
+        Returns: List[ success records, list of unknown_sports, NumberInSports, MaxPointsInSport, TotalCountryPoints, CountryBestOrder ]
+
+        """
 
         sports = DB.getAllSports()
         countries = DB.getActiveCountryIds()
@@ -242,7 +262,14 @@ class excelParser:
         return [ success, unknown_sports, pocet_statov, max_bodov, pocet_bodov, najvyssie_um ]
 
     def parseInterconnectness(self, wb, type: int) -> List[InterconnectnessRecord]:
+        """ parses Interconnectedness data file
 
+        Args:
+            wb : opened data file
+
+        Returns: List[ records of Interconnectedness ]
+
+        """
         sheet = wb.active
         countries = DB.getActiveCountryTranslations()
 
@@ -302,6 +329,14 @@ class excelParser:
         return records
 
     def parseBGS(self, wb) -> List[BGSRecord]:
+        """ parses BGS data file
+
+        Args:
+            wb : opened data file
+
+        Returns: List[ records of BGS ]
+
+        """
         sheet = wb.active
         sports = DB.getAllSports()
 
