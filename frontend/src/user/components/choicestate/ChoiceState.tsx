@@ -1,35 +1,25 @@
 import React from "react";
 
-
-
 interface ChoiceStateProps {
     state: string,
-    interconnectness?: boolean
+    alert?: string,
+    message?: string
 }
-
-export const ChoiceState = ({state, interconnectness = false}:ChoiceStateProps) => {
-
-        if (!state) {
-            if (interconnectness){
-                return(
-                    <div className="alert alert-warning col-md-6 mt-md-4" role="alert">
-                        <h4>  Please select country and interconnectedness</h4>
-                    </div>
-                )
-
-            }
-            return(
+/** A component that notifies the user if an option is selected
+ * A parameter and two optional parameters enter this component.
+ * And that item is selected or undefined and reports if the item
+ * is undefined and reports that if it is selected */
+export const ChoiceState = ({state, alert = "Please select country",message = "You can see results for country" }:ChoiceStateProps) => {
+    if (!state) {
+        return(
             <div className="alert alert-warning col-md-6 mt-md-4" role="alert">
-                <h4>  Please select country  </h4>
+                <h4>  {alert}  </h4>
             </div>
-            )
-        }
-
-
-        return (
-            <div className="alert alert-success col-md-6 mt-md-4" role="alert">
-                <h4>  You can see results for chosen country <b>{state} :</b>  </h4>
-            </div>
-        );
+        )
+    }
+    return (
+        <div className="alert alert-success col-md-6 mt-md-4" role="alert">
+            <h4>  {message} <b>{state} :</b>  </h4>
+        </div>
+    );
 }
-

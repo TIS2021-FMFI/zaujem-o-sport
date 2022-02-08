@@ -10,14 +10,14 @@ import {useCountries} from "../../../app/hooks";
 import {Info} from "../../components/info/Info";
 import {ChoiceState} from "../../components/choicestate/ChoiceState";
 import {formatLongNumber} from "../../../helpers/format";
-
+/** This page is used to show the fundings of individual countries */
 export const Fundings = () => {
     
     const {countries} = useCountries("en");
     const [rowFundings, setRowFunding] = useState<(number | string)[][]>([]);
     const [options, setOptions] = useState<{value: string, label: string}[]>([]);
     const [option, setOption] = useState<string[]>(["",""]);
-
+    /** useEffect for loading countries */
     useEffect(() => {
         if (countries !== undefined) {
             setOptions(countries.map(d => ({
@@ -29,7 +29,7 @@ export const Fundings = () => {
                 setOption([svkCountry.code, svkCountry.name]);
         }
     }, [countries]);
-
+    /** Async query for displaying funding data. */
     const { mutateAsync: asyncFunding } = useMutation(["setFunding", option],
         () => apiFunding(option[0]),
         {
@@ -42,7 +42,7 @@ export const Fundings = () => {
             }
         }
     );
-
+    /** useEffect for displaying funding data. */
     useEffect(() => {
         if (option[0].length !== 0)
             asyncFunding();
@@ -50,7 +50,7 @@ export const Fundings = () => {
 
     return (
         <>
-            <header><h1 className="mt-3 mb-4"> Fundings <Info label="What is Ranking" input="
+            <header><h1 className="mt-3 mb-4"> Fundings <Info label="What is Funding" input="
             On this page, after selecting a country, it is displayed as a given funding between individual sports.
             The branches the columns will be: name of the sport,  amount (money) in the local currency of the given country and currency"/></h1></header>
 

@@ -7,7 +7,7 @@ export interface DialogLinksProp {
     handle: Function
 }
 
-
+/** This is a component of the dialog box that is used to display alerts.*/
 
 function Dialog({handle}:DialogLinksProp) {
     const [show, setShow] = useState(false);

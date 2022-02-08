@@ -20,6 +20,7 @@ import user.endpoints.chart
 import user.endpoints.interconnectness
 import user.endpoints.interconnectnesstype
 import user.endpoints.funding
+import user.endpoints.show_sports
 from flask import send_from_directory
 
 @app.errorhandler(400)
@@ -182,9 +183,9 @@ app.add_url_rule(
 )
 
 app.add_url_rule(
-	"/api/user/<countryCode>/success",
+	"/api/user/success",
 	view_func=user.endpoints.success.ShowSuccessView.as_view("list_success"),
-	methods=["GET"]
+	methods=["GET", "POST"]
 )
 
 app.add_url_rule(
@@ -194,10 +195,18 @@ app.add_url_rule(
 )
 
 app.add_url_rule(
+	"/api/user/sports",
+	view_func=user.endpoints.show_sports.ShowSportsView.as_view("list_sports2"),
+	methods=["GET"]
+)
+
+app.add_url_rule(
 	"/api/user/<countryCode>/<interconnectednessType>/interconnectedness",
 	view_func=user.endpoints.interconnectness.ShowInterconnectnessView.as_view("list_interconnectness"),
 	methods=["GET"]
 )
+
+
 
 
 if __name__ == "__main__":

@@ -1,5 +1,3 @@
-// npm i react-leaflet@3.1.0 @react-leaflet/core@1.0.2
-
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import {locations} from "./locationProvider";
 
@@ -14,7 +12,8 @@ interface MapProps {
     input: MapType[]
 }
 
-
+/** This is a map module to show the interconnection of countries.
+ *  Takes a list of MapType elements as a parameter. */
 export const MapShow = ({input}: MapProps) => {
     return (<>
 

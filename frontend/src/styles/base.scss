@@ -15,3 +15,23 @@ header > h2 {
 .leaflet-pane {
   z-index: 0;
 }
+
+.site{
+  background-color: white;
+  padding-left: 100px;
+  padding-right: 100px;
+  min-height: 500px;
+}
+
+.button{
+  text-decoration: none;
+}
+
+.button:hover{
+  color: white;
+  text-decoration: none;
+}
+
+li{
+  margin: 5px 0 5px 0;
+}

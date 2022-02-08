@@ -2,7 +2,7 @@ import React from "react";
 import {BarChart, Easel, HouseDoor, List, Wallet} from "react-bootstrap-icons";
 export const HomeUser = () => {
 
-
+/** This is the home site */
     return (<>
         <div className="main">
         <header>

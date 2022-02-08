@@ -14,9 +14,10 @@ import {Download} from "react-bootstrap-icons";
 import {Table} from "../../../components/table/Table";
 import {MapShow} from "../../components/map/Map";
 
+/** This page is used to show the interconnectedness of individual countries */
 export const Interconnectness = () => {
 	const history = useHistory()
-	const options = [
+	const dataDisplayingSelectedOptions = [
 		{
 			label: "Table",
 			value: "/interconnectness/table",
@@ -27,6 +28,14 @@ export const Interconnectness = () => {
 		}
 	];
 
+	const [dataDisplayingSelectedOption, setDataDisplayingSelectedOption] = useState<{value: string, label: string}>(
+		dataDisplayingSelectedOptions[1]
+	);
+    /** useEffect for storing selected option */
+	useEffect(() => {
+		history.push(dataDisplayingSelectedOption.value);
+	}, [dataDisplayingSelectedOption]);
+
 	const {countries} = useCountries("en");
 	const {interconnectednessType} = useInterconnectednessType("en");
 	const [countryOptions, setCountryOptions] = useState<{value: string, label: string}[]>([]);
@@ -35,7 +44,7 @@ export const Interconnectness = () => {
 	const [interconnectednessOption, setInterconnectednessOption] = useState<number>(1);
 	const [interconnectnesses, setInterconnectness] = useState<interconnectnessType[]>();
 	const [rowInterconnectness, setRowInterconnectness] = useState<(number | string)[][]>([]);
-
+	/** useEffect for loading interconnectedness types */
 	useEffect(() => {
 		if (interconnectednessType !== undefined) {
 			setInterconnectednessTypeOptions(interconnectednessType.map(d => ({
@@ -45,6 +54,7 @@ export const Interconnectness = () => {
 		}
 	}, [interconnectednessType]);
 
+	/** useEffect for loading countries */
 	useEffect(() => {
 		if (countries !== undefined) {
 			setCountryOptions(countries.map(d => ({
@@ -56,7 +66,7 @@ export const Interconnectness = () => {
 				setCountryOption([svkCountry.code, svkCountry.name]);
 		}
 	}, [countries]);
-
+	/** Async query for displaying interconnectedness data. */
 	const { mutateAsync: asyncInterconnectness } = useMutation(["setInterconnectedness", countryOption, interconnectednessOption],
 		() => apiInterconnectness(interconnectednessOption, countryOption[0]),
 		{
@@ -70,7 +80,7 @@ export const Interconnectness = () => {
 			}
 		}
 	);
-
+	/** useEffect for displaying interconnectedness data. */
 	useEffect(() => {
 		if (countryOption[0].length !== 0)
 			asyncInterconnectness();
@@ -86,12 +96,14 @@ export const Interconnectness = () => {
 			<h4> Data displaying</h4>
 
 			<Select className="mb-3"
-			        id="setview"
-			        options={options}
-			        placeholder="Choose how data will be displayed"
-			        onChange={ (selectedOption) => {
-				        if (selectedOption !== null)
-					        history.push(selectedOption.value) }}
+					id="setview"
+					value={dataDisplayingSelectedOption}
+					options={dataDisplayingSelectedOptions}
+					placeholder="Choose how data will be displayed"
+					onChange={ (selectedOption) => {
+						if (selectedOption !== null)
+							setDataDisplayingSelectedOption(selectedOption);
+					}}
 			/>
 
 			<div>
@@ -114,11 +126,11 @@ export const Interconnectness = () => {
 						if (selectedOption !== null)
 							setInterconnectednessOption(selectedOption.value) }}
 				/>
-				<ChoiceState state={countryOption[1]} interconnectness={true} />
-
+				<ChoiceState state={countryOption[1]} alert={"Please select country and type "}
+							 message={"You can see results for country and type"} />
 				<Button variant="outline-primary mt-md-2 mb-md-2">
 					<CSVLink className='button' filename={"interconnectedness" + countryOption}
-					         data={rowInterconnectness}>
+							 data={rowInterconnectness}>
 						<Download size={25} />Export data
 					</CSVLink>
 				</Button>{' '}
@@ -129,12 +141,12 @@ export const Interconnectness = () => {
 					<Route path="/interconnectness/table">
 						<Table columnNames={[{name: "Code", sortable: true}, {name: "Country", sortable: true}, {
 							name: "Value", sortable: true}, {name: "Type", sortable: true }]}
-						       rows={rowInterconnectness}/>
+							   rows={rowInterconnectness}/>
 					</Route>
 					<Route path="/interconnectness/map">
 						<>
 							{interconnectnesses !== undefined &&
-	              <MapShow input={interconnectnesses.map((interconnectness) => {
+								<MapShow input={interconnectnesses.map((interconnectness) => {
 									return (
 										{name: interconnectness.country, code: interconnectness.code, value: interconnectness.value}
 									)
