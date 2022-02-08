@@ -59,8 +59,9 @@ class UploadView(SwaggerView):
 				for table in parsed[2:]:
 					table.save()
 
-			# TODO: list of unknown sports in parsed[1]
-
+		"""	
+		# TODO: list of unknown sports in parsed[1]
+		
 		BGSfile = load_workbook(filename='BGS_test.xlsx')
 
 		if BGSfile:
@@ -73,6 +74,7 @@ class UploadView(SwaggerView):
 
 				for item in parsed:
 					item.save()
+		"""
 
 
 		if fundingFile:
