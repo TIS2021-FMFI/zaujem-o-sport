@@ -24,7 +24,6 @@ import {Interconnectness} from "./user/pages/interconnectness/Interconnectness";
 import {UploadData as AdminUploadData} from "./admin/pages/upload_data/UploadData";
 import {Footer} from "./user/components/Footer";
 import {HomeUser} from "./user/pages/home/HomeUser";
-import 'user/pages/styles/site.scss';
 import {ToastContainer} from "react-toastify";
 import {UpdateSport} from "./admin/pages/update_sport/UpdateSport";
 import {AddCountry} from "admin/pages/add_country/AddCountry";
